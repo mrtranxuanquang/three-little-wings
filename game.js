@@ -17,6 +17,7 @@ import { CHAPTER_2 } from './js/chapters/chapter2.js';
 import { CHAPTER_3 } from './js/chapters/chapter3.js';
 import { CHAPTER_4 } from './js/chapters/chapter4.js';
 import { CHAPTER_5 } from './js/chapters/chapter5.js';
+import { CHAPTER_6 } from './js/chapters/chapter6.js';
 
 const CHAPTERS = {
   1: CHAPTER_1,
@@ -24,7 +25,8 @@ const CHAPTERS = {
   3: CHAPTER_3,
   4: CHAPTER_4,
   5: CHAPTER_5,
-  // 6-8 will be added later
+  6: CHAPTER_6,
+  // 7-8 will be added later
 };
 
 class Game {

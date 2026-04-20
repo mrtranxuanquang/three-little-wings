@@ -63,6 +63,12 @@ export class GameplayScene {
     this.collectibles = (ch.collectibles || []).map((c, i) => ({ ...c, taken: false, id: `c${i}`, bobPhase: Math.random()*Math.PI*2 }));
     this.totalCollectibles = this.collectibles.length;
 
+    // NPCs (non-controllable story characters, e.g. Bố Quang)
+    for (const npc of (ch.npcs || [])) {
+      this.characters[npc.id] = new Character(npc.id, npc.x, CONFIG.GROUND_Y, this.game.assets);
+      if (npc.facing != null) this.characters[npc.id].facing = npc.facing;
+    }
+
     // Dynamic platforms (initially hidden, revealed by showPlatform cmd)
     this.dynamicPlatforms = (ch.dynamicPlatforms || []).map(p => ({ ...p, visible: p.visible ?? false }));
     this.charAttachments = {};
@@ -530,7 +536,7 @@ export class GameplayScene {
     for (const p of this.props) if (p.draw) p.draw(ctx);
 
     // Characters — draw in z-order: depth by y (higher y = in front)
-    const charList = CONFIG.CHARACTER_IDS.map(id => this.characters[id]);
+    const charList = Object.values(this.characters).filter(Boolean);
     charList.sort((a, b) => a.y - b.y || (a.id === this.leaderId ? 1 : -1));
     for (const ch of charList) ch.draw(ctx);
 
@@ -603,7 +609,7 @@ export class GameplayScene {
   }
 
   _updateScriptedMoves(dt) {
-    for (const id of CONFIG.CHARACTER_IDS) {
+    for (const id of Object.keys(this.characters)) {
       const c = this.characters[id];
       if (!c._scriptedMove) continue;
       const sm = c._scriptedMove;
