@@ -1,8 +1,8 @@
 // Three Little Wings — Audio manager
-// Web Audio API wrapper. All audio is OPTIONAL: files may not exist in Phase 1,
-// engine runs silently if that's the case.
+// Web Audio API wrapper. Falls back to procedural synth when audio files are missing.
 
 import { CONFIG } from './config.js';
+import { AudioSynth, synthSfx } from './audio-synth.js';
 
 class AudioManager {
   constructor() {
@@ -12,18 +12,19 @@ class AudioManager {
     this.sfxGain = null;
     this.voiceGain = null;
 
-    this.currentBgm = null;      // { source, gain, buffer, name }
-    this.buffers = new Map();    // url -> AudioBuffer
+    this.currentBgm = null;   // { gain, source?, synth?, name }
+    this.buffers = new Map(); // url -> AudioBuffer | null
     this.muted = false;
     this.unlocked = false;
   }
 
-  /** Call after first user gesture (required by browser policies). */
+  /** Call after first user gesture (required by browser autoplay policy). */
   init() {
     if (this.ctx) return;
     try {
       const Ctx = window.AudioContext || window.webkitAudioContext;
       this.ctx = new Ctx();
+
       this.masterGain = this.ctx.createGain();
       this.masterGain.gain.value = 1.0;
       this.masterGain.connect(this.ctx.destination);
@@ -55,59 +56,81 @@ class AudioManager {
       const buf = await this.ctx.decodeAudioData(ab);
       this.buffers.set(url, buf);
       return buf;
-    } catch (e) {
-      // Silently fail — audio is optional
-      this.buffers.set(url, null);
+    } catch {
+      this.buffers.set(url, null); // cache miss so we don't retry
       return null;
     }
   }
 
   /**
-   * Play BGM with crossfade. Returns immediately.
-   * url: path to audio file. Pass null to stop current BGM.
+   * Play BGM. Crossfades from current track.
+   * Falls back to procedural synth if the audio file doesn't exist.
    */
-  async playBgm(url, { fadeMs = 1500, loop = true } = {}) {
+  async playBgm(url, { fadeMs = 1500 } = {}) {
     if (!this.ctx) return;
-    // Same BGM already playing? no-op
     if (this.currentBgm && this.currentBgm.name === url) return;
 
-    // Fade out previous
+    const fadeSec = fadeMs / 1000;
+
+    // Fade out and discard previous track
     if (this.currentBgm) {
       const old = this.currentBgm;
       const now = this.ctx.currentTime;
       old.gain.gain.cancelScheduledValues(now);
       old.gain.gain.setValueAtTime(old.gain.gain.value, now);
-      old.gain.gain.linearRampToValueAtTime(0, now + fadeMs/1000);
-      setTimeout(() => { try { old.source.stop(); } catch(e){} }, fadeMs + 100);
+      old.gain.gain.linearRampToValueAtTime(0, now + fadeSec);
+      setTimeout(() => {
+        try { old.source?.stop(); } catch (_) {}
+        try { old.synth?.destroy(); } catch (_) {}
+        try { old.gain.disconnect(); } catch (_) {}
+      }, fadeMs + 150);
     }
     this.currentBgm = null;
     if (!url) return;
 
-    const buf = await this._loadBuffer(url);
-    if (!buf || !this.ctx) return; // audio missing — silent
-
-    const source = this.ctx.createBufferSource();
-    source.buffer = buf;
-    source.loop = loop;
+    // Per-track gain node for independent fade control
     const gain = this.ctx.createGain();
     gain.gain.value = 0;
-    source.connect(gain).connect(this.bgmGain);
-    source.start(0);
+    gain.connect(this.bgmGain);
     const now = this.ctx.currentTime;
-    gain.gain.linearRampToValueAtTime(1, now + fadeMs/1000);
-    this.currentBgm = { source, gain, buffer: buf, name: url };
+    gain.gain.linearRampToValueAtTime(1, now + fadeSec);
+
+    const trackName = url.replace(/^audio\//, '').replace(/\.mp3$/, '');
+    const buf = await this._loadBuffer(url);
+
+    if (buf) {
+      // Real audio file found
+      const source = this.ctx.createBufferSource();
+      source.buffer = buf;
+      source.loop = true;
+      source.connect(gain);
+      source.start(0);
+      this.currentBgm = { source, gain, synth: null, name: url };
+    } else {
+      // No file — generate music procedurally
+      const synth = new AudioSynth(this.ctx, gain);
+      synth.play(trackName);
+      this.currentBgm = { source: null, gain, synth, name: url };
+    }
   }
 
+  /**
+   * Play one-shot SFX. Falls back to procedural synth if file is missing.
+   */
   async playSfx(url, { volume = 1.0 } = {}) {
     if (!this.ctx) return;
     const buf = await this._loadBuffer(url);
-    if (!buf) return;
-    const source = this.ctx.createBufferSource();
-    source.buffer = buf;
-    const gain = this.ctx.createGain();
-    gain.gain.value = volume;
-    source.connect(gain).connect(this.sfxGain);
-    source.start(0);
+    if (buf) {
+      const source = this.ctx.createBufferSource();
+      source.buffer = buf;
+      const gain = this.ctx.createGain();
+      gain.gain.value = volume;
+      source.connect(gain).connect(this.sfxGain);
+      source.start(0);
+    } else {
+      const sfxName = url.replace(/^audio\//, '').replace(/\.mp3$/, '');
+      synthSfx(this.ctx, this.sfxGain, sfxName);
+    }
   }
 
   async playVoice(url) {
@@ -122,9 +145,7 @@ class AudioManager {
 
   setMuted(muted) {
     this.muted = muted;
-    if (this.masterGain) {
-      this.masterGain.gain.value = muted ? 0 : 1;
-    }
+    if (this.masterGain) this.masterGain.gain.value = muted ? 0 : 1;
   }
 
   resume() {
