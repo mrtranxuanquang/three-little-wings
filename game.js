@@ -13,10 +13,12 @@ import { ChapterEndScene } from './js/scenes/chapter-end.js';
 import { DemoEndScene } from './js/scenes/demo-end.js';
 
 import { CHAPTER_1 } from './js/chapters/chapter1.js';
+import { CHAPTER_2 } from './js/chapters/chapter2.js';
 
 const CHAPTERS = {
   1: CHAPTER_1,
-  // 2-8 will be added in Phase 2+
+  2: CHAPTER_2,
+  // 3-8 will be added in Phase 3+
 };
 
 class Game {

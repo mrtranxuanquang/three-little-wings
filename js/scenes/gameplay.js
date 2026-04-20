@@ -29,6 +29,8 @@ export class GameplayScene {
     this.collectibles = [];      // { type, x, y, taken, id }
     this.props = [];             // scripted props (butterflies etc)
     this.firedTriggers = new Set();
+    this.dynamicPlatforms = []; // platforms toggled by showPlatform/hidePlatform
+    this.charAttachments = {};  // childId → parentId (hand-holding)
 
     // Input lock (cutscenes, forced movement)
     this.inputLocked = false;
@@ -60,6 +62,10 @@ export class GameplayScene {
     // Collectibles
     this.collectibles = (ch.collectibles || []).map((c, i) => ({ ...c, taken: false, id: `c${i}`, bobPhase: Math.random()*Math.PI*2 }));
     this.totalCollectibles = this.collectibles.length;
+
+    // Dynamic platforms (initially hidden, revealed by showPlatform cmd)
+    this.dynamicPlatforms = (ch.dynamicPlatforms || []).map(p => ({ ...p, visible: p.visible ?? false }));
+    this.charAttachments = {};
 
     // Start BGM
     if (ch.bgm) this.game.audio.playBgm(`audio/${ch.bgm}.mp3`, { fadeMs: 2000 });
@@ -125,7 +131,7 @@ export class GameplayScene {
 
     // Update characters
     const leader = this.characters[this.leaderId];
-    const platforms = this.chapter.platforms || [];
+    const platforms = this._getActivePlatforms();
 
     // Leader — player controls
     if (!this.inputLocked) {
@@ -162,10 +168,21 @@ export class GameplayScene {
       const follower = this.characters[id];
       // Skip follow AI if character is being driven by a scripted move —
       // otherwise the two systems fight and cause jitter/teleport.
-      if (!follower._scriptedMove) {
+      if (!follower._scriptedMove && !this.charAttachments[id]) {
         follower.followUpdate(leader, offset, dt, platforms);
       }
       offset += -offsetSign * CONFIG.FOLLOW_DISTANCE * 0.55;
+    }
+
+    // Attached chars (hand-holding): snap child beside parent
+    for (const [childId, parentId] of Object.entries(this.charAttachments)) {
+      const child = this.characters[childId];
+      const parent = this.characters[parentId];
+      if (!child || !parent) continue;
+      const targetX = parent.x + parent.facing * -80;
+      child.x += (targetX - child.x) * Math.min(1, dt * 10);
+      child.y = parent.y;
+      child.facing = parent.facing;
     }
 
     // Camera follow
@@ -240,6 +257,13 @@ export class GameplayScene {
       sessionStorage.setItem(flagKey, '1');
       this.dialog.say(newId, switchLine, { duration: 1500, waitForInput: false });
     }
+  }
+
+  _getActivePlatforms() {
+    return [
+      ...(this.chapter.platforms || []),
+      ...this.dynamicPlatforms.filter(p => p.visible),
+    ];
   }
 
   _checkTriggers(forceEnterOnly) {
@@ -403,7 +427,23 @@ export class GameplayScene {
         this.game.audio.playSfx(`audio/${cmd.sfx}.mp3`);
         break;
       case 'spawnProp':
-        this.props.push(createProp(cmd));
+        this.props.push(createProp(cmd, this));
+        break;
+      case 'showPlatform': {
+        const dp = this.dynamicPlatforms.find(p => p.id === cmd.id);
+        if (dp) dp.visible = true;
+        break;
+      }
+      case 'hidePlatform': {
+        const dp = this.dynamicPlatforms.find(p => p.id === cmd.id);
+        if (dp) dp.visible = false;
+        break;
+      }
+      case 'attachChars':
+        this.charAttachments[cmd.child] = cmd.parent;
+        break;
+      case 'detachChars':
+        delete this.charAttachments[cmd.child];
         break;
       case 'removeProp':
         this.props = this.props.filter(p => p.id !== cmd.id);
@@ -446,7 +486,26 @@ export class GameplayScene {
     // Platforms (debug)
     if (CONFIG.DEBUG) {
       ctx.fillStyle = 'rgba(255,0,0,0.3)';
-      for (const p of (this.chapter.platforms || [])) ctx.fillRect(p.x, p.y, p.w, p.h);
+      for (const p of this._getActivePlatforms()) ctx.fillRect(p.x, p.y, p.w, p.h);
+    }
+
+    // Dynamic platforms (stone bridge style)
+    for (const p of this.dynamicPlatforms) {
+      if (!p.visible) continue;
+      ctx.save();
+      ctx.fillStyle = '#8a7a68';
+      ctx.strokeStyle = '#4a3a28';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.roundRect(p.x, p.y - p.h, p.w, p.h, 6);
+      ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+      ctx.lineWidth = 2;
+      for (let i = 1; i < 3; i++) {
+        const sx = p.x + p.w * i / 3;
+        ctx.beginPath(); ctx.moveTo(sx, p.y - p.h); ctx.lineTo(sx, p.y); ctx.stroke();
+      }
+      ctx.restore();
     }
 
     // Collectibles
@@ -552,7 +611,7 @@ export class GameplayScene {
       // Drive horizontal motion ourselves; let updateBody handle gravity/ground.
       // We call updateBody with empty platforms to keep scripted chars on ground
       // without fighting platform collisions (intended for Ch1 ground-level scripts).
-      const platforms = this.chapter.platforms || [];
+      const platforms = this._getActivePlatforms();
       updateBody(c, platforms, CONFIG.GROUND_Y, dt);
       if (sm.speed >= CONFIG.RUN_SPEED) c.setState(STATE.RUN);
       else c.setState(STATE.WALK);
@@ -802,11 +861,72 @@ export class GameplayScene {
 
 let _propIdCounter = 0;
 
-function createProp(cmd) {
-  if (cmd.prop === 'butterfly') {
-    return createButterfly(cmd);
-  }
+function createProp(cmd, scene) {
+  if (cmd.prop === 'butterfly') return createButterfly(cmd);
+  if (cmd.prop === 'boulder')   return createBoulder(cmd, scene);
   return { id: `p${_propIdCounter++}`, update: () => {}, draw: () => {} };
+}
+
+function createBoulder({ id, x, y, triggerX, triggerEvent }, scene) {
+  let vy = 0, rolling = false, done = false;
+  const W = 120, H = 100;
+  const obj = {
+    id: id || `boulder${_propIdCounter++}`,
+    x, y: y ?? CONFIG.GROUND_Y,
+    update(dt) {
+      if (done) return;
+      // Gravity
+      vy += 1200 * dt;
+      this.y = Math.min(CONFIG.GROUND_Y, this.y + vy * dt);
+      if (this.y >= CONFIG.GROUND_Y) vy = 0;
+
+      // Skill push: only Chòe as leader, adjacent, holding Z
+      const leader = scene.characters[scene.leaderId];
+      if (!scene.inputLocked && scene.leaderId === 'choe' && leader) {
+        const dx = this.x - leader.x;
+        const near = Math.abs(dx) < 110 && Math.abs(this.y - leader.y) < 80;
+        const facing = leader.facing * dx > 0;
+        if (near && facing && Input.isDown('skill')) {
+          rolling = true;
+          leader.setState(STATE.CUSTOM, { sprite: 'choe_pushing_rock' });
+        } else if (!Input.isDown('skill') && rolling) {
+          rolling = false;
+          if (leader.customSpriteKey === 'choe_pushing_rock') leader.setState(STATE.IDLE);
+        }
+      }
+      if (rolling) {
+        const dir = Math.sign(this.x - (scene.characters['choe']?.x || this.x - 1));
+        this.x += dir * CONFIG.WALK_SPEED * dt;
+      }
+      // Trigger
+      if (triggerX && !done && rolling && this.x >= triggerX) {
+        done = true; rolling = false;
+        scene._fireEvent(triggerEvent);
+        const c = scene.characters['choe'];
+        if (c && c.customSpriteKey === 'choe_pushing_rock') c.setState(STATE.IDLE);
+      }
+    },
+    draw(ctx) {
+      const cx = this.x, cy = this.y - H / 2;
+      ctx.save();
+      ctx.fillStyle = '#9a8a78';
+      ctx.strokeStyle = '#3a2a1a';
+      ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.ellipse(cx, cy, W/2, H/2, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cx-25, cy-8); ctx.lineTo(cx+8, cy+22);
+      ctx.moveTo(cx+18, cy-22); ctx.lineTo(cx-5, cy+12);
+      ctx.stroke();
+      if (rolling) {
+        ctx.fillStyle = 'rgba(0,0,0,0.12)';
+        ctx.beginPath(); ctx.ellipse(cx, this.y+6, W/2+12, 14, 0, 0, Math.PI*2); ctx.fill();
+      }
+      ctx.restore();
+    }
+  };
+  return obj;
 }
 
 function createButterfly({ id, from, to, duration = 5000, color = '#4a9fd4' }) {
