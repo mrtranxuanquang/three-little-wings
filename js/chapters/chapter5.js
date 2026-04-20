@@ -59,7 +59,7 @@ export const CHAPTER_5 = {
       { t: 10000, cmd: 'attachChars', child: 'chien', parent: 'choe' },
 
       // Không có lời thoại — chỉ có hình ảnh 3 bé nắm tay nhau
-      { t: 11000, cmd: 'narrate', text: 'KHÔNG CÓ LỜI THOẠI. Chỉ có hình ảnh 3 bé nắm tay nhau đứng trước miệng hang.', duration: 4000, waitForInput: false },
+      { t: 11000, cmd: 'narrate', text: '...', duration: 3500, waitForInput: false },
       { t: 15500, cmd: 'charState', char: 'choe',  state: 'idle' },
       { t: 15500, cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 15500, cmd: 'charState', char: 'chien', state: 'idle' },

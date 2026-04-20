@@ -120,6 +120,17 @@ export class GameplayScene {
     // so scripted moves + say commands can flow naturally together.
     this._updateInlineScript(dt);
 
+    // Vignette animation runs unconditionally so fades work during dialog/cutscene
+    if (this._vignetteTarget !== undefined) {
+      const diff = this._vignetteTarget - this.vignetteAlpha;
+      if (Math.abs(diff) < 0.005) {
+        this.vignetteAlpha = this._vignetteTarget;
+        this._vignetteTarget = undefined;
+      } else {
+        this.vignetteAlpha += Math.sign(diff) * (this._vignetteSpeed || 0.5) * dt;
+      }
+    }
+
     // Global input handlers
     if (this.cutscenePlayer.active) {
       // Cutscene mode: only advance/skip
@@ -158,17 +169,6 @@ export class GameplayScene {
     if (this.caveWalkMode) {
       this._updateCaveWalk(dt);
       return;
-    }
-
-    // Vignette animation
-    if (this._vignetteTarget !== undefined) {
-      const diff = this._vignetteTarget - this.vignetteAlpha;
-      if (Math.abs(diff) < 0.005) {
-        this.vignetteAlpha = this._vignetteTarget;
-        this._vignetteTarget = undefined;
-      } else {
-        this.vignetteAlpha += Math.sign(diff) * (this._vignetteSpeed || 0.5) * dt;
-      }
     }
 
     // Character switching
@@ -1024,13 +1024,6 @@ export class GameplayScene {
       if (targetCx > screenCx + dz) this.cameraTargetX = targetCx - dz - CONFIG.LOGICAL_WIDTH / 2;
       this.cameraTargetX = Math.max(0, Math.min(this.chapter.worldWidth - CONFIG.LOGICAL_WIDTH, this.cameraTargetX));
       this.cameraX += (this.cameraTargetX - this.cameraX) * CAMERA.LERP;
-    }
-
-    // Vignette animation
-    if (this._vignetteTarget !== undefined) {
-      const diff = this._vignetteTarget - this.vignetteAlpha;
-      if (Math.abs(diff) < 0.005) { this.vignetteAlpha = this._vignetteTarget; this._vignetteTarget = undefined; }
-      else this.vignetteAlpha += Math.sign(diff) * (this._vignetteSpeed || 0.5) * dt;
     }
 
     if (this.cameraShake > 0) this.cameraShake = Math.max(0, this.cameraShake - dt * 20);
