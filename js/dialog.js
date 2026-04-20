@@ -139,19 +139,24 @@ export class DialogManager {
     const w = Math.max(120, Math.min(maxWidth, this._maxLineWidth(ctx, lines))) + padX * 2;
     const h = lines.length * lineHeight + padY * 2 - 4;
 
-    // Tail (below the bubble, pointing to character): anchor at (x, by+h).
-    // We compute the bubble rect first, then clamp within the screen,
-    // but keep the tail pointing back to the character's actual position.
     let bx = x - w / 2;
     let by = y - h;
 
-    // Clamp into the screen with a small margin
     const margin = 12;
     if (screenW) bx = Math.max(margin, Math.min(screenW - w - margin, bx));
-    if (screenH) by = Math.max(margin, by); // allow top-only clamp; bottom is character-anchored
+    if (screenH) by = Math.max(margin, by);
 
-    // Tail points from bubble bottom toward the character
     const tailX = Math.max(bx + 16, Math.min(bx + w - 16, x));
+
+    // Pop-in scale: 0.75 → 1.0 over first 140ms
+    const age = performance.now() - item.startTime;
+    const popScale = age < 140 ? 0.75 + 0.25 * (age / 140) : 1;
+    if (popScale < 1) {
+      const pivotX = bx + w / 2, pivotY = by + h / 2;
+      ctx.translate(pivotX, pivotY);
+      ctx.scale(popScale, popScale);
+      ctx.translate(-pivotX, -pivotY);
+    }
 
     // Drop shadow
     ctx.fillStyle = 'rgba(0,0,0,0.22)';
@@ -205,6 +210,9 @@ export class DialogManager {
 
   _drawNarrationBanner(ctx, screenW, screenH, text, item) {
     ctx.save();
+    // Fade-in: 0 → 1 over first 220ms
+    const age = performance.now() - item.startTime;
+    ctx.globalAlpha = age < 220 ? age / 220 : 1;
     ctx.font = '500 28px "Be Vietnam Pro", sans-serif';
     const maxWidth = Math.min(screenW - 120, 1100);
     const lines = this._wrapText(ctx, text, maxWidth);

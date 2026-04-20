@@ -38,7 +38,7 @@ export class MainMenuScene {
       x: lx * this.game.scale + this.game.offsetX,
       y: ly * this.game.scale + this.game.offsetY,
     });
-    const bw = 480, bh = 78;
+    const bw = 480, bh = 104;
     const hitboxes = [];
     for (let i = 0; i < this.buttons.length && i < 2; i++) {
       const b = this.buttons[i];
@@ -80,7 +80,7 @@ export class MainMenuScene {
     if (pt) {
       for (let i = 0; i < this.buttons.length; i++) {
         const b = this.buttons[i];
-        const bw = 480, bh = 78;
+        const bw = 480, bh = 104;
         if (pt.x >= b.x - bw/2 && pt.x <= b.x + bw/2 &&
             pt.y >= b.y - bh/2 && pt.y <= b.y + bh/2) {
           this.hovered = i;
@@ -174,7 +174,7 @@ export class MainMenuScene {
     ctx.textBaseline = 'middle';
     for (let i = 0; i < this.buttons.length; i++) {
       const b = this.buttons[i];
-      const bw = 480, bh = 78;
+      const bw = 480, bh = 104;
       const bx = b.x - bw/2, by = b.y - bh/2;
       const isHover = i === this.hovered;
 

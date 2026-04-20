@@ -910,49 +910,98 @@ export class GameplayScene {
     for (let i = 0; i < 3; i++) {
       const id = CONFIG.CHARACTER_IDS[i];
       const px = startX + i * (portraitSize + gap);
+      const cx = px + portraitSize / 2, cy = py + portraitSize / 2, r = portraitSize / 2;
       const active = id === this.leaderId;
       ctx.save();
-      // Circle
+
+      // Active glow ring behind portrait
+      if (active) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r + 7, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(212,165,116,0.45)';
+        ctx.lineWidth = 9;
+        ctx.stroke();
+      }
+
+      // Background fill
       ctx.beginPath();
-      ctx.arc(px + portraitSize/2, py + portraitSize/2, portraitSize/2, 0, Math.PI*2);
-      ctx.fillStyle = active ? '#f5ead0' : 'rgba(20,22,18,0.7)';
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = active ? '#2a1e14' : 'rgba(10,12,9,0.8)';
       ctx.fill();
-      ctx.strokeStyle = active ? '#d4a574' : 'rgba(245,234,208,0.5)';
-      ctx.lineWidth = active ? 4 : 2;
+
+      // Sprite thumbnail — clip to circle, show head/upper body
+      const img = this.game.assets.get(`${id}_idle_side`);
+      if (img) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r - 2, 0, Math.PI * 2);
+        ctx.clip();
+        const spriteH = portraitSize * 2.4;
+        const spriteW = img.width * (spriteH / img.height);
+        ctx.globalAlpha = active ? 1 : 0.65;
+        ctx.drawImage(img, cx - spriteW / 2, py, spriteW, spriteH);
+        ctx.restore();
+      } else {
+        // Fallback: color dot
+        ctx.fillStyle = CONFIG.CHARACTER_COLORS[id];
+        ctx.beginPath();
+        ctx.arc(cx, cy, r - 14, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Border ring
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = active ? '#d4a574' : 'rgba(245,234,208,0.35)';
+      ctx.lineWidth = active ? 3.5 : 2;
       ctx.stroke();
 
-      // Character color dot
-      ctx.fillStyle = CONFIG.CHARACTER_COLORS[id];
+      // Key-number badge (bottom-right corner of portrait)
+      const badgeR = 13;
+      const badgeX = px + portraitSize - badgeR + 2, badgeY = py + portraitSize - badgeR + 2;
+      ctx.fillStyle = active ? '#d4a574' : 'rgba(40,32,22,0.85)';
       ctx.beginPath();
-      ctx.arc(px + portraitSize/2, py + portraitSize/2, portraitSize/2 - 14, 0, Math.PI*2);
+      ctx.arc(badgeX, badgeY, badgeR, 0, Math.PI * 2);
       ctx.fill();
-
-      // Number
-      ctx.fillStyle = '#fff';
-      ctx.font = '700 32px "Be Vietnam Pro"';
+      ctx.fillStyle = active ? '#2a1e14' : 'rgba(245,234,208,0.7)';
+      ctx.font = '700 16px "Be Vietnam Pro"';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(String(i+1), px + portraitSize/2, py + portraitSize/2);
+      ctx.fillText(String(i + 1), badgeX, badgeY);
 
       // Name below
-      ctx.fillStyle = active ? '#f5ead0' : 'rgba(245,234,208,0.6)';
-      ctx.font = '500 15px "Be Vietnam Pro"';
+      ctx.fillStyle = active ? '#f5ead0' : 'rgba(245,234,208,0.5)';
+      ctx.font = active ? '600 15px "Be Vietnam Pro"' : '400 14px "Be Vietnam Pro"';
       ctx.textBaseline = 'top';
-      ctx.fillText(CONFIG.CHARACTER_NAMES[id], px + portraitSize/2, py + portraitSize + 4);
+      ctx.fillText(CONFIG.CHARACTER_NAMES[id], cx, py + portraitSize + 5);
       ctx.restore();
     }
 
-    // Flower collectibles counter top-left
+    // Flower collectibles counter top-left — drawn flower, no emoji
     if (this.totalCollectibles > 0) {
       ctx.save();
-      ctx.fillStyle = 'rgba(20,22,18,0.7)';
-      this._roundRect(ctx, 30, 30, 200, 56, 10);
+      ctx.fillStyle = 'rgba(20,22,18,0.72)';
+      this._roundRect(ctx, 30, 30, 190, 54, 10);
       ctx.fill();
+      // Draw a simple flower glyph instead of emoji (more reliable cross-platform)
+      const fx = 62, fy = 57;
+      ctx.fillStyle = '#e8a0c0';
+      for (let p = 0; p < 5; p++) {
+        const a = (p / 5) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.ellipse(fx + Math.cos(a) * 8, fy + Math.sin(a) * 8, 6, 4, a, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = '#f5e060';
+      ctx.beginPath();
+      ctx.arc(fx, fy, 6, 0, Math.PI * 2);
+      ctx.fill();
+      // Count text
       ctx.fillStyle = '#f5ead0';
-      ctx.font = '600 30px "Be Vietnam Pro"';
+      ctx.font = '600 28px "Be Vietnam Pro"';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`🌸 ${this.collectedCount} / ${this.totalCollectibles}`, 52, 58);
+      ctx.fillText(`${this.collectedCount} / ${this.totalCollectibles}`, 82, 57);
       ctx.restore();
     }
   }
