@@ -247,7 +247,13 @@ export class Character {
     }
     const anchor = this.assets.getAnchor(key);
 
-    // Squash/stretch: landing compresses, jumping upward stretches slightly
+    // Natural (unscaled) sprite dimensions in world pixels — pixel-snapped to avoid fringing
+    const baseScale = (this.height / img.height) * this.scale;
+    const w = Math.round(img.width  * baseScale);
+    const h = Math.round(img.height * baseScale);
+
+    // Squash/stretch factors applied via canvas transform (pivot = feet), not drawImage size.
+    // This keeps the anchor point fixed and avoids sub-pixel drift.
     let squashX = 1, squashY = 1;
     if (this.state === STATE.LAND && this.stateTimer < 0.12) {
       const t = 1 - this.stateTimer / 0.12;
@@ -258,18 +264,14 @@ export class Character {
       squashY = 1.08;
     }
 
-    const baseScale = (this.height / img.height) * this.scale;
-    const w = img.width * baseScale * squashX;
-    const h = img.height * baseScale * squashY;
-
-    // Breathing bob when idle
+    // Breathing bob when idle — rounded so it doesn't cause sub-pixel drift
     const bob = (this.state === STATE.IDLE)
-      ? Math.sin(this.idlePhase) * 2.5
+      ? Math.round(Math.sin(this.idlePhase) * 2.5)
       : 0;
 
-    // Anchor: draw so that (anchor.x * w, anchor.y * h) of image = (this.x, this.y)
-    const drawX = this.x - w * anchor[0];
-    const drawY = this.y - h * anchor[1] + bob;
+    // Pixel-snapped draw origin — anchor maps sprite foot-point to world position
+    const drawX = Math.round(this.x - w * anchor[0]);
+    const drawY = Math.round(this.y - h * anchor[1]) + bob;
 
     // Ground shadow (simple ellipse under feet)
     if (this.onGround) {
@@ -282,10 +284,20 @@ export class Character {
     }
 
     ctx.save();
+    ctx.globalAlpha = 1; // prevent leaks from cutscene/vignette draws
+
+    // Squash/stretch from feet pivot (this.x, this.y) — keeps feet planted on ground
+    if (squashX !== 1 || squashY !== 1) {
+      ctx.translate(this.x, this.y);
+      ctx.scale(squashX, squashY);
+      ctx.translate(-this.x, -this.y);
+    }
+
     if (this.facing < 0) {
-      ctx.translate(drawX + w / 2, drawY);
+      // Flip: translate to horizontal center of sprite, mirror, draw
+      ctx.translate(drawX + Math.floor(w / 2), drawY);
       ctx.scale(-1, 1);
-      ctx.drawImage(img, -w / 2, 0, w, h);
+      ctx.drawImage(img, -Math.ceil(w / 2), 0, w, h);
     } else {
       ctx.drawImage(img, drawX, drawY, w, h);
     }
