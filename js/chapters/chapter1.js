@@ -82,7 +82,7 @@ export const CHAPTER_1 = {
       { t: 0,     cmd: 'faceChar', char: 'chien', dir: 1 },
 
       // Opening narration
-      { t: 600,   cmd: 'narrate', text: 'Một chiều cuối tuần, ba anh em Chích Chòe, Cúc Cu và Chiền Chiện đang chơi ở bìa rừng sau nhà...', duration: 5500 },
+      { t: 600,   cmd: 'narrate', text: 'Một chiều cuối tuần, ba anh em Chích Chòe, Cúc Cu và Chiền Chiện đang chơi ở bìa rừng sau nhà...', duration: 5500, waitForInput: false },
 
       // Butterfly appears
       { t: 6300,  cmd: 'spawnProp', prop: 'butterfly', id: 'bfly', from: [750, 500], to: [1100, 450], duration: 8000, color: '#4a9fd4' },

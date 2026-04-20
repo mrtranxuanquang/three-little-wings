@@ -49,7 +49,7 @@ export const CHAPTER_2 = {
       { t: 0,    cmd: 'faceChar',    char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar',    char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar',    char: 'chien', dir: 1 },
-      { t: 500,  cmd: 'narrate', text: 'Ba anh em men theo suối, tiếng nước rì rào vang lên từ phía trước...', duration: 4500 },
+      { t: 500,  cmd: 'narrate', text: 'Ba anh em men theo suối, tiếng nước rì rào vang lên từ phía trước...', duration: 4500, waitForInput: false },
       { t: 5200, cmd: 'releaseInput' },
     ],
 
@@ -57,10 +57,11 @@ export const CHAPTER_2 = {
     // Chiền Chiện thấy suối → sợ
     // ============================================================
     chien_sees_water: [
+      { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_hesitant_back' },
-      { t: 0,    cmd: 'charState', char: 'chien', state: 'custom' },
       { t: 200,  cmd: 'say', char: 'chien', text: 'Ơ... anh ơi, suối to quá. Em... sợ nước.', duration: 2800 },
       { t: 3200, cmd: 'say', char: 'choe', text: 'Để anh nghĩ xem...', duration: 1800 },
+      { t: 5200, cmd: 'releaseInput' },
     ],
 
     // ============================================================
@@ -78,7 +79,7 @@ export const CHAPTER_2 = {
       { t: 0,    cmd: 'showPlatform', id: 'rock_bridge' },
       { t: 0,    cmd: 'cameraShake', amount: 10 },
       { t: 0,    cmd: 'sfx', sfx: 'sfx_rock_land' },
-      { t: 400,  cmd: 'narrate', text: '"Đá lăn vào suối — cầu đá xuất hiện!"', duration: 2500 },
+      { t: 400,  cmd: 'narrate', text: 'Đá lăn vào suối — cầu đá xuất hiện!', duration: 2500, waitForInput: false },
     ],
 
     // ============================================================
