@@ -16,13 +16,15 @@ import { CHAPTER_1 } from './js/chapters/chapter1.js';
 import { CHAPTER_2 } from './js/chapters/chapter2.js';
 import { CHAPTER_3 } from './js/chapters/chapter3.js';
 import { CHAPTER_4 } from './js/chapters/chapter4.js';
+import { CHAPTER_5 } from './js/chapters/chapter5.js';
 
 const CHAPTERS = {
   1: CHAPTER_1,
   2: CHAPTER_2,
   3: CHAPTER_3,
   4: CHAPTER_4,
-  // 5-8 will be added later
+  5: CHAPTER_5,
+  // 6-8 will be added later
 };
 
 class Game {
