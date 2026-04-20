@@ -21,26 +21,26 @@ export const STATE = {
 const POSE_TABLE = {
   choe: {
     idle:  { frames: ['choe_idle_side'],                                     dur: 999999 },
-    walk:  { frames: ['choe_idle_side', 'choe_walking_side'],                dur: 220 },
-    run:   { frames: ['choe_walking_side', 'choe_running_side'],             dur: 130 },
+    walk:  { frames: ['choe_idle_side', 'choe_walking_side'],                dur: 140 },
+    run:   { frames: ['choe_walking_side', 'choe_running_side'],             dur: 90 },
     jump:  { frames: ['choe_jumping'],                                       dur: 999999 },
-    land:  { frames: ['choe_landing'],                                       dur: 160 },
+    land:  { frames: ['choe_landing'],                                       dur: 180 },
     skill: { frames: ['choe_pushing_rock'],                                  dur: 999999 },
   },
   cucu: {
     idle:  { frames: ['cucu_idle_side'],                                     dur: 999999 },
-    walk:  { frames: ['cucu_idle_side', 'cucu_walking_side'],                dur: 220 },
-    run:   { frames: ['cucu_walking_side', 'cucu_running_side'],             dur: 130 },
+    walk:  { frames: ['cucu_idle_side', 'cucu_walking_side'],                dur: 140 },
+    run:   { frames: ['cucu_walking_side', 'cucu_running_side'],             dur: 90 },
     jump:  { frames: ['cucu_double_jump'],                                   dur: 999999 },
-    land:  { frames: ['cucu_landing'],                                       dur: 160 },
+    land:  { frames: ['cucu_landing'],                                       dur: 180 },
     skill: { frames: ['cucu_double_jump'],                                   dur: 999999 },
   },
   chien: {
     idle:  { frames: ['chien_idle_side'],                                    dur: 999999 },
-    walk:  { frames: ['chien_idle_side', 'chien_walking_side'],              dur: 220 },
-    run:   { frames: ['chien_walking_side', 'chien_running_side'],           dur: 130 },
+    walk:  { frames: ['chien_idle_side', 'chien_walking_side'],              dur: 140 },
+    run:   { frames: ['chien_walking_side', 'chien_running_side'],           dur: 90 },
     jump:  { frames: ['chien_jumping'],                                      dur: 999999 },
-    land:  { frames: ['chien_jumping'],                                      dur: 160 },
+    land:  { frames: ['chien_idle_side'],                                    dur: 180 },
     skill: { frames: ['chien_shrunk_tiny'],                                  dur: 999999 },
   },
 };
@@ -247,14 +247,24 @@ export class Character {
     }
     const anchor = this.assets.getAnchor(key);
 
-    // Scale sprite so its rendered height = this.height
-    const scale = (this.height / img.height) * this.scale;
-    const w = img.width * scale;
-    const h = img.height * scale;
+    // Squash/stretch: landing compresses, jumping upward stretches slightly
+    let squashX = 1, squashY = 1;
+    if (this.state === STATE.LAND && this.stateTimer < 0.12) {
+      const t = 1 - this.stateTimer / 0.12;
+      squashX = 1 + t * 0.18;
+      squashY = 1 - t * 0.20;
+    } else if (this.state === STATE.JUMP && this.vy < -300) {
+      squashX = 0.92;
+      squashY = 1.08;
+    }
 
-    // Breathing bob (subtle) when idle
+    const baseScale = (this.height / img.height) * this.scale;
+    const w = img.width * baseScale * squashX;
+    const h = img.height * baseScale * squashY;
+
+    // Breathing bob when idle
     const bob = (this.state === STATE.IDLE)
-      ? Math.sin(this.idlePhase) * 1.5
+      ? Math.sin(this.idlePhase) * 2.5
       : 0;
 
     // Anchor: draw so that (anchor.x * w, anchor.y * h) of image = (this.x, this.y)
@@ -273,7 +283,6 @@ export class Character {
 
     ctx.save();
     if (this.facing < 0) {
-      // Flip horizontally around drawX + w/2
       ctx.translate(drawX + w / 2, drawY);
       ctx.scale(-1, 1);
       ctx.drawImage(img, -w / 2, 0, w, h);
