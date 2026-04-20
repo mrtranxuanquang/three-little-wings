@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#2d3a2f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="Three Little Wings — Ba anh em vượt rừng. Một câu chuyện nhỏ dành tặng Khôi Vĩ, Khôi Nguyên và Khôi Trí." />
+  <title>Three Little Wings — Ba Anh Em Vượt Rừng</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #1a1f1c;
+      font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+      color: #f5ead0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+      overscroll-behavior: none;
+      touch-action: none;
+    }
+
+    #stage {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0c0f0d;
+    }
+
+    #game-canvas {
+      display: block;
+      background: #000;
+      image-rendering: auto;
+      box-shadow: 0 0 60px rgba(0,0,0,0.6);
+    }
+
+    /* Rotate-device hint for portrait mobile */
+    #rotate-hint {
+      position: fixed;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #1a1f1c;
+      color: #f5ead0;
+      text-align: center;
+      padding: 2rem;
+      z-index: 100;
+    }
+    #rotate-hint .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: rotate-pulse 2s ease-in-out infinite;
+    }
+    #rotate-hint h2 {
+      margin: 0.5rem 0;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    #rotate-hint p {
+      margin: 0.5rem 0;
+      opacity: 0.7;
+      font-size: 0.95rem;
+    }
+    @keyframes rotate-pulse {
+      0%,100% { transform: rotate(0deg); }
+      50% { transform: rotate(90deg); }
+    }
+
+    /* Only force rotate on small screens in portrait (phones) */
+    @media (max-width: 900px) and (orientation: portrait) {
+      #rotate-hint { display: flex; }
+    }
+
+    /* Loading splash (before JS takes over) */
+    #boot-splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #1a1f1c;
+      color: #f5ead0;
+      z-index: 50;
+      transition: opacity 0.5s ease-out;
+    }
+    #boot-splash.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #boot-splash .title {
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+    #boot-splash .subtitle {
+      font-weight: 400;
+      font-size: 1rem;
+      opacity: 0.7;
+      margin-bottom: 2rem;
+    }
+    #boot-splash .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(245, 234, 208, 0.15);
+      border-top-color: #d4a574;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <canvas id="game-canvas"></canvas>
+  </div>
+
+  <div id="rotate-hint">
+    <div class="icon">📱</div>
+    <h2>Xoay ngang máy để chơi</h2>
+    <p>Three Little Wings được thiết kế cho màn hình ngang.</p>
+  </div>
+
+  <div id="boot-splash">
+    <div class="title">Three Little Wings</div>
+    <div class="subtitle">Ba Anh Em Vượt Rừng</div>
+    <div class="spinner"></div>
+  </div>
+
+  <script type="module" src="game.js"></script>
+  <script>
+    // Register service worker (non-blocking)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
