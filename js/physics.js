@@ -32,14 +32,15 @@ export function updateBody(body, platforms, groundY, dt) {
     body.onGround = true;
   }
 
-  // Platform collisions (one-way: only from above, simple)
-  // Treat body as a point at feet (body.x, body.y)
+  // Platform collisions (one-way: only from above)
+  // Use 80% of body width so edge landings feel accurate but not too forgiving
   if (body.vy >= 0) {
+    const halfW = (body.w || 0) * 0.4;
     for (const p of platforms) {
       const feetY = body.y;
       const prevFeetY = feetY - body.vy * dt;
       if (
-        body.x >= p.x && body.x <= p.x + p.w &&
+        body.x + halfW >= p.x && body.x - halfW <= p.x + p.w &&
         prevFeetY <= p.y + 2 && feetY >= p.y && feetY <= p.y + p.h + 8
       ) {
         body.y = p.y;

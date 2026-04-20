@@ -66,7 +66,7 @@ export const CONFIG = {
 
 // Viewport/camera parameters
 export const CAMERA = {
-  LERP: 0.10,          // camera smoothly chases target
+  LERP: 0.13,          // camera smoothly chases target (0.10 → 0.13: snappier without jarring)
   DEADZONE_X: 200,     // px the leader can move before camera follows
   LOOK_AHEAD: 120,     // camera biases slightly toward movement direction
 };

@@ -179,6 +179,14 @@ export class Character {
 
     if (moveDir !== 0) this.facing = moveDir;
 
+    // Auto-jump: if leader is significantly above and follower is on ground, jump.
+    // This lets followers climb platforms without getting stuck below the leader.
+    if (this.onGround && target.y < this.y - 60 && dist < 400) {
+      this.vy = CONFIG.JUMP_VELOCITY;
+      this.onGround = false;
+      this.coyoteTimer = 0;
+    }
+
     const phys = updateBody(this, platforms, CONFIG.GROUND_Y, dt);
 
     // State

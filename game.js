@@ -200,6 +200,10 @@ class Game {
     ctx.setTransform(this.scale * this.dpr, 0, 0, this.scale * this.dpr,
                      this.offsetX * this.dpr, this.offsetY * this.dpr);
 
+    // High-quality image scaling for illustrated sprites and backgrounds
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
     if (this.scene) this.scene.draw(ctx);
   }
 

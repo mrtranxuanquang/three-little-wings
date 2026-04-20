@@ -1,7 +1,7 @@
 // Three Little Wings — Service Worker
 // Caches shell + assets for offline play
 
-const CACHE_NAME = 'tlw-v2.2-2026-04-20-ch1ch2fix';
+const CACHE_NAME = 'tlw-v2.3-2026-04-20-engine-opt';
 const SHELL = [
   './',
   './index.html',
