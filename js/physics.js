@@ -2,13 +2,35 @@
 
 import { CONFIG } from './config.js';
 
+// Max physics sub-step size (recommended by game-engine skill: fixed timestep principle).
+// Prevents fast-falling bodies from tunneling through thin platforms when dt spikes.
+const MAX_PHYSICS_STEP = 1 / 60;
+
 /**
  * Update a character body against platforms.
  *  body: { x, y, vx, vy, w, h, onGround, coyoteTimer, jumpBuffer }
  *  platforms: [{x,y,w,h}] — static AABB
  *  groundY: world y where flat ground is
+ *
+ * Sub-steps when dt > 16ms so collision remains stable at any frame rate.
  */
 export function updateBody(body, platforms, groundY, dt) {
+  if (dt <= MAX_PHYSICS_STEP) {
+    return _step(body, platforms, groundY, dt);
+  }
+
+  // Break large dt into fixed-size sub-steps
+  let remaining = dt;
+  const result = { landed: false };
+  while (remaining > 0) {
+    const subDt = Math.min(remaining, MAX_PHYSICS_STEP);
+    if (_step(body, platforms, groundY, subDt).landed) result.landed = true;
+    remaining -= subDt;
+  }
+  return result;
+}
+
+function _step(body, platforms, groundY, dt) {
   // Apply gravity
   body.vy += CONFIG.GRAVITY * dt;
 
