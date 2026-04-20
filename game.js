@@ -11,6 +11,7 @@ import { MainMenuScene } from './js/scenes/mainmenu.js';
 import { GameplayScene } from './js/scenes/gameplay.js';
 import { ChapterEndScene } from './js/scenes/chapter-end.js';
 import { DemoEndScene } from './js/scenes/demo-end.js';
+import { CreditsScene } from './js/scenes/credits.js';
 
 import { CHAPTER_1 } from './js/chapters/chapter1.js';
 import { CHAPTER_2 } from './js/chapters/chapter2.js';
@@ -153,6 +154,11 @@ class Game {
 
   async showDemoEnd() {
     await this._switchTo(new DemoEndScene(this));
+    Input.setTouchButtons([]);
+  }
+
+  async showCredits() {
+    await this._switchTo(new CreditsScene(this));
     Input.setTouchButtons([]);
   }
 

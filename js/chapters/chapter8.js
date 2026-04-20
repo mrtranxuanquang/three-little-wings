@@ -1,107 +1,128 @@
-// Three Little Wings — Chapter 8: Ngủ Ngoan
+// Three Little Wings — Chapter 8: Về Nhà
 //
-// Chương cuối. Ba anh em vào phòng ngủ, đếm sao trước khi ngủ.
-// Bố đắp mền, kể chuyện, chúc ngủ ngoan.
-// Khi ba ngôi sao được đếm đủ — đèn tắt, mọi thứ yên tĩnh.
-// THE END.
+// Bình minh. Trời sáng rồi. Nhà mình kìa!
+// Run home — chạy qua tất cả những nơi đã đi.
+// Bố Quang đứng trước cửa, quỳ xuống mở rộng 2 tay.
+// Một câu duy nhất bằng giọng thật của bố. Credits.
 
 import { CONFIG } from '../config.js';
 
 export const CHAPTER_8 = {
   number: 8,
   id: 'ch8',
-  title: 'Ngủ Ngoan',
-  background: 'bg_ch8_phongngu',
-  bgm: 'bgm_ch8_lullaby',
-  worldWidth: 1400,
+  title: 'Về Nhà',
+  background: 'bg_ch8_venha',
+  bgm: 'bgm_ch8_venha',
+  worldWidth: 3200,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 140, leader: 'chien' },
+  spawn: { x: 200, leader: 'chien' },
 
   platforms: [],
 
   npcs: [
-    { id: 'bo', x: 1100, facing: -1 },
+    { id: 'bo', x: 2950, facing: -1 },
   ],
 
-  // Ba ngôi sao ngoài cửa sổ — đếm trước khi ngủ
-  collectibles: [
-    { type: 'starflower', x: 360,  y: 840 },
-    { type: 'starflower', x: 660,  y: 840 },
-    { type: 'starflower', x: 960,  y: 840 },
-  ],
+  collectibles: [],
 
   triggers: [
-    { id: 'intro',         type: 'onEnter',   x: 0,   once: true, event: 'intro_ch8' },
-    { id: 'by_bed',        type: 'onEnter',   x: 480, w: 120, once: true, event: 'bo_tucks_in' },
-    { id: 'stars_counted', type: 'onCollect', count: 3, once: true, event: 'lullaby_goodnight' },
+    { id: 'intro',   type: 'onEnter', x: 0,    once: true, event: 'intro_ch8' },
+    { id: 'run',     type: 'onEnter', x: 380,  w: 80, once: true, event: 'run_home' },
+    { id: 'arrival', type: 'onEnter', x: 2750, w: 100, once: true, event: 'arrive_home' },
   ],
 
   events: {
     // ============================================================
-    // INTRO Ch8: vào phòng ngủ
+    // INTRO Ch8: bình minh, 3 bé tỉnh dậy
     // ============================================================
     intro_ch8: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charPose',     char: 'chien', sprite: 'chien_idle_side' },
-      { t: 0,    cmd: 'charPose',     char: 'cucu',  sprite: 'cucu_idle_side' },
-      { t: 0,    cmd: 'charPose',     char: 'choe',  sprite: 'choe_standing_watching' },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 160 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 260 },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 360 },
-      { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
-      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 280 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 180 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 380 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 0,    cmd: 'charPose', char: 'choe',  sprite: 'choe_against_tree' },
+      { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },
+      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_yawning_sleepy' },
+      { t: 0,    cmd: 'setVignette', alpha: 0.9 },
+      { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.2 },
 
-      { t: 500,  cmd: 'narrate', text: 'Phòng ngủ quen thuộc. Ba tấm chăn nhỏ xếp ngay ngắn, cửa sổ hé mở đón gió đêm mát rượi...', duration: 5000 },
-      { t: 5800, cmd: 'say', char: 'chien', text: 'Mệt quá... nhưng hôm nay vui thiệt là vui!', duration: 2800, waitForInput: false },
-      { t: 8800, cmd: 'say', char: 'bo',    text: 'Trước khi ngủ, đếm sao đi. Hôm nay bầu trời đẹp lắm.', duration: 3200 },
+      { t: 1500, cmd: 'narrate', text: 'Tiếng chim hót... Ánh sáng vàng của bình minh xuyên qua tán cây...', duration: 5000, waitForInput: false },
 
-      { t: 12200, cmd: 'charState', char: 'chien', state: 'idle' },
-      { t: 12200, cmd: 'charState', char: 'cucu',  state: 'idle' },
-      { t: 12200, cmd: 'charState', char: 'choe',  state: 'idle' },
-      { t: 12400, cmd: 'releaseInput' },
-      { t: 12600, cmd: 'narrate', text: '💡 Đếm đủ ba ngôi sao rồi đi ngủ nhé!', duration: 3500, tutorial: true, waitForInput: false },
+      { t: 5500, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
+      { t: 5800, cmd: 'say', char: 'chien', text: 'Anh ơi! Anh ơi! Trời sáng rồi!', duration: 2500, waitForInput: false },
+      { t: 8500, cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 8500, cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 8500, cmd: 'charState', char: 'chien', state: 'idle' },
+      { t: 8800, cmd: 'say', char: 'cucu',  text: 'Nhà mình! Nhà mình kìa!', duration: 2500, waitForInput: false },
+
+      { t: 11600, cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 11600, cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 11600, cmd: 'charState', char: 'chien', state: 'idle' },
+      { t: 11600, cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 11600, cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 11600, cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 11800, cmd: 'releaseInput' },
     ],
 
     // ============================================================
-    // Bố đắp mền, chúc ngủ ngoan từng đứa
+    // Chạy về nhà — music swells
     // ============================================================
-    bo_tucks_in: [
-      { t: 0,    cmd: 'say', char: 'bo',    text: 'Nằm xuống đi các con. Hôm nay đi xa về, mệt rồi.', duration: 3000, waitForInput: false },
-      { t: 3200, cmd: 'say', char: 'cucu',  text: 'Bố ơi... kể chuyện cho con nghe được không?', duration: 2500, waitForInput: false },
-      { t: 5900, cmd: 'say', char: 'bo',    text: 'Được chứ. Đếm sao xong là bố kể.', duration: 2200, waitForInput: false },
+    run_home: [
+      { t: 0,   cmd: 'narrate', text: 'Ba anh em cùng chạy về nhà. Không có thoại. Chỉ có tiếng chim và gió.', duration: 4500, waitForInput: false },
     ],
 
     // ============================================================
-    // Ba sao đủ — chúc ngủ ngoan + lullaby + THE END
+    // Đến nhà — Bố đang đứng chờ
     // ============================================================
-    lullaby_goodnight: [
+    arrive_home: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 920 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 1000 },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 1080 },
-      { t: 0,    cmd: 'faceChar', char: 'chien', dir: -1 },
-      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: -1 },
-      { t: 0,    cmd: 'faceChar', char: 'choe',  dir: -1 },
-      { t: 0,    cmd: 'faceChar', char: 'bo',    dir: -1 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 2820 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 2720 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 2920 },
+      { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 0,    cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
+      { t: 0,    cmd: 'charPose', char: 'bo', sprite: 'bo_kneeling_arms_open' },
 
-      { t: 500,  cmd: 'say', char: 'chien', text: 'Một, hai, ba! Đủ rồi Bố ơi! Kể chuyện đi!', duration: 2800 },
-      { t: 3500, cmd: 'say', char: 'bo',    text: 'Ngày xửa ngày xưa, có ba anh em chim nhỏ sống trong khu rừng...', duration: 4000 },
-      { t: 7700, cmd: 'say', char: 'cucu',  text: '...Là tụi mình hả Bố?', duration: 2000 },
-      { t: 9900, cmd: 'say', char: 'bo',    text: 'Ừ, là tụi con. Ba chú chim nhỏ dũng cảm, yêu thương nhau, và luôn tìm được đường về nhà.', duration: 5000 },
+      // Bố không nói một lời — chỉ quỳ xuống, mở rộng 2 tay
+      { t: 800,  cmd: 'narrate', text: 'Bố thấy 3 con. Không nói một lời. Bố quỳ xuống. Mở rộng 2 tay.', duration: 4500, waitForInput: false },
 
-      // Chúc ngủ ngoan
-      { t: 15200, cmd: 'say', char: 'chien', text: 'Ngủ ngon anh Chòe! Ngủ ngon anh Cúc Cu!', duration: 2800 },
-      { t: 18200, cmd: 'say', char: 'cucu',  text: 'Ngủ ngon Chiền Chiện. Ngủ ngon anh Chòe.', duration: 2500 },
-      { t: 20900, cmd: 'say', char: 'choe',  text: 'Ngủ ngon hai em. Ngủ ngon Bố.', duration: 2500 },
-      { t: 23600, cmd: 'say', char: 'bo',    text: 'Ngủ ngon các con. Bố yêu các con nhiều lắm.', duration: 3500 },
+      // 3 bé lao vào ôm bố
+      { t: 5500, cmd: 'attachChars', child: 'chien', parent: 'bo' },
+      { t: 5500, cmd: 'attachChars', child: 'cucu',  parent: 'bo' },
+      { t: 5500, cmd: 'attachChars', child: 'choe',  parent: 'bo' },
+      { t: 5500, cmd: 'charPose', char: 'bo',    sprite: 'bo_hands_clasped_emotional' },
+      { t: 5500, cmd: 'charPose', char: 'chien', sprite: 'chien_clinging_scared' },
+      { t: 5500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder' },
+      { t: 5500, cmd: 'charPose', char: 'choe',  sprite: 'choe_relieved_kneeling' },
 
-      // Lời cuối
-      { t: 27500, cmd: 'narrate', text: '"Anh em phải luôn yêu thương nhau."', duration: 4000, waitForInput: false },
-      { t: 32500, cmd: 'narrate', text: 'Đêm xuống. Tiếng thở đều đều của ba anh em hoà vào tiếng gió nhẹ ngoài cửa sổ...', duration: 5000, waitForInput: true },
+      // 5 giây im lặng. Không có thoại. Music dịu xuống.
+      { t: 11000, cmd: 'narrate', text: '...', duration: 2000, waitForInput: false },
 
-      { t: 38500, cmd: 'gameComplete' },
+      // Giọng thật của Bố Quang — câu duy nhất
+      { t: 14000, cmd: 'sfx', sfx: 'sfx_bo_voice' },
+      { t: 14000, cmd: 'say', char: 'bo', text: '"Về nhà rồi. Bố rất tự hào vì các con đã đoàn kết, bảo vệ và yêu thương nhau."', duration: 6500, waitForInput: false },
+
+      // 3 bé nhìn bố — rồi mỉm cười
+      { t: 21200, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
+      { t: 21200, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },
+      { t: 21200, cmd: 'charPose', char: 'choe',  sprite: 'choe_sighing_smile' },
+
+      // Fade to white
+      { t: 24500, cmd: 'animateVignette', to: 1.0, speed: 0.4 },
+
+      // Chữ "Anh em phải bảo vệ và yêu thương nhau..."
+      { t: 26800, cmd: 'narrate', text: 'Anh em phải bảo vệ và yêu thương nhau...', duration: 6000, waitForInput: false },
+
+      // Sang Credits
+      { t: 34000, cmd: 'goToCredits' },
     ],
   },
 };

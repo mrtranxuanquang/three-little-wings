@@ -1,124 +1,148 @@
-// Three Little Wings — Chapter 6: Về Nhà
+// Three Little Wings — Chapter 6: Vách Núi
 //
-// Ba anh em về đến nhà, gặp Bố Quang đang đứng chờ trước cửa.
-// Đây là chương cảm xúc nhất — đoàn tụ gia đình.
-// Bố Quang lần đầu xuất hiện trong game như một NPC.
+// Chòe cõng Chiền Chiện trèo lên vách núi cao.
+// Cúc Cu đứng dưới giữ dây.
+// Chòe trượt giữa đường — cánh tay Cúc Cu cứu cả hai.
+// Từ đỉnh, lần đầu nhìn thấy ánh đèn nhà từ xa.
 
 import { CONFIG } from '../config.js';
 
 export const CHAPTER_6 = {
   number: 6,
   id: 'ch6',
-  title: 'Về Nhà',
-  background: 'bg_ch6_venhà',
-  bgm: 'bgm_ch6_home',
-  worldWidth: 2400,
+  title: 'Vách Núi',
+  background: 'bg_ch6_vachnui',
+  bgm: 'bgm_ch6_vachnui',
+  worldWidth: 2800,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 180, leader: 'choe' },
+  spawn: { x: 200, leader: 'choe' },
 
-  // Đường về nhà — ngắn, nhẹ nhàng
+  // Climbing ledges — step up from ground to summit
   platforms: [
-    { x: 480,  y: 860, w: 200, h: 30 },
-    { x: 780,  y: 840, w: 180, h: 30 },
-    { x: 1160, y: 860, w: 200, h: 30 },
+    { x: 420,  y: 820, w: 200, h: 30 },
+    { x: 680,  y: 740, w: 180, h: 30 },
+    { x: 940,  y: 660, w: 180, h: 30 },
+    { x: 1200, y: 570, w: 200, h: 30 },
+    { x: 1480, y: 480, w: 180, h: 30 },
+    { x: 1740, y: 390, w: 200, h: 30 },
+    { x: 2020, y: 310, w: 220, h: 30 },   // summit
   ],
 
-  // Bố Quang đứng chờ trước cửa nhà
-  npcs: [
-    { id: 'bo', x: 2100, facing: -1 },
-  ],
-
-  collectibles: [
-    { type: 'flower', x: 560,  y: 760 },
-    { type: 'flower', x: 1240, y: 760 },
-  ],
+  collectibles: [],
 
   triggers: [
-    { id: 'intro',      type: 'onEnter', x: 0,    once: true, event: 'intro_ch6' },
-    { id: 'bo_appears', type: 'onEnter', x: 900,  w: 100, once: true, event: 'bo_calls_out' },
-    { id: 'reunion',    type: 'onEnter', x: 1700, w: 100, once: true, event: 'reunion_scene' },
-    { id: 'ending',     type: 'onEnter', x: 2200, w: 80,  once: true, event: 'ending_ch6' },
+    { id: 'intro',     type: 'onEnter', x: 0,    once: true, event: 'intro_ch6' },
+    { id: 'slip',      type: 'onEnter', x: 1100, w: 100, once: true, event: 'choe_slips' },
+    { id: 'summit',    type: 'onEnter', x: 2000, w: 120, once: true, event: 'reach_summit' },
+    { id: 'ending',    type: 'onEnter', x: 2600, w: 100, once: true, event: 'ending_ch6' },
   ],
 
   events: {
     // ============================================================
-    // INTRO Ch6: bước vào sân nhà
+    // INTRO Ch6: trước vách núi
     // ============================================================
     intro_ch6: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charPose',     char: 'choe',  sprite: 'choe_standing_watching' },
-      { t: 0,    cmd: 'charPose',     char: 'cucu',  sprite: 'cucu_idle_side' },
-      { t: 0,    cmd: 'charPose',     char: 'chien', sprite: 'chien_wonder_awestruck' },
       { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 220 },
       { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 130 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 330 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 320 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 0,    cmd: 'charPose', char: 'choe',  sprite: 'choe_standing_watching' },
+      { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_idle_side' },
+      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_clinging_scared' },
 
-      { t: 500,  cmd: 'narrate', text: 'Cánh cổng nhà quen thuộc hiện ra. Tim ba anh em đập thình thịch...', duration: 4500 },
-      { t: 5300, cmd: 'say', char: 'chien', text: 'Nhà mình rồi thiệt rồi! Em nhớ cái cổng này!', duration: 2500, waitForInput: false },
-      { t: 8000, cmd: 'charState', char: 'choe',  state: 'idle' },
-      { t: 8000, cmd: 'charState', char: 'cucu',  state: 'idle' },
-      { t: 8000, cmd: 'charState', char: 'chien', state: 'idle' },
-      { t: 8200, cmd: 'releaseInput' },
+      { t: 600,  cmd: 'say', char: 'choe',  text: 'Vách núi cao thế này... Chiền Chiện chắc không trèo được đâu.', duration: 3000 },
+      { t: 3800, cmd: 'charPose', char: 'chien', sprite: 'chien_yelling_defiant' },
+      { t: 3900, cmd: 'say', char: 'chien', text: 'Em trèo được! Em khỏe mà!', duration: 2000 },
+      { t: 6100, cmd: 'charPose', char: 'choe', sprite: 'choe_sighing_smile' },
+      { t: 6200, cmd: 'say', char: 'choe',  text: 'Thôi để anh cõng em. Cúc Cu giữ dây dưới này cho anh.', duration: 3000 },
+      { t: 9400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_pulling_rope' },
+      { t: 9500, cmd: 'say', char: 'cucu',  text: 'OK anh! Em sẽ giữ chắc!', duration: 2000 },
+
+      // Piggyback: chien on choe's back
+      { t: 11800, cmd: 'piggybackAttach', child: 'chien', parent: 'choe', yOffset: -90 },
+      { t: 11800, cmd: 'lockCharSwitch' },
+      { t: 11800, cmd: 'setLeader', char: 'choe' },
+      { t: 12000, cmd: 'charPose', char: 'chien', sprite: 'chien_clinging_scared' },
+
+      { t: 12200, cmd: 'narrate', text: '💡 Chòe cõng Chiền Chiện! Điều khiển Chòe trèo lên vách núi.', duration: 4000, tutorial: true, waitForInput: false },
+      { t: 12400, cmd: 'charState', char: 'choe', state: 'idle' },
+      { t: 12600, cmd: 'releaseInput' },
     ],
 
     // ============================================================
-    // Bố Quang nhìn thấy và gọi ra
+    // Giữa vách — Chòe trượt
     // ============================================================
-    bo_calls_out: [
-      { t: 0,   cmd: 'say', char: 'bo', text: 'Chích Chòe! Cúc Cu! Chiền Chiện! Các con về rồi!', duration: 3500, waitForInput: false },
-      { t: 3800, cmd: 'say', char: 'chien', text: 'Bố ơi!!!', duration: 1500, waitForInput: false },
-      { t: 5500, cmd: 'say', char: 'cucu',  text: 'Bố! Bố! Con về rồi!', duration: 2000, waitForInput: false },
-    ],
-
-    // ============================================================
-    // Đoàn tụ — ba anh em chạy đến bên Bố
-    // ============================================================
-    reunion_scene: [
+    choe_slips: [
       { t: 0,    cmd: 'freezeInput' },
+      { t: 0,    cmd: 'charPose', char: 'choe',  sprite: 'choe_slipping' },
+      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_clinging_scared' },
+      { t: 0,    cmd: 'cameraShake', amount: 22 },
+      { t: 0,    cmd: 'sfx', sfx: 'sfx_rock_land' },
 
-      // Ba anh em chạy đến
-      { t: 0,    cmd: 'moveChar', char: 'choe',  toX: 1980, speed: 'run' },
-      { t: 100,  cmd: 'moveChar', char: 'cucu',  toX: 2020, speed: 'run' },
-      { t: 200,  cmd: 'moveChar', char: 'chien', toX: 2060, speed: 'run' },
-
-      // Bố bước ra đón
-      { t: 0,    cmd: 'moveChar', char: 'bo',    toX: 1920, speed: 'walk' },
-
-      { t: 2800, cmd: 'cameraShake', amount: 4 },
-
-      { t: 3200, cmd: 'say', char: 'bo', text: 'Bố lo lắng quá... Các con có bị thương không?', duration: 3000 },
-      { t: 6400, cmd: 'say', char: 'choe', text: 'Không ạ, ba anh em đều ổn. Con xin lỗi Bố.', duration: 2800 },
-      { t: 9400, cmd: 'say', char: 'bo',   text: 'Không sao. Bố vui vì các con về an toàn. Kể bố nghe đi — đi đâu mà lâu vậy?', duration: 4000 },
-      { t: 13600, cmd: 'say', char: 'chien', text: 'Dài lắm Bố ơi! Có suối, có hang tối, có rừng hoa nữa!', duration: 3000 },
-      { t: 16800, cmd: 'say', char: 'bo',   text: 'Thật à! Vào nhà đi, Bố nấu cơm rồi, kể bố nghe từ đầu nhé.', duration: 3500 },
-
-      { t: 20500, cmd: 'charState', char: 'choe',  state: 'idle' },
-      { t: 20500, cmd: 'charState', char: 'cucu',  state: 'idle' },
-      { t: 20500, cmd: 'charState', char: 'chien', state: 'idle' },
-      { t: 20500, cmd: 'charState', char: 'bo',    state: 'idle' },
-      { t: 20700, cmd: 'releaseInput' },
+      { t: 600,  cmd: 'say', char: 'cucu',  text: 'ANH CÓ SAO KHÔNG?!', duration: 1800, waitForInput: false },
+      { t: 2600, cmd: 'charPose', char: 'choe',  sprite: 'choe_climbing' },
+      { t: 2700, cmd: 'say', char: 'choe',  text: 'Ổn! Em giữ chắc lắm!', duration: 2000, waitForInput: false },
+      { t: 5000, cmd: 'say', char: 'chien', text: 'Anh Chòe ơi... em sợ... em không dám nhìn...', duration: 3000 },
+      { t: 8300, cmd: 'say', char: 'choe',  text: 'Không sao đâu. Có anh và anh Cúc Cu đây. Em mở mắt ra nhìn lên trời đi. Trời đẹp lắm.', duration: 4500 },
+      { t: 13100, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
+      { t: 13200, cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 13400, cmd: 'releaseInput' },
     ],
 
     // ============================================================
-    // ENDING Ch6: bước vào nhà
+    // Đỉnh vách — nhìn thấy nhà từ xa
+    // ============================================================
+    reach_summit: [
+      { t: 0,    cmd: 'freezeInput' },
+      { t: 0,    cmd: 'piggybackDetach', child: 'chien' },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 2070, y: 310 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 1960, y: 310 },
+      { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_idle_side' },
+      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
+
+      { t: 600,  cmd: 'say', char: 'chien', text: 'Anh Chòe ơi, cảm ơn anh đã cõng em.', duration: 2800 },
+      { t: 3600, cmd: 'say', char: 'choe',  text: 'Em nhẹ hều mà. Nhưng may mà có Cúc Cu giữ dây không thì anh đã rơi rồi.', duration: 3500 },
+      { t: 7400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_by_fire_warm' },
+      { t: 7500, cmd: 'say', char: 'cucu',  text: 'Anh em mình, phối hợp là vượt qua hết.', duration: 2800 },
+
+      { t: 10700, cmd: 'say', char: 'chien', text: 'Kia có phải nhà mình không anh?', duration: 2800 },
+      { t: 13700, cmd: 'say', char: 'choe',  text: 'Uhm, đúng rồi. Nhưng còn xa lắm... Anh em mình cùng đi tiếp nào!', duration: 3500 },
+      { t: 17500, cmd: 'narrate', text: 'Từ đỉnh vách núi, ba anh em lần đầu thấy ánh đèn nhà xa xa...', duration: 4000, waitForInput: false },
+
+      { t: 21800, cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 21800, cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 21800, cmd: 'charState', char: 'chien', state: 'idle' },
+      { t: 21800, cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 21800, cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 21800, cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 21800, cmd: 'unlockCharSwitch' },
+      { t: 22000, cmd: 'releaseInput' },
+    ],
+
+    // ============================================================
+    // ENDING Ch6
     // ============================================================
     ending_ch6: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 2220 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 2160 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 2280 },
-      { t: 0,    cmd: 'charTeleport', char: 'bo',    x: 2320 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 2660 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 2560 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 2760 },
+      { t: 0,    cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
-      { t: 0,    cmd: 'faceChar', char: 'bo',    dir: 1 },
 
-      { t: 500,  cmd: 'narrate', text: 'Bốn cha con bước vào nhà. Ánh đèn vàng ấm, mùi cơm thơm, tiếng cười vang lên...', duration: 5000, waitForInput: true },
-      { t: 6200, cmd: 'showTransition', title: 'Chương 6 — Về Nhà', next: 7 },
+      { t: 500,  cmd: 'narrate', text: 'Ba anh em xuống núi. Nhà đã gần hơn. Chỉ một đêm nữa thôi...', duration: 5000, waitForInput: true },
+      { t: 6300, cmd: 'showTransition', title: 'Chương 6 — Vách Núi', next: 7 },
     ],
   },
 };

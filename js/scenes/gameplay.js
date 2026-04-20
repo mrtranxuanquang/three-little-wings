@@ -34,6 +34,23 @@ export class GameplayScene {
 
     // Input lock (cutscenes, forced movement)
     this.inputLocked = false;
+    this.charSwitchLocked = false;
+
+    // Cave walk mode
+    this.caveWalkMode = false;
+
+    // Visual overlays
+    this.vignetteAlpha = 0;
+    this._vignetteTarget = undefined;
+    this._vignetteSpeed = 0.5;
+
+    // Background override (null = use chapter default)
+    this.currentBgKey = null;
+
+    // Heartbeat synthesizer
+    this._heartbeatActive = false;
+    this._heartbeatTimer = null;
+    this._heartbeatBpm = 60;
 
     // UI state
     this.collectedCount = 0;
@@ -73,6 +90,14 @@ export class GameplayScene {
     this.dynamicPlatforms = (ch.dynamicPlatforms || []).map(p => ({ ...p, visible: p.visible ?? false }));
     this.charAttachments = {};
 
+    // Reset engine state
+    this.charSwitchLocked = false;
+    this.caveWalkMode = false;
+    this.vignetteAlpha = 0;
+    this._vignetteTarget = undefined;
+    this.currentBgKey = null;
+    this._stopHeartbeat();
+
     // Start BGM
     if (ch.bgm) this.game.audio.playBgm(`audio/${ch.bgm}.mp3`, { fadeMs: 2000 });
 
@@ -87,6 +112,7 @@ export class GameplayScene {
   async exit() {
     this.dialog.clear();
     this.cutscenePlayer.stop();
+    this._stopHeartbeat();
   }
 
   update(dt) {
@@ -128,8 +154,25 @@ export class GameplayScene {
       return;
     }
 
+    // Cave walk mode — all 3 walk together, hold SPACE to advance
+    if (this.caveWalkMode) {
+      this._updateCaveWalk(dt);
+      return;
+    }
+
+    // Vignette animation
+    if (this._vignetteTarget !== undefined) {
+      const diff = this._vignetteTarget - this.vignetteAlpha;
+      if (Math.abs(diff) < 0.005) {
+        this.vignetteAlpha = this._vignetteTarget;
+        this._vignetteTarget = undefined;
+      } else {
+        this.vignetteAlpha += Math.sign(diff) * (this._vignetteSpeed || 0.5) * dt;
+      }
+    }
+
     // Character switching
-    if (!this.inputLocked) {
+    if (!this.inputLocked && !this.charSwitchLocked) {
       if (Input.consumePressed('switch1')) this._switchLeader('choe');
       if (Input.consumePressed('switch2')) this._switchLeader('cucu');
       if (Input.consumePressed('switch3')) this._switchLeader('chien');
@@ -180,14 +223,17 @@ export class GameplayScene {
       offset += -offsetSign * CONFIG.FOLLOW_DISTANCE * 0.55;
     }
 
-    // Attached chars (hand-holding): snap child beside parent
-    for (const [childId, parentId] of Object.entries(this.charAttachments)) {
+    // Attached chars (hand-holding OR piggyback): snap child beside/above parent
+    for (const [childId, attachment] of Object.entries(this.charAttachments)) {
       const child = this.characters[childId];
+      const parentId = typeof attachment === 'string' ? attachment : attachment.parent;
+      const yOffset  = typeof attachment === 'object' ? (attachment.yOffset || 0) : 0;
       const parent = this.characters[parentId];
       if (!child || !parent) continue;
-      const targetX = parent.x + parent.facing * -80;
-      child.x += (targetX - child.x) * Math.min(1, dt * 10);
-      child.y = parent.y;
+      const xOff = yOffset !== 0 ? 0 : parent.facing * -80; // piggyback: center on parent
+      const targetX = parent.x + xOff;
+      child.x += (targetX - child.x) * Math.min(1, dt * 12);
+      child.y = parent.y + yOffset;
       child.facing = parent.facing;
     }
 
@@ -466,6 +512,52 @@ export class GameplayScene {
         this.chapterComplete = true;
         setTimeout(() => this.game.showDemoEnd(), cmd.delay || 300);
         break;
+      case 'goToCredits':
+        this.chapterComplete = true;
+        setTimeout(() => this.game.showCredits(), cmd.delay || 300);
+        break;
+      case 'lockCharSwitch':
+        this.charSwitchLocked = true;
+        break;
+      case 'unlockCharSwitch':
+        this.charSwitchLocked = false;
+        break;
+      case 'setBg':
+        this.currentBgKey = cmd.key || null;
+        break;
+      case 'setVignette':
+        this.vignetteAlpha = cmd.alpha ?? 0;
+        this._vignetteTarget = undefined;
+        break;
+      case 'animateVignette':
+        this._vignetteTarget = cmd.to ?? 0;
+        this._vignetteSpeed = cmd.speed ?? 0.5;
+        break;
+      case 'setCaveWalk':
+        this.caveWalkMode = !!cmd.on;
+        if (!cmd.on) {
+          // Restore normal idle when exiting cave walk
+          for (const id of CONFIG.CHARACTER_IDS) {
+            const c = this.characters[id];
+            if (c) { c.vx = 0; c.setState(STATE.IDLE); }
+          }
+        }
+        break;
+      case 'piggybackAttach':
+        this.charAttachments[cmd.child] = { parent: cmd.parent, yOffset: cmd.yOffset ?? -90 };
+        break;
+      case 'piggybackDetach':
+        delete this.charAttachments[cmd.child];
+        break;
+      case 'heartbeat':
+        this._startHeartbeat(cmd.bpm || 60);
+        break;
+      case 'stopHeartbeat':
+        this._stopHeartbeat();
+        break;
+      case 'setHeartbeatBpm':
+        this._heartbeatBpm = cmd.bpm || 60;
+        break;
       case 'callback':
         try { cmd.fn(this); } catch(e) { console.error(e); }
         break;
@@ -546,6 +638,17 @@ export class GameplayScene {
 
     ctx.restore();
 
+    // Vignette overlay (progressive darkness: cave, night, etc.)
+    if (this.vignetteAlpha > 0.001) {
+      const va = Math.min(1, this.vignetteAlpha);
+      const grd = ctx.createRadialGradient(W / 2, H * 0.5, H * 0.12, W / 2, H * 0.5, H * 0.88);
+      grd.addColorStop(0, 'rgba(0,0,0,0)');
+      grd.addColorStop(0.55, `rgba(0,0,0,${va * 0.35})`);
+      grd.addColorStop(1, `rgba(0,0,0,${va})`);
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, W, H);
+    }
+
     // Dialog (screen space)
     this.dialog.draw(ctx, { x: this.cameraX, y: this.cameraY }, W, H);
 
@@ -568,7 +671,7 @@ export class GameplayScene {
   }
 
   _drawBackground(ctx) {
-    const bg = this.game.assets.get(this.chapter.background);
+    const bg = this.game.assets.get(this.currentBgKey || this.chapter.background);
     if (!bg) {
       ctx.fillStyle = '#556b4e';
       ctx.fillRect(0, 0, CONFIG.LOGICAL_WIDTH, CONFIG.LOGICAL_HEIGHT);
@@ -877,6 +980,116 @@ export class GameplayScene {
     ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
     ctx.closePath();
   }
+
+  // ---- Cave Walk ------------------------------------------------
+
+  _updateCaveWalk(dt) {
+    const walking = Input.isDown('jump') || Input.isDown('skill');
+    const speed = walking ? CONFIG.WALK_SPEED * 0.42 : 0;
+    const platforms = this._getActivePlatforms();
+
+    const choe  = this.characters['choe'];
+    const cucu  = this.characters['cucu'];
+    const chien = this.characters['chien'];
+
+    if (choe) {
+      choe.vx = speed;
+      choe.facing = 1;
+      updateBody(choe, platforms, CONFIG.GROUND_Y, dt);
+      choe.x = Math.max(50, Math.min(this.chapter.worldWidth - 50, choe.x));
+      if (walking) choe.setState(STATE.WALK); else choe.setState(STATE.IDLE);
+    }
+    // Keep cucu & chien flanking choe
+    if (cucu && choe) {
+      const tx = choe.x - 90;
+      cucu.x += (tx - cucu.x) * Math.min(1, dt * 7);
+      cucu.y = CONFIG.GROUND_Y;
+      cucu.facing = 1;
+      if (walking) cucu.setState(STATE.WALK); else cucu.setState(STATE.IDLE);
+    }
+    if (chien && choe) {
+      const tx = choe.x + 90;
+      chien.x += (tx - chien.x) * Math.min(1, dt * 7);
+      chien.y = CONFIG.GROUND_Y;
+      chien.facing = 1;
+      if (walking) chien.setState(STATE.WALK); else chien.setState(STATE.IDLE);
+    }
+
+    // Camera follows choe
+    const leader = choe || this.characters[this.leaderId];
+    if (leader) {
+      const dz = CAMERA.DEADZONE_X * 0.5;
+      const targetCx = leader.x + 60;
+      const screenCx = this.cameraX + CONFIG.LOGICAL_WIDTH / 2;
+      if (targetCx > screenCx + dz) this.cameraTargetX = targetCx - dz - CONFIG.LOGICAL_WIDTH / 2;
+      this.cameraTargetX = Math.max(0, Math.min(this.chapter.worldWidth - CONFIG.LOGICAL_WIDTH, this.cameraTargetX));
+      this.cameraX += (this.cameraTargetX - this.cameraX) * CAMERA.LERP;
+    }
+
+    // Vignette animation
+    if (this._vignetteTarget !== undefined) {
+      const diff = this._vignetteTarget - this.vignetteAlpha;
+      if (Math.abs(diff) < 0.005) { this.vignetteAlpha = this._vignetteTarget; this._vignetteTarget = undefined; }
+      else this.vignetteAlpha += Math.sign(diff) * (this._vignetteSpeed || 0.5) * dt;
+    }
+
+    if (this.cameraShake > 0) this.cameraShake = Math.max(0, this.cameraShake - dt * 20);
+    for (const p of this.props) if (p.update) p.update(dt);
+    this._checkTriggers(false);
+    this.dialog.update(dt);
+    // Note: _updateInlineScript is already called at the top of update()
+  }
+
+  // ---- Heartbeat synthesizer ------------------------------------
+
+  _startHeartbeat(bpm) {
+    this._stopHeartbeat();
+    this._heartbeatActive = true;
+    this._heartbeatBpm = bpm;
+    this._scheduleNextBeat();
+  }
+
+  _scheduleNextBeat() {
+    if (!this._heartbeatActive) return;
+    const interval = 60000 / (this._heartbeatBpm || 60);
+    this._heartbeatTimer = setTimeout(() => {
+      this._playBeatSound();
+      this._scheduleNextBeat();
+    }, interval);
+  }
+
+  _playBeatSound() {
+    const audio = this.game.audio;
+    const ctx = audio._ctx || audio.ctx;
+    if (!ctx || ctx.state !== 'running') return;
+    try {
+      const now = ctx.currentTime;
+      const g1 = ctx.createGain();
+      g1.connect(ctx.destination);
+      const o1 = ctx.createOscillator();
+      o1.frequency.value = 78; o1.type = 'sine';
+      o1.connect(g1);
+      g1.gain.setValueAtTime(0, now);
+      g1.gain.linearRampToValueAtTime(0.28, now + 0.018);
+      g1.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+      o1.start(now); o1.stop(now + 0.32);
+
+      const g2 = ctx.createGain();
+      g2.connect(ctx.destination);
+      const o2 = ctx.createOscillator();
+      o2.frequency.value = 63; o2.type = 'sine';
+      o2.connect(g2);
+      g2.gain.setValueAtTime(0, now + 0.13);
+      g2.gain.linearRampToValueAtTime(0.20, now + 0.148);
+      g2.gain.exponentialRampToValueAtTime(0.001, now + 0.48);
+      o2.start(now + 0.13); o2.stop(now + 0.48);
+    } catch(e) {}
+  }
+
+  _stopHeartbeat() {
+    this._heartbeatActive = false;
+    if (this._heartbeatTimer) { clearTimeout(this._heartbeatTimer); this._heartbeatTimer = null; }
+  }
 }
 
 // ---------- Props ----------
@@ -886,6 +1099,9 @@ let _propIdCounter = 0;
 function createProp(cmd, scene) {
   if (cmd.prop === 'butterfly') return createButterfly(cmd);
   if (cmd.prop === 'boulder')   return createBoulder(cmd, scene);
+  if (cmd.prop === 'campfire')  return createCampfire(cmd);
+  if (cmd.prop === 'deerEyes')  return createDeerEyes(cmd);
+  if (cmd.prop === 'fireflies') return createFireflies(cmd);
   return { id: `p${_propIdCounter++}`, update: () => {}, draw: () => {} };
 }
 
@@ -949,6 +1165,127 @@ function createBoulder({ id, x, y, triggerX, triggerEvent }, scene) {
     }
   };
   return obj;
+}
+
+function createCampfire({ id, x, y }) {
+  return {
+    id: id || `p${_propIdCounter++}`,
+    x: x || 760, y: y || CONFIG.GROUND_Y,
+    update() {},
+    draw(ctx) {
+      const cx = this.x, cy = this.y;
+      const t = performance.now() / 1000;
+      ctx.save();
+      // Log
+      ctx.fillStyle = '#4a2e10';
+      ctx.beginPath();
+      ctx.ellipse(cx, cy - 6, 48, 12, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Flame layers (outer → inner)
+      const layers = [
+        { r: 32, h: 72, col1: 'rgba(255,90,10,', col2: 'rgba(255,0,0,0)' },
+        { r: 24, h: 55, col1: 'rgba(255,160,30,', col2: 'rgba(255,60,0,0)' },
+        { r: 14, h: 38, col1: 'rgba(255,230,80,', col2: 'rgba(255,200,0,0)' },
+      ];
+      for (let li = 0; li < layers.length; li++) {
+        const l = layers[li];
+        const flicker = Math.sin(t * 7 + li * 1.8) * 0.12 + 0.88;
+        const hw = (l.r * flicker) | 0;
+        const hh = (l.h * flicker) | 0;
+        const alpha = 0.82 - li * 0.18;
+        const grd = ctx.createRadialGradient(cx, cy - hh * 0.55, 2, cx, cy - hh * 0.3, hw * 1.2);
+        grd.addColorStop(0, l.col1 + alpha + ')');
+        grd.addColorStop(1, l.col2);
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.ellipse(cx + Math.sin(t * 3 + li) * 3, cy - hh * 0.5, hw, hh * 0.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Embers
+      for (let i = 0; i < 7; i++) {
+        const et = ((t * 0.65 + i * 0.43) % 1);
+        const ex = cx + Math.sin(t * 1.2 + i * 2.3) * 18;
+        const ey = cy - 15 - et * 100;
+        const ea = Math.max(0, 1 - et * 1.4);
+        ctx.fillStyle = `rgba(255,180,50,${ea})`;
+        ctx.beginPath();
+        ctx.arc(ex, ey, 2.2 * (1 - et * 0.8), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    },
+  };
+}
+
+function createDeerEyes({ id, x, y }) {
+  let blinkTimer = 0, blinking = false;
+  return {
+    id: id || `p${_propIdCounter++}`,
+    x: x || 2600, y: y || CONFIG.GROUND_Y - 120,
+    update(dt) {
+      blinkTimer += dt;
+      if (!blinking && blinkTimer > 2.2) { blinking = true; blinkTimer = 0; }
+      if (blinking && blinkTimer > 0.14) { blinking = false; blinkTimer = 0; }
+    },
+    draw(ctx) {
+      const spacing = 38, r = 9;
+      for (let i = 0; i < 2; i++) {
+        const ex = this.x + (i === 0 ? -spacing / 2 : spacing / 2);
+        const ey = this.y;
+        if (!blinking) {
+          const grd = ctx.createRadialGradient(ex, ey, 0, ex, ey, r * 2.8);
+          grd.addColorStop(0, 'rgba(255,70,30,0.95)');
+          grd.addColorStop(1, 'rgba(200,0,0,0)');
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.arc(ex, ey, r * 2.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#ff4418';
+          ctx.beginPath();
+          ctx.ellipse(ex, ey, r, r * 0.55, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    },
+  };
+}
+
+function createFireflies({ id, count = 35 }) {
+  const flies = Array.from({ length: count }, (_, i) => ({
+    wx: 2800 + Math.random() * 1200,
+    wy: CONFIG.GROUND_Y - 80 - Math.random() * 380,
+    phase: Math.random() * Math.PI * 2,
+    speed: 18 + Math.random() * 28,
+    dir: Math.random() * Math.PI * 2,
+  }));
+  return {
+    id: id || `p${_propIdCounter++}`,
+    update(dt) {
+      for (const f of flies) {
+        f.phase += dt * 1.8;
+        f.wx += Math.cos(f.dir) * f.speed * dt;
+        f.wy += Math.sin(f.dir) * f.speed * dt * 0.25;
+        f.wy = Math.max(CONFIG.GROUND_Y - 480, Math.min(CONFIG.GROUND_Y - 60, f.wy));
+        if (Math.random() < 0.008) f.dir += (Math.random() - 0.5) * 0.6;
+      }
+    },
+    draw(ctx) {
+      for (const f of flies) {
+        const a = (Math.sin(f.phase) * 0.42 + 0.58);
+        const grd = ctx.createRadialGradient(f.wx, f.wy, 0, f.wx, f.wy, 11);
+        grd.addColorStop(0, `rgba(190,255,80,${a})`);
+        grd.addColorStop(1, 'rgba(180,255,50,0)');
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.arc(f.wx, f.wy, 11, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgba(240,255,180,${a * 0.9})`;
+        ctx.beginPath();
+        ctx.arc(f.wx, f.wy, 2.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    },
+  };
 }
 
 function createButterfly({ id, from, to, duration = 5000, color = '#4a9fd4' }) {

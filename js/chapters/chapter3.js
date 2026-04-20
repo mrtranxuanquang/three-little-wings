@@ -1,9 +1,9 @@
 // Three Little Wings — Chapter 3: Rừng Hoa
 //
-// Skill: Cúc Cu có double-jump (bấm Space hai lần) → nhảy lên cao
-// hái hoa chỉ đường giúp ba anh em tìm lối ra khỏi rừng hoa.
-// Emotion: Chiền Chiện mê mẩn hoa, Chòe kiên nhẫn dẫn dắt,
-//           Cúc Cu tự tin dùng sức mạnh riêng của mình.
+// Breathing room. Không có kẻ thù, không có nguy hiểm.
+// 5 bông hoa đặc biệt phát sáng để thu thập.
+// Khoảnh khắc snack dưới bóng cây cổ thụ.
+// Rừng trước mặt ngày càng tối dần — báo hiệu cho Ch4.
 
 import { CONFIG } from '../config.js';
 
@@ -13,120 +13,135 @@ export const CHAPTER_3 = {
   title: 'Rừng Hoa',
   background: 'bg_ch3_runghoa',
   bgm: 'bgm_ch3_flowers',
-  worldWidth: 4200,
+  worldWidth: 2600,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 200, leader: 'cucu' },
+  spawn: { x: 200, leader: 'choe' },
 
-  // Mixed heights: low (single-jump) → high (double-jump needed)
-  platforms: [
-    // Warm-up — single jump comfortable
-    { x: 680,  y: 820, w: 220, h: 30 },
-    { x: 1020, y: 780, w: 180, h: 30 },
-
-    // High section — Cúc Cu cần double-jump
-    { x: 1340, y: 680, w: 180, h: 30 },
-    { x: 1600, y: 640, w: 160, h: 30 },   // đỉnh: starflower ở đây
-    { x: 1880, y: 700, w: 180, h: 30 },
-
-    // Xuống dần
-    { x: 2180, y: 800, w: 200, h: 30 },
-    { x: 2480, y: 820, w: 220, h: 30 },
-
-    // Đoạn cuối rừng
-    { x: 2900, y: 760, w: 160, h: 30 },
-    { x: 3200, y: 800, w: 200, h: 30 },
-  ],
+  platforms: [],
 
   collectibles: [
-    { type: 'flower',     x: 780,  y: 720 },   // trên đầu nền tảng đầu
-    { type: 'starflower', x: 1680, y: 540 },   // đỉnh cao nhất — cần double-jump
-    { type: 'flower',     x: 2560, y: 720 },   // mid-section
-    { type: 'starflower', x: 3280, y: 700 },   // gần lối ra
+    { type: 'flower',     x: 420,  y: CONFIG.GROUND_Y - 80 },
+    { type: 'flower',     x: 780,  y: CONFIG.GROUND_Y - 80 },
+    { type: 'starflower', x: 1200, y: CONFIG.GROUND_Y - 80 },
+    { type: 'flower',     x: 1700, y: CONFIG.GROUND_Y - 80 },
+    { type: 'starflower', x: 2200, y: CONFIG.GROUND_Y - 80 },
   ],
 
   triggers: [
-    { id: 'intro',         type: 'onEnter', x: 0,    once: true, event: 'intro_ch3' },
-    { id: 'tut_jump2',     type: 'onEnter', x: 600,  w: 100, once: true, event: 'tutorial_double_jump' },
-    { id: 'cucu_spots',    type: 'onEnter', x: 1280, w: 100, once: true, event: 'cucu_spots_path' },
-    { id: 'near_exit',     type: 'onEnter', x: 3150, w: 100, once: true, event: 'near_exit_comment' },
-    { id: 'ending',        type: 'onEnter', x: 3800, w: 80,  once: true, event: 'ending_ch3' },
+    { id: 'intro',       type: 'onEnter', x: 0,    once: true, event: 'intro_ch3' },
+    { id: 'butterfly',   type: 'onEnter', x: 350,  w: 80, once: true, event: 'butterfly_swarm' },
+    { id: 'snack',       type: 'onEnter', x: 1050, w: 100, once: true, event: 'snack_scene' },
+    { id: 'darkening',   type: 'onEnter', x: 2050, w: 100, once: true, event: 'forest_darkens' },
+    { id: 'ending',      type: 'onEnter', x: 2450, w: 80,  once: true, event: 'ending_ch3' },
   ],
 
   events: {
     // ============================================================
-    // INTRO Ch3: vào rừng hoa
+    // INTRO Ch3: vào cánh đồng hoa
     // ============================================================
     intro_ch3: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charPose',    char: 'cucu',  sprite: 'cucu_idle_side' },
-      { t: 0,    cmd: 'charPose',    char: 'choe',  sprite: 'choe_standing_watching' },
-      { t: 0,    cmd: 'charPose',    char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 240 },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 140 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 360 },
-      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'charPose',     char: 'chien', sprite: 'chien_wonder_awestruck' },
+      { t: 0,    cmd: 'charPose',     char: 'cucu',  sprite: 'cucu_idle_side' },
+      { t: 0,    cmd: 'charPose',     char: 'choe',  sprite: 'choe_standing_watching' },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 200 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 310 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 420 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
 
-      { t: 500,  cmd: 'narrate', text: 'Rừng hoa trải dài trước mắt, hương thơm ngào ngạt. Nhưng mọi lối đi nhìn đâu cũng giống nhau...', duration: 5000 },
+      { t: 600,  cmd: 'say', char: 'chien', text: 'WOOOW! Đẹp quá các anh ơi!', duration: 2200, waitForInput: false },
+      { t: 3000, cmd: 'charState', char: 'chien', state: 'idle' },
+      { t: 3100, cmd: 'say', char: 'cucu',  text: 'Hoa ở đâu cũng có... mình không bị lạc chứ?', duration: 2800, waitForInput: false },
+      { t: 6200, cmd: 'say', char: 'choe',  text: 'Không. Mình đi qua đây rồi tới rừng sâu phía trước.', duration: 3000 },
 
-      { t: 6000, cmd: 'say', char: 'chien', text: 'Ôi đẹp quá! Hoa ở khắp nơi luôn anh ơi!', duration: 2500, waitForInput: false },
-      { t: 8700, cmd: 'say', char: 'choe',  text: 'Đẹp thật — nhưng mình đang lạc đường rồi đây.', duration: 2800 },
-      { t: 11700, cmd: 'say', char: 'cucu', text: 'Để em leo lên cao nhìn thử! Em nhảy cao mà!', duration: 2500 },
-
-      { t: 14400, cmd: 'charState', char: 'cucu',  state: 'idle' },
-      { t: 14400, cmd: 'charState', char: 'choe',  state: 'idle' },
-      { t: 14400, cmd: 'charState', char: 'chien', state: 'idle' },
-      { t: 14600, cmd: 'releaseInput' },
+      { t: 9500, cmd: 'narrate', text: 'Cánh đồng hoa trải dài trước mắt, hương thơm ngào ngạt...', duration: 4000, waitForInput: false },
+      { t: 9800, cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 9800, cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 9800, cmd: 'charState', char: 'chien', state: 'idle' },
+      { t: 10000, cmd: 'releaseInput' },
     ],
 
     // ============================================================
-    // Tutorial: double-jump
+    // Bướm bay theo
     // ============================================================
-    tutorial_double_jump: [
-      { t: 0, cmd: 'narrate', text: '💡 Cúc Cu có thể nhảy hai lần! Nhảy lên rồi bấm Space thêm lần nữa để lên cao hơn!', duration: 5500, tutorial: true, waitForInput: false },
+    butterfly_swarm: [
+      { t: 0,   cmd: 'spawnProp', prop: 'butterfly', id: 'b1', from: [380, 700], to: [600, 500], duration: 6000, color: '#6ad4f5' },
+      { t: 400, cmd: 'spawnProp', prop: 'butterfly', id: 'b2', from: [430, 750], to: [700, 450], duration: 5500, color: '#f9a8d4' },
+      { t: 800, cmd: 'spawnProp', prop: 'butterfly', id: 'b3', from: [500, 680], to: [550, 420], duration: 7000, color: '#86efac' },
     ],
 
     // ============================================================
-    // Cúc Cu nhận ra cần nhìn từ trên cao
+    // Khoảnh khắc snack dưới cây
     // ============================================================
-    cucu_spots_path: [
-      { t: 0,    cmd: 'say', char: 'choe', text: 'Cúc Cu, nhảy lên hái bông hoa sáng kia — nó chỉ đường đó!', duration: 3200, waitForInput: false },
-      { t: 3400, cmd: 'say', char: 'cucu', text: 'Ừ! Anh tin em đi!', duration: 1800, waitForInput: false },
+    snack_scene: [
+      { t: 0,    cmd: 'freezeInput' },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 1130 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 1020 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 1250 },
+      { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'chien', dir: -1 },
+      { t: 0,    cmd: 'charPose', char: 'choe',  sprite: 'choe_opening_bag' },
+      { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_attentive_listening' },
+      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_offering_candy' },
+
+      { t: 500,  cmd: 'say', char: 'choe',  text: 'Nghỉ chút đã. Anh mang snack theo này.', duration: 2500 },
+      { t: 3200, cmd: 'charPose', char: 'cucu', sprite: 'cucu_eating_snack' },
+      { t: 3300, cmd: 'say', char: 'cucu',  text: 'Có bánh quy không anh Chòe? Em đói rồi.', duration: 2500 },
+      { t: 6000, cmd: 'say', char: 'choe',  text: 'Có chứ. Cho em 2 cái.', duration: 1800 },
+      { t: 8000, cmd: 'say', char: 'chien', text: 'Em có kẹo mút này! Em chia cho các anh!', duration: 2500 },
+      { t: 10700, cmd: 'say', char: 'choe', text: 'Em ăn đi, anh ăn snack đây rồi.', duration: 2200 },
+
+      { t: 13200, cmd: 'charPose', char: 'chien', sprite: 'chien_melancholy_sitting' },
+      { t: 13500, cmd: 'say', char: 'chien', text: 'Anh Chòe ơi... Chừng nào mình mới về được nhà?', duration: 3200, waitForInput: false },
+      { t: 17000, cmd: 'charPose', char: 'choe',  sprite: 'choe_standing_watching' },
+      { t: 17200, cmd: 'say', char: 'choe',  text: 'Sắp rồi. Anh nghĩ không còn xa lắm đâu.', duration: 3000 },
+
+      { t: 20500, cmd: 'narrate', text: 'Nhưng mắt Chòe không chắc lắm — chỉ có người chơi thấy.', duration: 4000, waitForInput: false },
+
+      { t: 24800, cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 24800, cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 24800, cmd: 'charState', char: 'chien', state: 'idle' },
+      { t: 24800, cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 24800, cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 24800, cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 25000, cmd: 'releaseInput' },
     ],
 
     // ============================================================
-    // Gần lối ra: Chiền Chiện thấy ánh sáng
+    // Rừng phía trước tối dần
     // ============================================================
-    near_exit_comment: [
-      { t: 0,   cmd: 'say', char: 'chien', text: 'Cuối rừng rồi! Em thấy ánh sáng kìa!', duration: 2500, waitForInput: false },
-      { t: 2700, cmd: 'say', char: 'cucu', text: 'Đúng rồi, mình sắp ra khỏi rừng hoa rồi!', duration: 2500, waitForInput: false },
+    forest_darkens: [
+      { t: 0,    cmd: 'animateVignette', to: 0.25, speed: 0.08 },
+      { t: 500,  cmd: 'narrate', text: 'Mặt trời đã xuống thấp. Rừng phía trước tối dần...', duration: 4000, waitForInput: false },
     ],
 
     // ============================================================
-    // ENDING Ch3: ra khỏi rừng hoa
+    // ENDING Ch3
     // ============================================================
     ending_ch3: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 3860 },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 3750 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 3960 },
-      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 2490 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 2380 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 2580 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
-      { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 0,    cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
 
-      { t: 500,  cmd: 'say', char: 'chien', text: 'Ra rồi! Em hít thở được rồi... hoa thơm quá mũi em!', duration: 2800 },
-      { t: 3500, cmd: 'say', char: 'cucu',  text: 'Nhờ hoa chỉ đường mình mới ra được. Cảm ơn rừng hoa!', duration: 2800 },
-      { t: 6500, cmd: 'charPose', char: 'choe', sprite: 'choe_pointing_direction' },
-      { t: 6700, cmd: 'say', char: 'choe',  text: 'Giỏi lắm Cúc Cu. Phía trước là vùng núi — Chòe dẫn đường tiếp.', duration: 3500 },
+      { t: 500,  cmd: 'say', char: 'chien', text: 'Ra rồi! Anh ơi, em hít thở được rồi... hoa thơm quá mũi em!', duration: 3000 },
+      { t: 3700, cmd: 'say', char: 'cucu',  text: 'Cảm ơn rừng hoa. Nhưng phía trước trông... tối hơn nhiều đó.', duration: 3000 },
+      { t: 6900, cmd: 'charPose', char: 'choe', sprite: 'choe_pointing_direction' },
+      { t: 7100, cmd: 'say', char: 'choe',  text: 'Đúng. Đó là rừng sâu. Mình phải qua đó mới về được nhà.', duration: 3500 },
 
-      { t: 10400, cmd: 'narrate', text: 'Ba anh em bước ra khỏi rừng hoa, lòng nhẹ bẫng như cánh hoa bay...', duration: 4000, waitForInput: true },
+      { t: 10900, cmd: 'narrate', text: 'Ba anh em tiếp tục đi. Rừng trước mặt ngày càng rậm rạp...', duration: 4000, waitForInput: true },
 
-      { t: 15000, cmd: 'showTransition', title: 'Chương 3 — Rừng Hoa', next: 4 },
+      { t: 15200, cmd: 'showTransition', title: 'Chương 3 — Rừng Hoa', next: 4 },
     ],
   },
 };

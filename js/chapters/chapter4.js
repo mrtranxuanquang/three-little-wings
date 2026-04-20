@@ -1,154 +1,170 @@
-// Three Little Wings — Chapter 4: Hang Núi
+// Three Little Wings — Chapter 4: Rừng Sâu
 //
-// Skill: Chiền Chiện nhỏ bé và không sợ bóng tối → dẫn đường trong hang.
-// Mechanic: thu thập 3 viên đá phát sáng (glowstone) → 3 bục đá sáng xuất hiện
-//           mở đường qua đoạn hang tối.
-// Emotion: Chòe lo lắng, Cúc Cu sợ bóng tối,
-//           Chiền Chiện tự tin dùng sức mạnh của riêng mình.
+// "Em không cần anh nữa!" — Chiền Chiện giận, bỏ chạy vào rừng.
+// Người chơi chỉ điều khiển Cúc Cu chạy theo em.
+// Cành cây gãy — Cúc Cu lao vào cứu Chiền Chiện.
+// Hối hận, ôm nhau, tha thứ. Chòe ôm cả hai.
 
 import { CONFIG } from '../config.js';
 
 export const CHAPTER_4 = {
   number: 4,
   id: 'ch4',
-  title: 'Hang Núi',
-  background: 'bg_ch4_hangnui',
-  bgm: 'bgm_ch4_cave',
-  worldWidth: 3800,
+  title: 'Rừng Sâu',
+  background: 'bg_ch4_rungsau',
+  bgm: 'bgm_ch4_rungsau',
+  worldWidth: 2600,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 200, leader: 'chien' },
+  spawn: { x: 200, leader: 'cucu' },
 
-  // Irregular cave platforms
-  platforms: [
-    // Entry section
-    { x: 450,  y: 860, w: 200, h: 30 },
-    { x: 740,  y: 820, w: 170, h: 30 },
-    { x: 980,  y: 855, w: 200, h: 30 },
+  platforms: [],
 
-    // Crystal hunt — glowstones are above these platforms
-    { x: 1240, y: 800, w: 160, h: 30 },
-    { x: 1500, y: 840, w: 180, h: 30 },
-    { x: 1760, y: 800, w: 160, h: 30 },
-    { x: 2000, y: 850, w: 200, h: 30 },
-
-    // After gap — reachable via glowing stepping stones
-    { x: 2820, y: 760, w: 200, h: 30 },
-    { x: 3100, y: 820, w: 220, h: 30 },
-  ],
-
-  // Glowing stepping stones — appear when 3 crystals collected
-  dynamicPlatforms: [
-    { id: 'glow1', x: 2220, y: 800, w: 140, h: 30, visible: false, color: '#b8e8ff', glow: true },
-    { id: 'glow2', x: 2440, y: 760, w: 140, h: 30, visible: false, color: '#b8e8ff', glow: true },
-    { id: 'glow3', x: 2650, y: 800, w: 140, h: 30, visible: false, color: '#b8e8ff', glow: true },
-  ],
-
-  collectibles: [
-    { type: 'flower',     x: 520,  y: 760 },              // welcome flower
-    { type: 'starflower', x: 1290, y: 700 },              // glowstone 1
-    { type: 'starflower', x: 1840, y: 700 },              // glowstone 2
-    { type: 'starflower', x: 2060, y: 750 },              // glowstone 3 → triggers path
-  ],
+  collectibles: [],
 
   triggers: [
-    { id: 'intro',        type: 'onEnter',   x: 0,    once: true, event: 'intro_ch4' },
-    { id: 'tut_crystal',  type: 'onEnter',   x: 500,  w: 100, once: true, event: 'tutorial_crystal' },
-    { id: 'choe_worried', type: 'onEnter',   x: 1200, w: 100, once: true, event: 'choe_dark_worried' },
-    { id: 'path_open',    type: 'onCollect', count: 3, once: true, event: 'glowstones_appear' },
-    { id: 'near_exit',    type: 'onEnter',   x: 3200, w: 100, once: true, event: 'near_exit_ch4' },
-    { id: 'ending',       type: 'onEnter',   x: 3700, w: 80,  once: true, event: 'ending_ch4' },
+    { id: 'intro',      type: 'onEnter', x: 0,    once: true, event: 'intro_ch4' },
+    { id: 'cucu_calls', type: 'onEnter', x: 700,  w: 100, once: true, event: 'cucu_calling_run' },
+    { id: 'tai_nan',    type: 'onEnter', x: 1250, w: 100, once: true, event: 'falling_branch' },
+    { id: 'ending',     type: 'onEnter', x: 2200, w: 100, once: true, event: 'ending_ch4' },
   ],
 
   events: {
     // ============================================================
-    // INTRO Ch4: vào hang núi tối
+    // INTRO Ch4: tranh cãi, Chiền Chiện bỏ chạy
     // ============================================================
     intro_ch4: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charPose',     char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 0,    cmd: 'charPose',     char: 'choe',  sprite: 'choe_standing_watching' },
-      { t: 0,    cmd: 'charPose',     char: 'cucu',  sprite: 'cucu_idle_side' },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 240 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 140 },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 360 },
-      { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
-      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 200 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 300 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 400 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 0,    cmd: 'charPose', char: 'choe',  sprite: 'choe_standing_watching' },
+      { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_idle_side' },
+      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_idle_side' },
 
-      { t: 500,  cmd: 'narrate', text: 'Ba anh em bước vào hang núi. Bóng tối dày đặc, chỉ còn tiếng nhỏ giọt của nước đá vọng lại...', duration: 5500 },
+      { t: 500,  cmd: 'narrate', text: 'Rừng sâu. Cây cao. Hai ngã rẽ trước mặt...', duration: 3500, waitForInput: false },
+      { t: 4200, cmd: 'say', char: 'choe',  text: 'Đường nào nhỉ...', duration: 2000 },
+      { t: 6400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_calling_worried' },
+      { t: 6500, cmd: 'say', char: 'cucu',  text: 'Bên này! Em thấy có ánh sáng!', duration: 2200 },
+      { t: 8900, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
+      { t: 9000, cmd: 'say', char: 'chien', text: 'Không! Bên này! Em nghe có tiếng nước chảy!', duration: 2500 },
+      { t: 11700, cmd: 'charPose', char: 'cucu', sprite: 'cucu_angry_pointing' },
+      { t: 11800, cmd: 'say', char: 'cucu',  text: 'Chiền Chiện sai rồi. Bên này mới đúng!', duration: 2500 },
+      { t: 14500, cmd: 'charPose', char: 'chien', sprite: 'chien_yelling_defiant' },
+      { t: 14600, cmd: 'say', char: 'chien', text: 'Không phải! Nghe em đi. Đi hướng này!', duration: 2500 },
+      { t: 17300, cmd: 'say', char: 'cucu',  text: 'Em biết gì mà nói?! Em còn bé lắm, có thạo đường đâu!', duration: 3200 },
 
-      { t: 6200, cmd: 'say', char: 'cucu',  text: 'Tối quá... anh Chòe ơi em không nhìn thấy gì cả!', duration: 2800 },
-      { t: 9200, cmd: 'say', char: 'choe',  text: 'Bình tĩnh. Mình cần tìm thứ gì đó để soi đường.', duration: 2800 },
-      { t: 12200, cmd: 'say', char: 'chien', text: 'Ơi nhìn kìa! Có đá sáng! Để em dẫn đường cho!', duration: 2800 },
+      // Chiền Chiện bị tổn thương, bỏ chạy
+      { t: 20800, cmd: 'charPose', char: 'chien', sprite: 'chien_yelling_defiant' },
+      { t: 21000, cmd: 'say', char: 'chien', text: 'EM MẶC KỆ ANH! EM TỰ ĐI!', duration: 2500 },
+      { t: 23800, cmd: 'moveChar', char: 'chien', toX: 1400, speed: 'run' },
+      { t: 23800, cmd: 'faceChar', char: 'chien', dir: 1 },
 
-      { t: 15200, cmd: 'charState', char: 'chien', state: 'idle' },
-      { t: 15200, cmd: 'charState', char: 'choe',  state: 'idle' },
-      { t: 15200, cmd: 'charState', char: 'cucu',  state: 'idle' },
-      { t: 15400, cmd: 'releaseInput' },
+      // Cúc Cu đứng sững
+      { t: 24200, cmd: 'charPose', char: 'cucu', sprite: 'cucu_shocked_regret' },
+      { t: 26000, cmd: 'charPose', char: 'choe',  sprite: 'choe_sighing_smile' },
+      { t: 26200, cmd: 'say', char: 'choe',  text: '...Đuổi theo Chiền Chiện đi. Anh chạy sau không thì lạc nhau mất.', duration: 3500 },
+
+      // Lock char switch → only Cúc Cu
+      { t: 30000, cmd: 'lockCharSwitch' },
+      { t: 30000, cmd: 'setLeader', char: 'cucu' },
+      { t: 30000, cmd: 'charState', char: 'cucu', state: 'idle' },
+      { t: 30200, cmd: 'narrate', text: '💡 Cúc Cu phải chạy theo em! Chỉ điều khiển Cúc Cu.', duration: 4000, tutorial: true, waitForInput: false },
+      { t: 30400, cmd: 'releaseInput' },
     ],
 
     // ============================================================
-    // Tutorial: thu thập đá phát sáng
+    // Cúc Cu gọi Chiền Chiện khi đang chạy
     // ============================================================
-    tutorial_crystal: [
-      { t: 0, cmd: 'narrate', text: '💡 Thu thập 3 viên đá phát sáng để mở đường qua đoạn hang tối!', duration: 5000, tutorial: true, waitForInput: false },
+    cucu_calling_run: [
+      { t: 0,    cmd: 'charPose', char: 'cucu', sprite: 'cucu_running_calling' },
+      { t: 0,    cmd: 'say', char: 'cucu',  text: 'Chiền Chiện! Chiền Chiện ơi!', duration: 2200, waitForInput: false },
+      { t: 2500, cmd: 'say', char: 'cucu',  text: 'Em ơi, quay lại đi! Cho anh xin lỗi!', duration: 2800, waitForInput: false },
     ],
 
     // ============================================================
-    // Chòe lo khi vào sâu trong hang
+    // Tai nạn — cành cây gãy
     // ============================================================
-    choe_dark_worried: [
-      { t: 0,    cmd: 'say', char: 'choe',  text: 'Càng vào sâu càng tối. Chiền Chiện, em thấy đường không?', duration: 3000, waitForInput: false },
-      { t: 3200, cmd: 'say', char: 'chien', text: 'Em thấy hết mà anh! Đá sáng đâu là em đi được đó!', duration: 2800, waitForInput: false },
+    falling_branch: [
+      { t: 0,    cmd: 'freezeInput' },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 1350 },
+      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_crying_sitting' },
+      { t: 0,    cmd: 'faceChar', char: 'chien', dir: -1 },
+
+      { t: 300,  cmd: 'narrate', text: 'Tiếng nứt. "CRRRR... CRACK!"', duration: 2500, waitForInput: false },
+      { t: 800,  cmd: 'cameraShake', amount: 20 },
+      { t: 800,  cmd: 'sfx', sfx: 'sfx_rock_land' },
+
+      // Slow-mo beat — camera shake + dark flash
+      { t: 1400, cmd: 'animateVignette', to: 0.5, speed: 4 },
+      { t: 1500, cmd: 'cameraShake', amount: 14 },
+
+      // Cúc Cu lao tới cứu
+      { t: 1800, cmd: 'charPose', char: 'cucu', sprite: 'cucu_diving_save' },
+      { t: 1800, cmd: 'moveChar', char: 'cucu', toX: 1350, speed: 'run' },
+      { t: 1900, cmd: 'say', char: 'cucu',  text: 'CHIỀN CHIỆN!', duration: 1500, waitForInput: false },
+
+      // RẦMMMM
+      { t: 3500, cmd: 'cameraShake', amount: 30 },
+      { t: 3500, cmd: 'sfx', sfx: 'sfx_rock_land' },
+      { t: 3500, cmd: 'animateVignette', to: 0.0, speed: 1.2 },
+
+      // 3 giây im lặng — bụi tan dần
+      { t: 7000, cmd: 'charPose', char: 'cucu', sprite: 'cucu_shocked_regret' },
+      { t: 7000, cmd: 'charPose', char: 'chien', sprite: 'chien_crying_sitting' },
+      { t: 7000, cmd: 'charTeleport', char: 'cucu', x: 1350 },
+
+      // Khoảnh khắc hối hận
+      { t: 7500, cmd: 'say', char: 'chien', text: 'EM XIN LỖI ANH... EM TƯỞNG BỊ LẠC RỒI... EM KHÔNG DÁM BỎ ĐI MỘT MÌNH NỮA ĐÂU...', duration: 4500 },
+      { t: 12300, cmd: 'charPose', char: 'cucu', sprite: 'cucu_arm_around_shoulder' },
+      { t: 12500, cmd: 'say', char: 'cucu',  text: 'Anh cũng xin lỗi. Anh quát Chiền Chiện là anh sai. Đừng bao giờ... bỏ đi một mình nữa, nghe không?', duration: 5000 },
+      { t: 17700, cmd: 'say', char: 'chien', text: 'Vâng... vâng anh ơi...', duration: 2200 },
+
+      // Chòe chạy tới
+      { t: 20200, cmd: 'moveChar', char: 'choe', toX: 1420, speed: 'run' },
+      { t: 22000, cmd: 'charPose', char: 'choe', sprite: 'choe_relieved_kneeling' },
+      { t: 22000, cmd: 'charTeleport', char: 'choe', x: 1420 },
+      { t: 24500, cmd: 'charPose', char: 'choe', sprite: 'choe_sighing_smile' },
+      { t: 24700, cmd: 'say', char: 'choe',  text: 'Được rồi. Các em an toàn là anh mừng rồi. Đi, chúng ta đi tiếp thôi.', duration: 3500 },
+
+      // Unlock — player gets control back
+      { t: 28500, cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 28500, cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 28500, cmd: 'charState', char: 'chien', state: 'idle' },
+      { t: 28500, cmd: 'faceChar', char: 'choe',  dir: 1 },
+      { t: 28500, cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 28500, cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 28500, cmd: 'attachChars', child: 'chien', parent: 'cucu' },
+      { t: 28700, cmd: 'unlockCharSwitch' },
+      { t: 28700, cmd: 'releaseInput' },
     ],
 
     // ============================================================
-    // 3 glowstones collected → stepping stones xuất hiện
-    // ============================================================
-    glowstones_appear: [
-      { t: 0,    cmd: 'cameraShake', amount: 8 },
-      { t: 0,    cmd: 'sfx', sfx: 'sfx_rock_land' },
-      { t: 0,    cmd: 'showPlatform', id: 'glow1' },
-      { t: 250,  cmd: 'showPlatform', id: 'glow2' },
-      { t: 500,  cmd: 'showPlatform', id: 'glow3' },
-      { t: 700,  cmd: 'narrate', text: 'Đá phát sáng — những bục đá lấp lánh hiện ra giữa màn tối!', duration: 3000, waitForInput: false },
-      { t: 3900, cmd: 'say', char: 'chien', text: 'Đường sáng rồi anh ơi! Đi theo em!', duration: 2200, waitForInput: false },
-      { t: 6300, cmd: 'say', char: 'cucu',  text: 'Chiền Chiện giỏi quá! Không có em thì mình lạc rồi!', duration: 2800, waitForInput: false },
-    ],
-
-    // ============================================================
-    // Thấy ánh sáng cuối hang
-    // ============================================================
-    near_exit_ch4: [
-      { t: 0,    cmd: 'say', char: 'choe',  text: 'Nhìn kìa! Ánh sáng cuối hang rồi!', duration: 2500, waitForInput: false },
-      { t: 2700, cmd: 'say', char: 'chien', text: 'Em biết mà! Cứ đi theo em là ra thôi!', duration: 2500, waitForInput: false },
-    ],
-
-    // ============================================================
-    // ENDING Ch4: ra khỏi hang núi
+    // ENDING Ch4: ba anh em đi tiếp cùng nhau
     // ============================================================
     ending_ch4: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 3730 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 3620 },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 3850 },
-      { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
-      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'detachChars', child: 'chien' },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 2300 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 2200 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 2400 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
-      { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
-      { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
       { t: 0,    cmd: 'charState', char: 'choe',  state: 'idle' },
+      { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
+      { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
 
-      { t: 500,  cmd: 'say', char: 'choe',  text: 'Chiền Chiện giỏi lắm. Không có em, tối thế này ai dẫn được.', duration: 3200 },
-      { t: 3900, cmd: 'say', char: 'chien', text: 'Hehe, em nhỏ nên không sợ chỗ tối! Đó là sức mạnh của em!', duration: 3000 },
-      { t: 7100, cmd: 'say', char: 'cucu',  text: 'Ba anh em mình ai cũng có sức mạnh riêng nhỉ!', duration: 2800 },
-      { t: 10100, cmd: 'charPose', char: 'choe', sprite: 'choe_pointing_direction' },
-      { t: 10300, cmd: 'say', char: 'choe', text: 'Đúng vậy. Phía trước là cánh đồng — gần nhà rồi!', duration: 2800 },
-
-      { t: 13300, cmd: 'narrate', text: 'Ba anh em bước ra khỏi hang núi, ánh nắng chiều ập vào ấm áp...', duration: 4000, waitForInput: true },
-
-      { t: 18000, cmd: 'showTransition', title: 'Chương 4 — Hang Núi', next: 5 },
+      { t: 600,  cmd: 'narrate', text: 'Có những hiểu lầm làm ta lớn lên. Cúc Cu và Chiền Chiện sẽ nhớ mãi bài học này...', duration: 5000, waitForInput: false },
+      { t: 6000, cmd: 'say', char: 'chien', text: 'Anh Cúc Cu... cầm tay em đi.', duration: 2500 },
+      { t: 8700, cmd: 'attachChars', child: 'chien', parent: 'cucu' },
+      { t: 9000, cmd: 'say', char: 'cucu',  text: 'Ừ. Lần này anh không bao giờ bỏ tay em nữa.', duration: 3000 },
+      { t: 12300, cmd: 'narrate', text: 'Chiền Chiện cầm tay Cúc Cu thật chặt — không bao giờ muốn buông nữa.', duration: 4000, waitForInput: true },
+      { t: 16600, cmd: 'detachChars', child: 'chien' },
+      { t: 16800, cmd: 'showTransition', title: 'Chương 4 — Rừng Sâu', next: 5 },
     ],
   },
 };
