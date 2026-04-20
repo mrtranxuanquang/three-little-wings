@@ -1,7 +1,7 @@
 // Three Little Wings — Service Worker
 // Caches shell + assets for offline play
 
-const CACHE_NAME = 'tlw-v1.8-2026-04-20-ch7';
+const CACHE_NAME = 'tlw-v1.9-2026-04-20-ch8';
 const SHELL = [
   './',
   './index.html',
@@ -27,6 +27,7 @@ const SHELL = [
   './js/chapters/chapter5.js',
   './js/chapters/chapter6.js',
   './js/chapters/chapter7.js',
+  './js/chapters/chapter8.js',
 ];
 
 self.addEventListener('install', (event) => {

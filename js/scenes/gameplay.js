@@ -462,6 +462,10 @@ export class GameplayScene {
         this.chapterComplete = true;
         setTimeout(() => this.game.showChapterEnd(cmd.title, cmd.next), cmd.delay || 300);
         break;
+      case 'gameComplete':
+        this.chapterComplete = true;
+        setTimeout(() => this.game.showDemoEnd(), cmd.delay || 300);
+        break;
       case 'callback':
         try { cmd.fn(this); } catch(e) { console.error(e); }
         break;
