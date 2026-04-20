@@ -489,12 +489,24 @@ export class GameplayScene {
       for (const p of this._getActivePlatforms()) ctx.fillRect(p.x, p.y, p.w, p.h);
     }
 
-    // Dynamic platforms (stone bridge style)
+    // Dynamic platforms (stone bridge style; supports color + glow)
     for (const p of this.dynamicPlatforms) {
       if (!p.visible) continue;
       ctx.save();
-      ctx.fillStyle = '#8a7a68';
-      ctx.strokeStyle = '#4a3a28';
+      const baseColor = p.color || '#8a7a68';
+      const rimColor  = p.color ? '#3a6888' : '#4a3a28';
+      if (p.glow) {
+        const grd = ctx.createRadialGradient(
+          p.x + p.w / 2, p.y - p.h / 2, 4,
+          p.x + p.w / 2, p.y - p.h / 2, p.w * 0.75
+        );
+        grd.addColorStop(0, 'rgba(160,220,255,0.55)');
+        grd.addColorStop(1, 'rgba(160,220,255,0)');
+        ctx.fillStyle = grd;
+        ctx.fillRect(p.x - 20, p.y - p.h - 20, p.w + 40, p.h + 40);
+      }
+      ctx.fillStyle = baseColor;
+      ctx.strokeStyle = rimColor;
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.roundRect(p.x, p.y - p.h, p.w, p.h, 6);
