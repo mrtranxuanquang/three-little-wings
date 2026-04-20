@@ -70,6 +70,8 @@ export const CHAPTER_1 = {
     // INTRO: Chiền Chiện chases butterfly, Cúc Cu calls, Chòe follows
     // ============================================================
     intro_scene: [
+      { t: 0,     cmd: 'setVignette', alpha: 0.9 },
+      { t: 0,     cmd: 'animateVignette', to: 0, speed: 0.3 },
       { t: 0,     cmd: 'freezeInput' },
       { t: 0,     cmd: 'charPose', char: 'choe',  sprite: 'choe_standing_watching' },
       { t: 0,     cmd: 'charPose', char: 'cucu',  sprite: 'cucu_idle_side' },
@@ -154,10 +156,9 @@ export const CHAPTER_1 = {
       { t: 6200, cmd: 'charPose', char: 'choe', sprite: 'choe_pointing_direction' },
       { t: 6500, cmd: 'say', char: 'choe', text: 'Theo suối đi. Nước chảy về đâu, mình về đó.', duration: 3500 },
 
-      { t: 10500, cmd: 'narrate', text: 'Và thế là hành trình bắt đầu...', duration: 3500, waitForInput: true },
-
-      // Transition to chapter end screen
-      { t: 14500, cmd: 'showTransition', title: 'Chương 1 — Bìa Rừng', next: 2 },
+      { t: 10500, cmd: 'narrate', text: 'Và thế là hành trình bắt đầu...', duration: 3500, waitForInput: false },
+      { t: 14500, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
+      { t: 17500, cmd: 'showTransition', title: 'Chương 1 — Bìa Rừng', next: 2 },
     ],
   },
 };

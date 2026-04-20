@@ -38,6 +38,8 @@ export const CHAPTER_5 = {
     // INTRO: 3 bé đứng trước miệng hang
     // ============================================================
     intro_ch5: [
+      { t: 0,    cmd: 'setVignette', alpha: 0.85 },
+      { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.35 },
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 250 },
       { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 150 },
@@ -73,6 +75,11 @@ export const CHAPTER_5 = {
       { t: 0,    cmd: 'setCaveWalk', on: true },
       { t: 0,    cmd: 'heartbeat', bpm: 58 },
       { t: 0,    cmd: 'animateVignette', to: 0.15, speed: 0.12 },
+      // Heartbeat chỉ 5-7 giây rồi dừng, sau đó hiện mắt nai từ xa
+      { t: 5000, cmd: 'setHeartbeatBpm', bpm: 82 },
+      { t: 7000, cmd: 'stopHeartbeat' },
+      { t: 7200, cmd: 'animateVignette', to: 0.72, speed: 0.06 },
+      { t: 7500, cmd: 'spawnProp', prop: 'deerEyes', id: 'deer1', x: 2600 },
     ],
 
     // ============================================================
@@ -87,8 +94,7 @@ export const CHAPTER_5 = {
     // Mắt đỏ xuất hiện ở xa
     // ============================================================
     deer_eyes_appear: [
-      { t: 0,   cmd: 'spawnProp', prop: 'deerEyes', id: 'deer1', x: 2600 },
-      { t: 0,   cmd: 'setHeartbeatBpm', bpm: 82 },
+      // Mắt nai đã xuất hiện từ enter_cave sau 7.5s heartbeat
       { t: 0,   cmd: 'animateVignette', to: 0.88, speed: 0.1 },
       { t: 800, cmd: 'freezeInput' },
       { t: 800, cmd: 'setCaveWalk', on: false },
@@ -182,8 +188,9 @@ export const CHAPTER_5 = {
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
 
       { t: 500,  cmd: 'say', char: 'choe',  text: 'Trời tối rồi. Mình cần nghỉ ngơi rồi đi tiếp.', duration: 2800 },
-      { t: 3500, cmd: 'narrate', text: 'Ba anh em nhìn lên trời. Sao đêm bắt đầu mọc. Đom đóm lấp lánh khắp nơi...', duration: 5000, waitForInput: true },
-      { t: 9000, cmd: 'showTransition', title: 'Chương 5 — Hang Tối', next: 6 },
+      { t: 3500, cmd: 'narrate', text: 'Ba anh em nhìn lên trời. Sao đêm bắt đầu mọc. Đom đóm lấp lánh khắp nơi...', duration: 5000, waitForInput: false },
+      { t: 9500, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
+      { t: 12500, cmd: 'showTransition', title: 'Chương 5 — Hang Tối', next: 6 },
     ],
   },
 };

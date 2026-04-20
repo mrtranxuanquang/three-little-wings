@@ -41,6 +41,8 @@ export const CHAPTER_3 = {
     // INTRO Ch3: vào cánh đồng hoa
     // ============================================================
     intro_ch3: [
+      { t: 0,    cmd: 'setVignette', alpha: 0.9 },
+      { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.3 },
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charPose',     char: 'chien', sprite: 'chien_wonder_awestruck' },
       { t: 0,    cmd: 'charPose',     char: 'cucu',  sprite: 'cucu_idle_side' },
@@ -139,8 +141,8 @@ export const CHAPTER_3 = {
       { t: 6900, cmd: 'charPose', char: 'choe', sprite: 'choe_pointing_direction' },
       { t: 7100, cmd: 'say', char: 'choe',  text: 'Đúng. Đó là rừng sâu. Mình phải qua đó mới về được nhà.', duration: 3500 },
 
-      { t: 10900, cmd: 'narrate', text: 'Ba anh em tiếp tục đi. Rừng trước mặt ngày càng rậm rạp...', duration: 4000, waitForInput: true },
-
+      { t: 10900, cmd: 'narrate', text: 'Ba anh em tiếp tục đi. Rừng trước mặt ngày càng rậm rạp...', duration: 4000, waitForInput: false },
+      { t: 11400, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
       { t: 15200, cmd: 'showTransition', title: 'Chương 3 — Rừng Hoa', next: 4 },
     ],
   },

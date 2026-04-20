@@ -42,6 +42,8 @@ export const CHAPTER_2 = {
     // INTRO Ch2: pick up from Ch1 ending
     // ============================================================
     intro_ch2: [
+      { t: 0,    cmd: 'setVignette', alpha: 0.9 },
+      { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.3 },
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charPose',    char: 'choe',  sprite: 'choe_standing_watching' },
       { t: 0,    cmd: 'charPose',    char: 'cucu',  sprite: 'cucu_idle_side' },
@@ -116,7 +118,8 @@ export const CHAPTER_2 = {
       { t: 500,  cmd: 'say', char: 'chien', text: 'Qua được rồi! Cảm ơn anh Cúc Cu!', duration: 2200 },
       { t: 2900, cmd: 'say', char: 'cucu',  text: 'Nhớ lần sau không được chạy xa nữa nhé!', duration: 2500 },
       { t: 5600, cmd: 'say', char: 'choe',  text: 'Đi tiếp nào. Rừng hoa ở phía trước.', duration: 2200 },
-      { t: 8000, cmd: 'narrate', text: 'Ba anh em cùng bước, tiếng suối dần nhỏ lại phía sau...', duration: 3500, waitForInput: true },
+      { t: 8000, cmd: 'narrate', text: 'Ba anh em cùng bước, tiếng suối dần nhỏ lại phía sau...', duration: 3500, waitForInput: false },
+      { t: 8500, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
       { t: 12000, cmd: 'showTransition', title: 'Chương 2 — Suối Đá', next: 3 },
     ],
   },

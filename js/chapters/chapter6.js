@@ -18,6 +18,9 @@ export const CHAPTER_6 = {
 
   spawn: { x: 200, leader: 'choe' },
 
+  // Cúc Cu giữ dây bên dưới — đặt ở chân vách núi, không trèo lên
+  cucuBaseX: 320,
+
   // Climbing ledges — step up from ground to summit
   platforms: [
     { x: 420,  y: 820, w: 200, h: 30 },
@@ -43,6 +46,8 @@ export const CHAPTER_6 = {
     // INTRO Ch6: trước vách núi
     // ============================================================
     intro_ch6: [
+      { t: 0,    cmd: 'setVignette', alpha: 0.85 },
+      { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.35 },
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 220 },
       { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 130 },
@@ -62,11 +67,16 @@ export const CHAPTER_6 = {
       { t: 9400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_pulling_rope' },
       { t: 9500, cmd: 'say', char: 'cucu',  text: 'OK anh! Em sẽ giữ chắc!', duration: 2000 },
 
-      // Piggyback: chien on choe's back
-      { t: 11800, cmd: 'piggybackAttach', child: 'chien', parent: 'choe', yOffset: -90 },
+      // Piggyback: chien ẩn vào choe (dùng hình cõng), chỉ còn Cúc Cu và Chòe (cõng Chiền Chiện)
+      { t: 11800, cmd: 'piggybackAttach', child: 'chien', parent: 'choe', yOffset: -260 },
+      { t: 11800, cmd: 'hideChar', char: 'chien' },        // chien ẩn, thấy qua pose của choe
+      { t: 11800, cmd: 'charPose', char: 'choe', sprite: 'choe_climbing' }, // climbing = cõng
+      // Cucu giữ nguyên ở chân vách — khóa follower AI
+      { t: 11800, cmd: 'lockFollower', char: 'cucu' },
+      { t: 11800, cmd: 'charTeleport', char: 'cucu', x: 320 },
+      { t: 11800, cmd: 'charPose', char: 'cucu', sprite: 'cucu_pulling_rope' },
       { t: 11800, cmd: 'lockCharSwitch' },
       { t: 11800, cmd: 'setLeader', char: 'choe' },
-      { t: 12000, cmd: 'charPose', char: 'chien', sprite: 'chien_clinging_scared' },
 
       { t: 12200, cmd: 'narrate', text: '💡 Chòe cõng Chiền Chiện! Điều khiển Chòe trèo lên vách núi.', duration: 4000, tutorial: true, waitForInput: false },
       { t: 12400, cmd: 'charState', char: 'choe', state: 'idle' },
@@ -99,6 +109,8 @@ export const CHAPTER_6 = {
     reach_summit: [
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'piggybackDetach', child: 'chien' },
+      { t: 0,    cmd: 'showChar', char: 'chien' },          // chien hiện ra ở đỉnh núi
+      { t: 0,    cmd: 'unlockFollower', char: 'cucu' },     // cucu có thể di chuyển lại
       { t: 0,    cmd: 'charTeleport', char: 'chien', x: 2070, y: 310 },
       { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 1960, y: 310 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
@@ -141,8 +153,9 @@ export const CHAPTER_6 = {
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
 
-      { t: 500,  cmd: 'narrate', text: 'Ba anh em xuống núi. Nhà đã gần hơn. Chỉ một đêm nữa thôi...', duration: 5000, waitForInput: true },
-      { t: 6300, cmd: 'showTransition', title: 'Chương 6 — Vách Núi', next: 7 },
+      { t: 500,  cmd: 'narrate', text: 'Ba anh em xuống núi. Nhà đã gần hơn. Chỉ một đêm nữa thôi...', duration: 5000, waitForInput: false },
+      { t: 6500, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
+      { t: 9500, cmd: 'showTransition', title: 'Chương 6 — Vách Núi', next: 7 },
     ],
   },
 };

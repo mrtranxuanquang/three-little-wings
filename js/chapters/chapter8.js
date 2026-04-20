@@ -28,7 +28,7 @@ export const CHAPTER_8 = {
 
   triggers: [
     { id: 'intro',   type: 'onEnter', x: 0,    once: true, event: 'intro_ch8' },
-    { id: 'run',     type: 'onEnter', x: 380,  w: 80, once: true, event: 'run_home' },
+    { id: 'run',     type: 'onEnter', x: 620,  w: 80, once: true, event: 'run_home' },
     { id: 'arrival', type: 'onEnter', x: 2750, w: 100, once: true, event: 'arrive_home' },
   ],
 
@@ -40,7 +40,7 @@ export const CHAPTER_8 = {
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 280 },
       { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 180 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 380 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 310 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
@@ -72,6 +72,7 @@ export const CHAPTER_8 = {
     // Chạy về nhà — music swells
     // ============================================================
     run_home: [
+      { t: 0,   cmd: 'sfx', sfx: 'sfx_birds_morning' },
       { t: 0,   cmd: 'narrate', text: 'Ba anh em cùng chạy về nhà. Không có thoại. Chỉ có tiếng chim và gió.', duration: 4500, waitForInput: false },
     ],
 

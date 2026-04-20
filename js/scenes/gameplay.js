@@ -96,6 +96,7 @@ export class GameplayScene {
     this.vignetteAlpha = 0;
     this._vignetteTarget = undefined;
     this.currentBgKey = null;
+    this._lockedFollowers = new Set();
     this._stopHeartbeat();
 
     // Start BGM
@@ -217,7 +218,7 @@ export class GameplayScene {
       const follower = this.characters[id];
       // Skip follow AI if character is being driven by a scripted move —
       // otherwise the two systems fight and cause jitter/teleport.
-      if (!follower._scriptedMove && !this.charAttachments[id]) {
+      if (!follower._scriptedMove && !this.charAttachments[id] && !this._lockedFollowers?.has(id)) {
         follower.followUpdate(leader, offset, dt, platforms);
       }
       offset += -offsetSign * CONFIG.FOLLOW_DISTANCE * 0.55;
@@ -326,7 +327,12 @@ export class GameplayScene {
       let fire = false;
       if (t.type === 'onEnter') {
         if (forceEnterOnly && t.x === 0) fire = true;
-        else if (!forceEnterOnly && leader.x >= t.x && leader.x <= (t.x + (t.w || 80))) fire = true;
+        else if (!forceEnterOnly && leader.x >= t.x && leader.x <= (t.x + (t.w || 80))) {
+          // Guard: skip positional triggers while the intro script is running with input locked.
+          // Prevents a character teleported into a trigger zone from firing that trigger mid-intro.
+          if (this.inputLocked && this.scriptRunning && t.x > 0) continue;
+          fire = true;
+        }
       } else if (t.type === 'afterDelay') {
         if (!this._delayTimers) this._delayTimers = new Map();
         // Don't start counting while input is locked (e.g. during intro cutscene).
@@ -522,6 +528,24 @@ export class GameplayScene {
       case 'unlockCharSwitch':
         this.charSwitchLocked = false;
         break;
+      case 'hideChar': {
+        const c = this.characters[cmd.char];
+        if (c) c.visible = false;
+        break;
+      }
+      case 'showChar': {
+        const c = this.characters[cmd.char];
+        if (c) c.visible = true;
+        break;
+      }
+      case 'lockFollower':
+        if (!this._lockedFollowers) this._lockedFollowers = new Set();
+        this._lockedFollowers.add(cmd.char);
+        if (this.characters[cmd.char]) this.characters[cmd.char].vx = 0;
+        break;
+      case 'unlockFollower':
+        if (this._lockedFollowers) this._lockedFollowers.delete(cmd.char);
+        break;
       case 'setBg':
         this.currentBgKey = cmd.key || null;
         break;
@@ -677,19 +701,13 @@ export class GameplayScene {
       ctx.fillRect(0, 0, CONFIG.LOGICAL_WIDTH, CONFIG.LOGICAL_HEIGHT);
       return;
     }
-    // Stretch BG horizontally to cover world width (parallax factor 1 for now)
-    // The BG is 1920x1080; we want to paint it across worldWidth px.
-    // Simple approach: tile-scale. For Ch1 worldWidth = 2x screen, we show 2x-stretched BG that doesn't look too bad because art is painterly.
-    // Better approach: scroll with parallax 0.6 (BG moves slower than world)
-    const parallax = 0.6;
-    const bgOffsetX = -this.cameraX * parallax;
-    const bgScale = CONFIG.LOGICAL_HEIGHT / bg.height;
-    const bgW = bg.width * bgScale;
-    // Number of BG tiles needed to cover (worldWidth * parallax_ratio) visible area
-    const startX = bgOffsetX % bgW;
-    for (let x = startX - bgW; x < CONFIG.LOGICAL_WIDTH + bgW; x += bgW) {
-      ctx.drawImage(bg, x, 0, bgW, CONFIG.LOGICAL_HEIGHT);
-    }
+    // Cover-fit: each chapter background fills the screen exactly, no tiling, no parallax.
+    // Backgrounds are chapter-specific and self-contained within their scene.
+    const W = CONFIG.LOGICAL_WIDTH, H = CONFIG.LOGICAL_HEIGHT;
+    const scale = Math.max(W / bg.width, H / bg.height);
+    const bw = bg.width * scale;
+    const bh = bg.height * scale;
+    ctx.drawImage(bg, (W - bw) / 2, (H - bh) / 2, bw, bh);
   }
 
   _drawFlower(ctx, c) {

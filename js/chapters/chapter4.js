@@ -34,6 +34,8 @@ export const CHAPTER_4 = {
     // INTRO Ch4: tranh cãi, Chiền Chiện bỏ chạy
     // ============================================================
     intro_ch4: [
+      { t: 0,    cmd: 'setVignette', alpha: 0.9 },
+      { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.3 },
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 200 },
       { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 300 },
@@ -162,7 +164,8 @@ export const CHAPTER_4 = {
       { t: 6000, cmd: 'say', char: 'chien', text: 'Anh Cúc Cu... cầm tay em đi.', duration: 2500 },
       { t: 8700, cmd: 'attachChars', child: 'chien', parent: 'cucu' },
       { t: 9000, cmd: 'say', char: 'cucu',  text: 'Ừ. Lần này anh không bao giờ bỏ tay em nữa.', duration: 3000 },
-      { t: 12300, cmd: 'narrate', text: 'Chiền Chiện cầm tay Cúc Cu thật chặt — không bao giờ muốn buông nữa.', duration: 4000, waitForInput: true },
+      { t: 12300, cmd: 'narrate', text: 'Chiền Chiện cầm tay Cúc Cu thật chặt — không bao giờ muốn buông nữa.', duration: 4000, waitForInput: false },
+      { t: 12800, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
       { t: 16600, cmd: 'detachChars', child: 'chien' },
       { t: 16800, cmd: 'showTransition', title: 'Chương 4 — Rừng Sâu', next: 5 },
     ],
