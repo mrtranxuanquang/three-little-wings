@@ -47,14 +47,14 @@ export const CHAPTER_4 = {
       { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_idle_side' },
       { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_idle_side' },
 
-      { t: 500,  cmd: 'narrate', text: 'Rừng sâu. Cây cao. Hai ngã rẽ trước mặt...', duration: 3500, waitForInput: false },
-      { t: 4200, cmd: 'say', char: 'choe',  text: 'Đường nào nhỉ...', duration: 2000 },
+      { t: 500,  cmd: 'narrate', text: 'Rừng tối hơn. Cây cao hơn. Ánh sáng chỉ còn vàng cam của hoàng hôn. Có 2 ngã rẽ ở trước mặt.', duration: 6000, waitForInput: false },
+      { t: 4200, cmd: 'say', char: 'choe',  text: 'Rẽ đường nào bây giờ nhỉ...', duration: 2000 },
       { t: 6400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_calling_worried' },
       { t: 6500, cmd: 'say', char: 'cucu',  text: 'Bên này! Em thấy có ánh sáng!', duration: 2200 },
       { t: 8900, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 9000, cmd: 'say', char: 'chien', text: 'Không! Bên này! Em nghe có tiếng nước chảy!', duration: 2500 },
+      { t: 9000, cmd: 'say', char: 'chien', text: 'Không! Bên này! Vừa nãy em nghe có tiếng người nói chuyện!', duration: 2800 },
       { t: 11700, cmd: 'charPose', char: 'cucu', sprite: 'cucu_angry_pointing' },
-      { t: 11800, cmd: 'say', char: 'cucu',  text: 'Chiền Chiện sai rồi. Bên này mới đúng!', duration: 2500 },
+      { t: 11800, cmd: 'say', char: 'cucu',  text: 'Chiện sai rồi. Bên này mới đúng!', duration: 2000 },
       { t: 14500, cmd: 'charPose', char: 'chien', sprite: 'chien_yelling_defiant' },
       { t: 14600, cmd: 'say', char: 'chien', text: 'Không phải! Nghe em đi. Đi hướng này!', duration: 2500 },
       { t: 17300, cmd: 'say', char: 'cucu',  text: 'Em biết gì mà nói?! Em còn bé lắm, có thạo đường đâu!', duration: 3200 },
@@ -68,7 +68,7 @@ export const CHAPTER_4 = {
       // Cúc Cu đứng sững
       { t: 24200, cmd: 'charPose', char: 'cucu', sprite: 'cucu_shocked_regret' },
       { t: 26000, cmd: 'charPose', char: 'choe',  sprite: 'choe_sighing_smile' },
-      { t: 26200, cmd: 'say', char: 'choe',  text: '...Đuổi theo Chiền Chiện đi. Anh chạy sau không thì lạc nhau mất.', duration: 3500 },
+      { t: 26200, cmd: 'say', char: 'choe',  text: '...Đuổi theo Chiện thôi. Anh chạy phía sau, không thì lạc nhau mất.', duration: 3200 },
 
       // Lock char switch → only Cúc Cu
       { t: 30000, cmd: 'lockCharSwitch' },
@@ -83,8 +83,8 @@ export const CHAPTER_4 = {
     // ============================================================
     cucu_calling_run: [
       { t: 0,    cmd: 'charPose', char: 'cucu', sprite: 'cucu_running_calling' },
-      { t: 0,    cmd: 'say', char: 'cucu',  text: 'Chiền Chiện! Chiền Chiện ơi!', duration: 2200, waitForInput: false },
-      { t: 2500, cmd: 'say', char: 'cucu',  text: 'Em ơi, quay lại đi! Cho anh xin lỗi!', duration: 2800, waitForInput: false },
+      { t: 0,    cmd: 'say', char: 'cucu',  text: 'Chiệnnnnnnnn! Chiền Chiện ơi!!!', duration: 2500, waitForInput: false },
+      { t: 2500, cmd: 'say', char: 'cucu',  text: 'Chiện đâu rồi? Quay lại đi! Cho anh xin lỗi!', duration: 2800, waitForInput: false },
     ],
 
     // ============================================================
@@ -107,7 +107,7 @@ export const CHAPTER_4 = {
       // Cúc Cu lao tới cứu
       { t: 1800, cmd: 'charPose', char: 'cucu', sprite: 'cucu_diving_save' },
       { t: 1800, cmd: 'moveChar', char: 'cucu', toX: 1350, speed: 'run' },
-      { t: 1900, cmd: 'say', char: 'cucu',  text: 'CHIỀN CHIỆN!', duration: 1500, waitForInput: false },
+      { t: 1900, cmd: 'say', char: 'cucu',  text: 'CHIỀN CHIỆN CẨN THẬN!!!', duration: 2000, waitForInput: false },
 
       // RẦMMMM
       { t: 3500, cmd: 'cameraShake', amount: 30 },
@@ -120,7 +120,7 @@ export const CHAPTER_4 = {
       { t: 7000, cmd: 'charTeleport', char: 'cucu', x: 1350 },
 
       // Khoảnh khắc hối hận
-      { t: 7500, cmd: 'say', char: 'chien', text: 'EM XIN LỖI ANH... EM TƯỞNG BỊ LẠC RỒI... EM KHÔNG DÁM BỎ ĐI MỘT MÌNH NỮA ĐÂU...', duration: 4500 },
+      { t: 7500, cmd: 'say', char: 'chien', text: 'Em không sao! Huhu... Em xin lỗi... Em tưởng bị lạc rồi... Em không dám bỏ đi một mình nữa đâu.', duration: 5500 },
       { t: 12300, cmd: 'charPose', char: 'cucu', sprite: 'cucu_arm_around_shoulder' },
       { t: 12500, cmd: 'say', char: 'cucu',  text: 'Anh cũng xin lỗi. Anh quát Chiền Chiện là anh sai. Đừng bao giờ... bỏ đi một mình nữa, nghe không?', duration: 5000 },
       { t: 17700, cmd: 'say', char: 'chien', text: 'Vâng... vâng anh ơi...', duration: 2200 },
@@ -130,7 +130,7 @@ export const CHAPTER_4 = {
       { t: 22000, cmd: 'charPose', char: 'choe', sprite: 'choe_relieved_kneeling' },
       { t: 22000, cmd: 'charTeleport', char: 'choe', x: 1420 },
       { t: 24500, cmd: 'charPose', char: 'choe', sprite: 'choe_sighing_smile' },
-      { t: 24700, cmd: 'say', char: 'choe',  text: 'Được rồi. Các em an toàn là anh mừng rồi. Đi, chúng ta đi tiếp thôi.', duration: 3500 },
+      { t: 24700, cmd: 'say', char: 'choe',  text: 'Suốt ngày cãi lộn với nhau. Được rồi! Hai đứa an toàn là anh mừng rồi. Đi, chúng ta đi tiếp thôi.', duration: 4500 },
 
       // Unlock — player gets control back
       { t: 28500, cmd: 'charState', char: 'choe',  state: 'idle' },
@@ -160,11 +160,11 @@ export const CHAPTER_4 = {
       { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
 
-      { t: 600,  cmd: 'narrate', text: 'Có những hiểu lầm làm ta lớn lên. Cúc Cu và Chiền Chiện sẽ nhớ mãi bài học này...', duration: 5000, waitForInput: false },
-      { t: 6000, cmd: 'say', char: 'chien', text: 'Anh Cúc Cu... cầm tay em đi.', duration: 2500 },
+      { t: 600,  cmd: 'narrate', text: 'Có những hiểu lầm, có những cãi vã... để làm chúng ta lớn lên và hiểu nhau hơn. Cúc Cu và Chiền Chiện sẽ nhớ mãi bài học này...', duration: 7000, waitForInput: false },
+      { t: 6000, cmd: 'say', char: 'chien', text: 'Anh Cu đi gần em đi.', duration: 2000 },
       { t: 8700, cmd: 'attachChars', child: 'chien', parent: 'cucu' },
-      { t: 9000, cmd: 'say', char: 'cucu',  text: 'Ừ. Lần này anh không bao giờ bỏ tay em nữa.', duration: 3000 },
-      { t: 12300, cmd: 'narrate', text: 'Chiền Chiện cầm tay Cúc Cu thật chặt — không bao giờ muốn buông nữa.', duration: 4000, waitForInput: false },
+      { t: 9000, cmd: 'say', char: 'cucu',  text: 'Ừ. Thế Chiện nắm tay Cu đi không lại lạc đấy.', duration: 3000 },
+      { t: 12300, cmd: 'narrate', text: 'Chiền Chiện cầm tay Cúc Cu thật chặt vì sợ lại bị đi lạc đường — Cãi nhau xong lại thân nhau ngay.', duration: 4000, waitForInput: false },
       { t: 12800, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
       { t: 16600, cmd: 'detachChars', child: 'chien' },
       { t: 16800, cmd: 'showTransition', title: 'Chương 4 — Rừng Sâu', next: 5 },

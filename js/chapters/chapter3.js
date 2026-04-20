@@ -56,8 +56,8 @@ export const CHAPTER_3 = {
 
       { t: 600,  cmd: 'say', char: 'chien', text: 'WOOOW! Đẹp quá các anh ơi!', duration: 2200, waitForInput: false },
       { t: 3000, cmd: 'charState', char: 'chien', state: 'idle' },
-      { t: 3100, cmd: 'say', char: 'cucu',  text: 'Hoa ở đâu cũng có... mình không bị lạc chứ?', duration: 2800, waitForInput: false },
-      { t: 6200, cmd: 'say', char: 'choe',  text: 'Không. Mình đi qua đây rồi tới rừng sâu phía trước.', duration: 3000 },
+      { t: 3100, cmd: 'say', char: 'cucu',  text: 'Cả một rừng hoa luôn... em chưa bao giờ đến đây. Chúng mình không bị lạc chứ?', duration: 3500, waitForInput: false },
+      { t: 6200, cmd: 'say', char: 'choe',  text: 'Không đâu. Mình đi qua đây rồi sẽ có lối về nhà ở phía trước thôi.', duration: 3500 },
 
       { t: 9500, cmd: 'narrate', text: 'Cánh đồng hoa trải dài trước mắt, hương thơm ngào ngạt...', duration: 4000, waitForInput: false },
       { t: 9800, cmd: 'charState', char: 'choe',  state: 'idle' },
@@ -90,19 +90,19 @@ export const CHAPTER_3 = {
       { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_attentive_listening' },
       { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_offering_candy' },
 
-      { t: 500,  cmd: 'say', char: 'choe',  text: 'Nghỉ chút đã. Anh mang snack theo này.', duration: 2500 },
+      { t: 500,  cmd: 'say', char: 'choe',  text: 'Nhưng mà chúng mình ngồi nghỉ chút đã. Anh mang snack theo này.', duration: 3000 },
       { t: 3200, cmd: 'charPose', char: 'cucu', sprite: 'cucu_eating_snack' },
       { t: 3300, cmd: 'say', char: 'cucu',  text: 'Có bánh quy không anh Chòe? Em đói rồi.', duration: 2500 },
       { t: 6000, cmd: 'say', char: 'choe',  text: 'Có chứ. Cho em 2 cái.', duration: 1800 },
-      { t: 8000, cmd: 'say', char: 'chien', text: 'Em có kẹo mút này! Em chia cho các anh!', duration: 2500 },
-      { t: 10700, cmd: 'say', char: 'choe', text: 'Em ăn đi, anh ăn snack đây rồi.', duration: 2200 },
+      { t: 8000, cmd: 'say', char: 'chien', text: 'Còn em có kẹo mút này! Em chia cho các anh!', duration: 2500 },
+      { t: 10700, cmd: 'say', char: 'choe', text: 'Chiện ăn đi, anh ăn snack đây rồi.', duration: 2200 },
 
       { t: 13200, cmd: 'charPose', char: 'chien', sprite: 'chien_melancholy_sitting' },
       { t: 13500, cmd: 'say', char: 'chien', text: 'Anh Chòe ơi... Chừng nào mình mới về được nhà?', duration: 3200, waitForInput: false },
       { t: 17000, cmd: 'charPose', char: 'choe',  sprite: 'choe_standing_watching' },
       { t: 17200, cmd: 'say', char: 'choe',  text: 'Sắp rồi. Anh nghĩ không còn xa lắm đâu.', duration: 3000 },
 
-      { t: 20500, cmd: 'narrate', text: 'Nhưng mắt Chòe không chắc lắm — chỉ có người chơi thấy.', duration: 4000, waitForInput: false },
+      { t: 20500, cmd: 'narrate', text: 'Nhưng ánh mắt Chích Chòe nhìn xa xăm, tỏ vẻ không chắc lắm...', duration: 4000, waitForInput: false },
 
       { t: 24800, cmd: 'charState', char: 'choe',  state: 'idle' },
       { t: 24800, cmd: 'charState', char: 'cucu',  state: 'idle' },
@@ -136,10 +136,10 @@ export const CHAPTER_3 = {
       { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
 
-      { t: 500,  cmd: 'say', char: 'chien', text: 'Ra rồi! Anh ơi, em hít thở được rồi... hoa thơm quá mũi em!', duration: 3000 },
-      { t: 3700, cmd: 'say', char: 'cucu',  text: 'Cảm ơn rừng hoa. Nhưng phía trước trông... tối hơn nhiều đó.', duration: 3000 },
+      { t: 500,  cmd: 'say', char: 'chien', text: 'Đi hết cánh đồng hoa rồi! Em mỏi chân quá...', duration: 2500 },
+      { t: 3700, cmd: 'say', char: 'cucu',  text: 'Chiện cố lên đi. Nhưng mà... phía trước trông... tối tối âm u kiểu gì ấy...', duration: 3500 },
       { t: 6900, cmd: 'charPose', char: 'choe', sprite: 'choe_pointing_direction' },
-      { t: 7100, cmd: 'say', char: 'choe',  text: 'Đúng. Đó là rừng sâu. Mình phải qua đó mới về được nhà.', duration: 3500 },
+      { t: 7100, cmd: 'say', char: 'choe',  text: 'Đó là khu rừng sâu mà bố kể đấy. Anh em mình phải đi xuyên qua đó mới về được nhà.', duration: 4000 },
 
       { t: 10900, cmd: 'narrate', text: 'Ba anh em tiếp tục đi. Rừng trước mặt ngày càng rậm rạp...', duration: 4000, waitForInput: false },
       { t: 11400, cmd: 'animateVignette', to: 1.0, speed: 0.35 },

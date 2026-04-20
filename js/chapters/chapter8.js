@@ -50,14 +50,14 @@ export const CHAPTER_8 = {
       { t: 0,    cmd: 'setVignette', alpha: 0.9 },
       { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.2 },
 
-      { t: 1500, cmd: 'narrate', text: 'Tiếng chim hót... Ánh sáng vàng của bình minh xuyên qua tán cây...', duration: 5000, waitForInput: false },
+      { t: 1500, cmd: 'narrate', text: 'Tiếng chim hót... Ánh sáng vàng của bình minh xuyên qua tán cây... Ba anh em từ từ mở mắt. Chiền Chiện tỉnh trước, nhìn xung quanh rồi lay hai anh...', duration: 8000, waitForInput: false },
 
       { t: 5500, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 5800, cmd: 'say', char: 'chien', text: 'Anh ơi! Anh ơi! Trời sáng rồi!', duration: 2500, waitForInput: false },
+      { t: 5800, cmd: 'say', char: 'chien', text: 'Chòe!!! Cu!!! Trời sáng rồi!', duration: 2500, waitForInput: false },
       { t: 8500, cmd: 'charState', char: 'choe',  state: 'idle' },
       { t: 8500, cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 8500, cmd: 'charState', char: 'chien', state: 'idle' },
-      { t: 8800, cmd: 'say', char: 'cucu',  text: 'Nhà mình! Nhà mình kìa!', duration: 2500, waitForInput: false },
+      { t: 8800, cmd: 'say', char: 'cucu',  text: 'Nhà mình! Nhà mình ở phía xa kìa!', duration: 2500, waitForInput: false },
 
       { t: 11600, cmd: 'charState', char: 'choe',  state: 'idle' },
       { t: 11600, cmd: 'charState', char: 'cucu',  state: 'idle' },
@@ -73,7 +73,7 @@ export const CHAPTER_8 = {
     // ============================================================
     run_home: [
       { t: 0,   cmd: 'sfx', sfx: 'sfx_birds_morning' },
-      { t: 0,   cmd: 'narrate', text: 'Ba anh em cùng chạy về nhà. Không có thoại. Chỉ có tiếng chim và gió.', duration: 4500, waitForInput: false },
+      { t: 0,   cmd: 'narrate', text: 'Thấp thoảng tít đằng xa là cột ống khói bốc lên... Ba anh em cùng chạy thật nhanh về phía trước.', duration: 5000, waitForInput: false },
     ],
 
     // ============================================================
@@ -93,7 +93,7 @@ export const CHAPTER_8 = {
       { t: 0,    cmd: 'charPose', char: 'bo', sprite: 'bo_kneeling_arms_open' },
 
       // Bố không nói một lời — chỉ quỳ xuống, mở rộng 2 tay
-      { t: 800,  cmd: 'narrate', text: 'Bố thấy 3 con. Không nói một lời. Bố quỳ xuống. Mở rộng 2 tay.', duration: 4500, waitForInput: false },
+      { t: 800,  cmd: 'narrate', text: 'Ra khỏi rừng... Băng qua cánh đồng hoa... Chúng nhảy qua suối... Và thấy cổng nhà...', duration: 6000, waitForInput: false },
 
       // 3 bé lao vào ôm bố
       { t: 5500, cmd: 'attachChars', child: 'chien', parent: 'bo' },
@@ -120,7 +120,7 @@ export const CHAPTER_8 = {
       { t: 24500, cmd: 'animateVignette', to: 1.0, speed: 0.4 },
 
       // Chữ "Anh em phải bảo vệ và yêu thương nhau..."
-      { t: 26800, cmd: 'narrate', text: 'Anh em phải bảo vệ và yêu thương nhau...', duration: 6000, waitForInput: false },
+      { t: 26800, cmd: 'narrate', text: '"Anh em phải bảo vệ và yêu thương nhau..."', duration: 6000, waitForInput: false },
 
       // Sang Credits
       { t: 34000, cmd: 'goToCredits' },

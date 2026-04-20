@@ -48,10 +48,10 @@ export const CHAPTER_7 = {
       // ---- Đoạn thoại ----
       { t: 1500, cmd: 'say', char: 'chien', text: 'Anh ơi... em nhớ bố mẹ...', duration: 3000, waitForInput: false },
       { t: 4800, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder' },
-      { t: 5000, cmd: 'say', char: 'cucu',  text: 'Em đừng khóc, có anh ở đây mà.', duration: 2800, waitForInput: false },
+      { t: 5000, cmd: 'say', char: 'cucu',  text: 'Đừng khóc, có tụi anh ở đây mà.', duration: 2500, waitForInput: false },
       { t: 8100, cmd: 'say', char: 'choe',  text: 'Các em có nhớ bố hay dặn gì không?', duration: 3000 },
       { t: 11400, cmd: 'say', char: 'cucu',  text: 'Anh em phải bảo vệ và yêu thương nhau...', duration: 3000 },
-      { t: 14700, cmd: 'say', char: 'choe',  text: 'Đúng rồi. Vậy nghĩa là... dù chuyện gì xảy ra, ba anh em mình cũng cùng nhau vượt qua.', duration: 4500 },
+      { t: 14700, cmd: 'say', char: 'choe',  text: 'Đúng rồi. Vậy nghĩa là... dù chuyện gì xảy ra, ba anh em mình sẽ cùng nhau vượt qua.', duration: 4500 },
       { t: 19500, cmd: 'narrate', text: '...', duration: 2500, waitForInput: false },
 
       // ---- SHOT 1: Chiền Chiện ngáp ----

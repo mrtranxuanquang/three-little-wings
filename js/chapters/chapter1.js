@@ -84,13 +84,13 @@ export const CHAPTER_1 = {
       { t: 0,     cmd: 'faceChar', char: 'chien', dir: 1 },
 
       // Opening narration
-      { t: 600,   cmd: 'narrate', text: 'Một chiều cuối tuần, ba anh em Chích Chòe, Cúc Cu và Chiền Chiện đang chơi ở bìa rừng sau nhà...', duration: 5500, waitForInput: false },
+      { t: 600,   cmd: 'narrate', text: 'Một chiều cuối tuần, ba anh em Chích Chòe, Cúc Cu và Chiền Chiện đang chơi cùng với nhau ở bìa rừng sau nhà...', duration: 5500, waitForInput: false },
 
       // Butterfly appears
       { t: 6300,  cmd: 'spawnProp', prop: 'butterfly', id: 'bfly', from: [750, 500], to: [1100, 450], duration: 8000, color: '#4a9fd4' },
 
       { t: 6500,  cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 6800,  cmd: 'say', char: 'chien', text: 'Ơ! Bướm đẹp quá! Em bắt cho!', duration: 2200, waitForInput: false },
+      { t: 6800,  cmd: 'say', char: 'chien', text: 'Ôi kìa! Con bướm đẹp quá! Để em đuổi bắt nó!', duration: 2500, waitForInput: false },
 
       // Chiền Chiện runs after butterfly
       { t: 9200,  cmd: 'charPose', char: 'chien', sprite: 'chien_chasing_butterfly' },
@@ -98,7 +98,7 @@ export const CHAPTER_1 = {
 
       // Cúc Cu reacts
       { t: 10300, cmd: 'charPose', char: 'cucu', sprite: 'cucu_calling_worried' },
-      { t: 10400, cmd: 'say', char: 'cucu', text: 'Em ơi! Đừng chạy xa!', duration: 2000, waitForInput: false },
+      { t: 10400, cmd: 'say', char: 'cucu', text: 'Chiền Chiện ơi! Đừng chạy xa thế!', duration: 2200, waitForInput: false },
 
       // Cúc Cu runs after
       { t: 12200, cmd: 'charPose', char: 'cucu', sprite: 'cucu_running_calling' },
@@ -106,7 +106,7 @@ export const CHAPTER_1 = {
 
       // Chích Chòe sighs and follows
       { t: 14000, cmd: 'charPose', char: 'choe', sprite: 'choe_sighing_smile' },
-      { t: 14200, cmd: 'say', char: 'choe', text: '...Haizz. Đi, anh đi với các em.', duration: 2500, waitForInput: false },
+      { t: 14200, cmd: 'say', char: 'choe', text: '...Haizz. Các em chạy đi đâu vậy? Đợi anh đi cùng với nào.', duration: 3000, waitForInput: false },
 
       // Chòe moves too, catch up positions
       { t: 16500, cmd: 'charState', char: 'choe', state: 'idle' },
@@ -116,7 +116,7 @@ export const CHAPTER_1 = {
 
       // Release control
       { t: 16700, cmd: 'releaseInput' },
-      { t: 16800, cmd: 'narrate', text: '💡 Dùng ← → để đi, Space để nhảy. Bấm 1/2/3 để chuyển nhân vật.', duration: 5000, tutorial: true, waitForInput: false },
+      { t: 16800, cmd: 'narrate', text: '💡 Dùng ← → để đi, Space để nhảy. Bấm số 1/2/3 để chuyển nhân vật.', duration: 5000, tutorial: true, waitForInput: false },
     ],
 
     // ============================================================
@@ -149,12 +149,12 @@ export const CHAPTER_1 = {
       { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
       { t: 0,    cmd: 'cameraTo', x: 2800 },
 
-      { t: 400,  cmd: 'say', char: 'choe',  text: 'Đường về nhà hình như ngược lại rồi...', duration: 2800 },
+      { t: 400,  cmd: 'say', char: 'choe',  text: 'Đường về nhà hình như ở hướng ngược lại rồi...', duration: 2800 },
       { t: 3400, cmd: 'say', char: 'cucu',  text: 'Vậy mình đi đường nào hả anh?', duration: 2600 },
 
       // Chòe points
       { t: 6200, cmd: 'charPose', char: 'choe', sprite: 'choe_pointing_direction' },
-      { t: 6500, cmd: 'say', char: 'choe', text: 'Theo suối đi. Nước chảy về đâu, mình về đó.', duration: 3500 },
+      { t: 6500, cmd: 'say', char: 'choe', text: 'Ra chỗ suối kia đi. Nước chảy về đâu, mình đi theo hướng đó.', duration: 4000 },
 
       { t: 10500, cmd: 'narrate', text: 'Và thế là hành trình bắt đầu...', duration: 3500, waitForInput: false },
       { t: 14500, cmd: 'animateVignette', to: 1.0, speed: 0.35 },

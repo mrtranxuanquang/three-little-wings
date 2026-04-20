@@ -51,7 +51,7 @@ export const CHAPTER_5 = {
       { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_attentive_listening' },
       { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_clinging_scared' },
 
-      { t: 500,  cmd: 'narrate', text: 'Trước mặt là một cái hang lớn. Miệng hang đen ngòm. Có gió lạnh từ trong thổi ra...', duration: 5500, waitForInput: false },
+      { t: 500,  cmd: 'narrate', text: 'Trước mặt là một cái hang lớn. Miệng hang đen ngòm. Có gió lạnh từ trong thổi ra... Có một vài tiếng lách cách rất nhỏ từ sâu trong hang.', duration: 7000, waitForInput: false },
       { t: 6300, cmd: 'say', char: 'choe',  text: '...Hình như có gì đó trong đấy.', duration: 2800, waitForInput: false },
 
       // 2 em nhìn anh cả — rồi tiến đến cầm tay
@@ -98,8 +98,8 @@ export const CHAPTER_5 = {
       { t: 0,   cmd: 'animateVignette', to: 0.88, speed: 0.1 },
       { t: 800, cmd: 'freezeInput' },
       { t: 800, cmd: 'setCaveWalk', on: false },
-      { t: 1200, cmd: 'say', char: 'chien', text: 'Có em với anh Cúc Cu ở đây mà, anh Chòe...', duration: 3000, waitForInput: false },
-      { t: 4500, cmd: 'say', char: 'cucu',  text: 'Tụi em không để anh một mình đâu.', duration: 2800, waitForInput: false },
+      { t: 1200, cmd: 'say', char: 'chien', text: 'Có em với anh Cu cũng ở đây mà, sợ gì...', duration: 2800, waitForInput: false },
+      { t: 4500, cmd: 'say', char: 'cucu',  text: 'Cu với Chiện không để Chòe một mình đâu. Mình cùng vào.', duration: 3500, waitForInput: false },
       { t: 7700, cmd: 'charPose', char: 'choe', sprite: 'choe_standing_watching' },
       { t: 8500, cmd: 'setCaveWalk', on: true },
       { t: 8500, cmd: 'releaseInput' },
@@ -141,7 +141,7 @@ export const CHAPTER_5 = {
       { t: 300, cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 300, cmd: 'charState', char: 'chien', state: 'idle' },
       { t: 500, cmd: 'freezeInput' },
-      { t: 800, cmd: 'say', char: 'chien', text: 'WOWWW...', duration: 2200, waitForInput: false },
+      { t: 800, cmd: 'say', char: 'chien', text: 'WOWWW... Đẹp quuuuuá! Hàng tỉ tỉ con đom đóm này...', duration: 3500, waitForInput: false },
       { t: 3500, cmd: 'releaseInput' },
     ],
 
@@ -160,8 +160,8 @@ export const CHAPTER_5 = {
       { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_attentive_listening' },
       { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
 
-      { t: 800,  cmd: 'say', char: 'choe',  text: 'Anh xin lỗi vì anh sợ bóng tối. Có hai đứa, anh đỡ sợ hơn nhiều.', duration: 4000 },
-      { t: 5000, cmd: 'say', char: 'cucu',  text: 'Ban ngày anh đã bảo vệ tụi em. Giờ tụi em cũng sẽ bảo vệ anh.', duration: 3500 },
+      { t: 800,  cmd: 'say', char: 'choe',  text: 'Anh xin lỗi vì anh sợ bóng tối nên vừa nãy... Nhưng có hai đứa, anh đỡ sợ hơn nhiều.', duration: 4500 },
+      { t: 5000, cmd: 'say', char: 'cucu',  text: 'Ban ngày Chòe bảo vệ Cu với Chiện. Giờ Cu với Chiện sẽ bảo vệ lại Chòe, hihi...', duration: 4000 },
       { t: 8800, cmd: 'narrate', text: 'Đôi khi... chính người lớn nhất cũng cần được bảo vệ.', duration: 4500, waitForInput: false },
       { t: 13700, cmd: 'charState', char: 'choe',  state: 'idle' },
       { t: 13700, cmd: 'charState', char: 'cucu',  state: 'idle' },
@@ -187,7 +187,7 @@ export const CHAPTER_5 = {
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
 
-      { t: 500,  cmd: 'say', char: 'choe',  text: 'Trời tối rồi. Mình cần nghỉ ngơi rồi đi tiếp.', duration: 2800 },
+      { t: 500,  cmd: 'say', char: 'choe',  text: 'Trời tối rồi. Mình phải ở lại đây nghỉ ngơi rồi mai mới đi tiếp được.', duration: 3500 },
       { t: 3500, cmd: 'narrate', text: 'Ba anh em nhìn lên trời. Sao đêm bắt đầu mọc. Đom đóm lấp lánh khắp nơi...', duration: 5000, waitForInput: false },
       { t: 9500, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
       { t: 12500, cmd: 'showTransition', title: 'Chương 5 — Hang Tối', next: 6 },

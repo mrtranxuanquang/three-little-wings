@@ -51,7 +51,7 @@ export const CHAPTER_2 = {
       { t: 0,    cmd: 'faceChar',    char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar',    char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar',    char: 'chien', dir: 1 },
-      { t: 500,  cmd: 'narrate', text: 'Ba anh em men theo suối, tiếng nước rì rào vang lên từ phía trước...', duration: 4500, waitForInput: false },
+      { t: 500,  cmd: 'narrate', text: 'Ba anh em men theo dòng suối, tiếng nước chảy róc rách vang lên từ phía trước...', duration: 4500, waitForInput: false },
       { t: 5200, cmd: 'releaseInput' },
     ],
 
@@ -61,8 +61,8 @@ export const CHAPTER_2 = {
     chien_sees_water: [
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_hesitant_back' },
-      { t: 200,  cmd: 'say', char: 'chien', text: 'Ơ... anh ơi, suối to quá. Em... sợ nước.', duration: 2800 },
-      { t: 3200, cmd: 'say', char: 'choe', text: 'Để anh nghĩ xem...', duration: 1800 },
+      { t: 200,  cmd: 'say', char: 'chien', text: 'Suối... suối này có sâu không anh Chòe? Em sợ không dám lội qua...', duration: 3500 },
+      { t: 3200, cmd: 'say', char: 'choe', text: 'Suối... khá sâu, nước lại... lạnh nữa. Để anh nghĩ cách xem...', duration: 3000 },
       { t: 5200, cmd: 'releaseInput' },
     ],
 
@@ -71,7 +71,7 @@ export const CHAPTER_2 = {
     // ============================================================
     tut_push_rock: [
       { t: 0, cmd: 'spawnProp', prop: 'boulder', id: 'boulder1', x: 850, triggerX: 1050, triggerEvent: 'bridge_appears' },
-      { t: 300, cmd: 'narrate', text: '💡 Chích Chòe khoẻ nhất! Đứng cạnh đá, giữ Z để đẩy đá vào suối.', duration: 5000, tutorial: true, waitForInput: false },
+      { t: 300, cmd: 'narrate', text: '💡 Chích Chòe khoẻ nhất! Đứng cạnh tảng đá, giữ Z để đẩy tảng đá vào dòng suối.', duration: 5000, tutorial: true, waitForInput: false },
     ],
 
     // ============================================================
@@ -81,7 +81,7 @@ export const CHAPTER_2 = {
       { t: 0,    cmd: 'showPlatform', id: 'rock_bridge' },
       { t: 0,    cmd: 'cameraShake', amount: 10 },
       { t: 0,    cmd: 'sfx', sfx: 'sfx_rock_land' },
-      { t: 400,  cmd: 'narrate', text: 'Đá lăn vào suối — cầu đá xuất hiện!', duration: 2500, waitForInput: false },
+      { t: 400,  cmd: 'narrate', text: 'Đá lăn vào suối — Chích Chòe đã đẩy tảng đá làm cầu cho các em!!', duration: 2500, waitForInput: false },
     ],
 
     // ============================================================
@@ -90,13 +90,13 @@ export const CHAPTER_2 = {
     cucu_takes_hand: [
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charPose', char: 'cucu', sprite: 'cucu_reaching_hand_out' },
-      { t: 300,  cmd: 'say', char: 'cucu', text: 'Chiền Chiện, nắm tay anh Cúc Cu nào!', duration: 2500 },
+      { t: 300,  cmd: 'say', char: 'cucu', text: 'Chiền Chiện, bám chặt tay anh nào!', duration: 2200 },
       { t: 3000, cmd: 'charPose', char: 'chien', sprite: 'chien_taking_hand_up' },
-      { t: 3200, cmd: 'say', char: 'chien', text: 'Dạ... em nắm rồi. Ấm tay anh Cúc Cu quá!', duration: 2800 },
+      { t: 3200, cmd: 'say', char: 'chien', text: 'Okeee... em nắm được tay anh rồi. Cảm ơn anh Cu!', duration: 2800 },
       { t: 6200, cmd: 'attachChars', parent: 'cucu', child: 'chien' },
       { t: 6300, cmd: 'charPose', char: 'cucu', sprite: 'cucu_idle_side' },
       { t: 6300, cmd: 'charPose', char: 'chien', sprite: 'chien_walking_side' },
-      { t: 6500, cmd: 'narrate', text: 'Các con biết giúp nhau — thật là những đứa trẻ ngoan!', duration: 3500, waitForInput: false },
+      { t: 6500, cmd: 'narrate', text: 'Các con biết giúp đỡ nhau, thật là những đứa trẻ ngoan!', duration: 3500, waitForInput: false },
       { t: 10200, cmd: 'releaseInput' },
     ],
 
@@ -115,10 +115,10 @@ export const CHAPTER_2 = {
       { t: 0,    cmd: 'charState', char: 'choe',  state: 'idle' },
       { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
-      { t: 500,  cmd: 'say', char: 'chien', text: 'Qua được rồi! Cảm ơn anh Cúc Cu!', duration: 2200 },
-      { t: 2900, cmd: 'say', char: 'cucu',  text: 'Nhớ lần sau không được chạy xa nữa nhé!', duration: 2500 },
-      { t: 5600, cmd: 'say', char: 'choe',  text: 'Đi tiếp nào. Rừng hoa ở phía trước.', duration: 2200 },
-      { t: 8000, cmd: 'narrate', text: 'Ba anh em cùng bước, tiếng suối dần nhỏ lại phía sau...', duration: 3500, waitForInput: false },
+      { t: 500,  cmd: 'say', char: 'chien', text: 'Em qua được rồi! Không bị ướt tẹo nào cả.', duration: 2500 },
+      { t: 2900, cmd: 'say', char: 'cucu',  text: 'Chiện phải ăn nhiều lên cho lớn khỏe đấy. Thế thì lần sau mới lội qua suối được chứ!', duration: 4000 },
+      { t: 5600, cmd: 'say', char: 'choe',  text: 'Giỏi lắm các em! Chúng mình đi tiếp nào. Anh nhìn thấy rừng hoa ở phía trước kìa.', duration: 3500 },
+      { t: 8000, cmd: 'narrate', text: 'Ba anh em cùng bước tiếp, tiếng suối dần nhỏ lại phía sau...', duration: 3500, waitForInput: false },
       { t: 8500, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
       { t: 12000, cmd: 'showTransition', title: 'Chương 2 — Suối Đá', next: 3 },
     ],
