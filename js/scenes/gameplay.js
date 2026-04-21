@@ -531,6 +531,11 @@ export class GameplayScene {
       case 'clearRightBarrier':
         this.rightBarrier = null;
         break;
+      case 'deflectProp': {
+        const p = this.props.find(p => p.id === cmd.id);
+        if (p && typeof p.deflect === 'function') p.deflect();
+        break;
+      }
       case 'attachChars':
         this.charAttachments[cmd.child] = cmd.parent;
         break;
@@ -1196,6 +1201,7 @@ function createProp(cmd, scene) {
   if (cmd.prop === 'butterfly') return createButterfly(cmd);
   if (cmd.prop === 'boulder')   return createBoulder(cmd, scene);
   if (cmd.prop === 'campfire')  return createCampfire(cmd);
+  if (cmd.prop === 'fallingBranch') return createFallingBranch(cmd, scene);
   if (cmd.prop === 'deerEyes')  return createDeerEyes(cmd, scene);
   if (cmd.prop === 'fireflies') return createFireflies(cmd);
   return { id: `p${_propIdCounter++}`, update: () => {}, draw: () => {} };
@@ -1365,6 +1371,107 @@ function createBoulder({ id, x, y, triggerX, triggerEvent, sinkDepth = 0 }, scen
   return obj;
 }
 
+function createFallingBranch({ id, x }, scene) {
+  const bx = x || 1350;
+  let phase = 'falling'; // 'falling' | 'deflected' | 'gone'
+  let by = -120;
+  let vy = 60;
+  let angle = -0.35;
+  let dvx = 0, dvy = 0, doneT = 0;
+
+  // Pre-generate leaf angles (not random per frame)
+  const leafAngles = [0.2, -0.3, 0.5, -0.1, 0.4];
+
+  return {
+    id: id || `branch${_propIdCounter++}`,
+    x: bx, y: by,
+    deflect() {
+      if (phase !== 'falling') return;
+      phase = 'deflected';
+      dvx = 420; dvy = -240;
+    },
+    update(dt) {
+      if (phase === 'falling') {
+        vy += 680 * dt;
+        by += vy * dt;
+        this.y = by;
+        angle += dt * 0.25;
+        if (by >= CONFIG.GROUND_Y - 150 && phase === 'falling') {
+          phase = 'deflected'; dvx = 380; dvy = -200;
+        }
+      } else if (phase === 'deflected') {
+        dvy += 600 * dt;
+        this.x += dvx * dt;
+        this.y += dvy * dt;
+        angle -= dt * 2.5;
+        doneT += dt;
+        if (doneT > 0.9) phase = 'gone';
+      }
+    },
+    draw(ctx) {
+      if (phase === 'gone') return;
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(angle);
+
+      // Shadow on ground (only while falling)
+      if (phase === 'falling') {
+        const shadowAlpha = Math.max(0, 0.25 - (by / CONFIG.GROUND_Y) * 0.1);
+        ctx.save();
+        ctx.globalAlpha = shadowAlpha;
+        ctx.fillStyle = '#000';
+        ctx.beginPath();
+        ctx.ellipse(0, CONFIG.GROUND_Y - this.y, 60, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Leaf clusters
+      const clusters = [
+        { ox: 0,   oy: -280, rx: 52, ry: 36, col: '#4a9045' },
+        { ox: -55, oy: -210, rx: 40, ry: 28, col: '#3a7a38' },
+        { ox:  48, oy: -200, rx: 36, ry: 26, col: '#5aaa50' },
+        { ox: -28, oy: -140, rx: 30, ry: 22, col: '#357030' },
+        { ox:  30, oy: -130, rx: 28, ry: 20, col: '#4a8842' },
+      ];
+      clusters.forEach((lc, i) => {
+        ctx.save();
+        ctx.globalAlpha = 0.90;
+        const g = ctx.createRadialGradient(lc.ox, lc.oy, 0, lc.ox, lc.oy, lc.rx);
+        g.addColorStop(0, '#7ec87a');
+        g.addColorStop(0.6, lc.col);
+        g.addColorStop(1, 'rgba(20,50,20,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.ellipse(lc.ox, lc.oy, lc.rx, lc.ry, leafAngles[i], 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+
+      // Main trunk
+      ctx.lineCap = 'round';
+      const trunk = [[0, 0, 0, -300, 18], [-50, -200, -90, -270, 11], [42, -180, 75, -260, 9]];
+      for (const [x1, y1, x2, y2, lw] of trunk) {
+        ctx.strokeStyle = '#7a5230';
+        ctx.lineWidth = lw;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        // Highlight
+        ctx.strokeStyle = 'rgba(210,160,90,0.35)';
+        ctx.lineWidth = lw * 0.28;
+        ctx.beginPath();
+        ctx.moveTo(x1 - lw * 0.18, y1);
+        ctx.lineTo(x2 - lw * 0.18, y2);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    },
+  };
+}
+
 function createCampfire({ id, x, y }) {
   return {
     id: id || `p${_propIdCounter++}`,
@@ -1422,14 +1529,13 @@ function createDeerEyes({ id, x, y }, scene) {
   return {
     id: id || `p${_propIdCounter++}`,
     x: startX, y: y || CONFIG.GROUND_Y - 120,
-    _moveSpeed: 28,   // px/s — slow, creepy approach
+    _moveSpeed: 55,   // px/s — clearly visible approach from darkness
     update(dt) {
-      // Auto-approach: drift toward the player's current X
+      // Drift LEFT at constant speed, stop when within 280px of player
       const leader = scene?.characters?.[scene?.leaderId];
-      if (leader) {
-        const targetX = leader.x + 180; // stay a bit ahead of player's view
-        const dx = targetX - this.x;
-        if (Math.abs(dx) > 10) this.x += Math.sign(dx) * Math.min(this._moveSpeed * dt, Math.abs(dx));
+      const minDist = 280;
+      if (!leader || this.x > leader.x + minDist) {
+        this.x -= this._moveSpeed * dt;
       }
       blinkTimer += dt;
       if (!blinking && blinkTimer > 2.2) { blinking = true; blinkTimer = 0; }
@@ -1437,20 +1543,36 @@ function createDeerEyes({ id, x, y }, scene) {
     },
     draw(ctx) {
       if (blinking) return;
-      const spacing = 38, r = 9;
+      const spacing = 50, r = 13;
       for (let i = 0; i < 2; i++) {
         const ex = this.x + (i === 0 ? -spacing / 2 : spacing / 2);
         const ey = this.y;
-        const grd = ctx.createRadialGradient(ex, ey, 0, ex, ey, r * 2.8);
-        grd.addColorStop(0, 'rgba(255,70,30,0.95)');
-        grd.addColorStop(1, 'rgba(200,0,0,0)');
+        // Outer ambient glow
+        const grd2 = ctx.createRadialGradient(ex, ey, 0, ex, ey, r * 5);
+        grd2.addColorStop(0, 'rgba(255,40,10,0.4)');
+        grd2.addColorStop(1, 'rgba(150,0,0,0)');
+        ctx.fillStyle = grd2;
+        ctx.beginPath();
+        ctx.arc(ex, ey, r * 5, 0, Math.PI * 2);
+        ctx.fill();
+        // Inner hot glow
+        const grd = ctx.createRadialGradient(ex, ey, 0, ex, ey, r * 2.4);
+        grd.addColorStop(0, 'rgba(255,200,160,1)');
+        grd.addColorStop(0.3, 'rgba(255,60,20,0.95)');
+        grd.addColorStop(1, 'rgba(180,0,0,0)');
         ctx.fillStyle = grd;
         ctx.beginPath();
-        ctx.arc(ex, ey, r * 2.8, 0, Math.PI * 2);
+        ctx.arc(ex, ey, r * 2.4, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = '#ff4418';
+        // Pupil
+        ctx.fillStyle = '#cc1100';
         ctx.beginPath();
-        ctx.ellipse(ex, ey, r, r * 0.55, 0, 0, Math.PI * 2);
+        ctx.ellipse(ex, ey, r, r * 0.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Specular
+        ctx.fillStyle = 'rgba(255,255,200,0.6)';
+        ctx.beginPath();
+        ctx.ellipse(ex - r*0.3, ey - r*0.25, r*0.25, r*0.15, 0, 0, Math.PI*2);
         ctx.fill();
       }
     },

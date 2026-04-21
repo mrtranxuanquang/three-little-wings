@@ -97,46 +97,43 @@ export const CHAPTER_4 = {
     falling_branch: [
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'charTeleport', char: 'chien', x: 1350 },
-      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_crying_sitting' },
+      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_clinging_scared' },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: -1 },
+      // Cành cây bắt đầu rơi xuống từ trên cao
+      { t: 0,    cmd: 'spawnProp', prop: 'fallingBranch', id: 'branch1', x: 1360 },
 
       { t: 300,  cmd: 'narrate', text: 'Tiếng nứt. "CRRRR... CRACK!"', duration: 2500, waitForInput: false },
       { t: 800,  cmd: 'cameraShake', amount: 20 },
       { t: 800,  cmd: 'sfx', sfx: 'sfx_rock_land' },
-
-      // Slow-mo beat — camera shake + dark flash
       { t: 1400, cmd: 'animateVignette', to: 0.5, speed: 4 },
       { t: 1500, cmd: 'cameraShake', amount: 14 },
 
-      // Cúc Cu lao tới cứu
+      // Cúc Cu lao tới cứu — đẩy cành cây sang một bên
+      { t: 1800, cmd: 'deflectProp', id: 'branch1' },
       { t: 1800, cmd: 'charPose', char: 'cucu', sprite: 'cucu_diving_save' },
       { t: 1800, cmd: 'moveChar', char: 'cucu', toX: 1350, speed: 'run' },
       { t: 1900, cmd: 'say', char: 'cucu',  text: 'CHIỀN CHIỆN CẨN THẬN!!!', duration: 2000, waitForInput: false },
 
-      // RẦMMMM
+      // RẦMMMM — cành cây đổ sang bên nhưng không trúng Chiện
       { t: 3500, cmd: 'cameraShake', amount: 30 },
       { t: 3500, cmd: 'sfx', sfx: 'sfx_rock_land' },
       { t: 3500, cmd: 'animateVignette', to: 0.0, speed: 1.2 },
 
-      // 3 giây im lặng — bụi tan dần
       { t: 7000, cmd: 'charPose', char: 'cucu', sprite: 'cucu_shocked_regret' },
       { t: 7000, cmd: 'charPose', char: 'chien', sprite: 'chien_crying_sitting' },
       { t: 7000, cmd: 'charTeleport', char: 'cucu', x: 1350 },
 
-      // Khoảnh khắc hối hận
       { t: 7500, cmd: 'say', char: 'chien', text: 'Em không sao! Huhu... Em xin lỗi... Em tưởng bị lạc rồi... Em không dám bỏ đi một mình nữa đâu.', duration: 5500 },
       { t: 12300, cmd: 'charPose', char: 'cucu', sprite: 'cucu_arm_around_shoulder', scale: 1.18 },
       { t: 12500, cmd: 'say', char: 'cucu',  text: 'Anh cũng xin lỗi. Anh quát Chiền Chiện là anh sai. Đừng bao giờ... bỏ đi một mình nữa, nghe không?', duration: 5000 },
       { t: 17700, cmd: 'say', char: 'chien', text: 'Vâng... vâng anh ơi...', duration: 2200 },
 
-      // Chòe chạy tới
       { t: 20200, cmd: 'moveChar', char: 'choe', toX: 1420, speed: 'run' },
       { t: 22000, cmd: 'charPose', char: 'choe', sprite: 'choe_relieved_kneeling' },
       { t: 22000, cmd: 'charTeleport', char: 'choe', x: 1420 },
       { t: 24500, cmd: 'charPose', char: 'choe', sprite: 'choe_sighing_smile' },
       { t: 24700, cmd: 'say', char: 'choe',  text: 'Suốt ngày cãi lộn với nhau. Được rồi! Hai đứa an toàn là anh mừng rồi. Đi, chúng ta đi tiếp thôi.', duration: 4500 },
 
-      // Unlock — player gets control back
       { t: 28500, cmd: 'charState', char: 'choe',  state: 'idle' },
       { t: 28500, cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 28500, cmd: 'charState', char: 'chien', state: 'idle' },

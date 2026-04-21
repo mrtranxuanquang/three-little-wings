@@ -133,13 +133,44 @@ class AudioManager {
     }
   }
 
+  /** Create a synthetic reverb impulse response — large hall with echo/decay */
+  _getReverbBuffer() {
+    if (this._reverbBuf) return this._reverbBuf;
+    const sr = this.ctx.sampleRate;
+    const duration = 3.5;   // seconds of reverb tail
+    const decay    = 2.8;   // higher = longer tail
+    const len = Math.floor(sr * duration);
+    const buf = this.ctx.createBuffer(2, len, sr);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = buf.getChannelData(ch);
+      for (let i = 0; i < len; i++) {
+        // Exponential decay noise — classic reverb IR
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay);
+      }
+    }
+    this._reverbBuf = buf;
+    return buf;
+  }
+
   async playVoice(url) {
     if (!this.ctx) return;
     const buf = await this._loadBuffer(url);
     if (!buf) return;
+
+    // Dry path (direct signal)
     const source = this.ctx.createBufferSource();
     source.buffer = buf;
-    source.connect(this.voiceGain);
+    const dryGain = this.ctx.createGain();
+    dryGain.gain.value = 0.65;   // slightly subdued direct signal
+    source.connect(dryGain).connect(this.voiceGain);
+
+    // Wet path (reverb — ethereal, echoing in the mind)
+    const convolver = this.ctx.createConvolver();
+    convolver.buffer = this._getReverbBuffer();
+    const wetGain = this.ctx.createGain();
+    wetGain.gain.value = 0.50;   // prominent reverb tail
+    source.connect(convolver).connect(wetGain).connect(this.voiceGain);
+
     source.start(0);
   }
 

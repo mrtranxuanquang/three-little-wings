@@ -59,14 +59,14 @@ export const CHAPTER_7 = {
 
       // ---- SHOT 2: Chiền Chiện ngả vào vai Cúc Cu — kéo 2 đứa lại gần nhau ----
       // Cúc Cu bên trái (x:670), Chiền Chiện bên phải (x:790), sát cạnh nhau
-      { t: 25500, cmd: 'charTeleport', char: 'cucu',  x: 670 },
-      { t: 25500, cmd: 'charTeleport', char: 'chien', x: 800 },
+      { t: 25500, cmd: 'charTeleport', char: 'cucu',  x: 690 },
+      { t: 25500, cmd: 'charTeleport', char: 'chien', x: 810 },
       { t: 25500, cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 25500, cmd: 'charPose', char: 'chien', sprite: 'chien_sleeping_leaning' },
       { t: 25500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },
 
       // ---- SHOT 3: Chiền Chiện nằm hẳn xuống — Cúc Cu (trái, x:670) đắp chăn bên phải ----
-      { t: 27500, cmd: 'charTeleport', char: 'chien', x: 870 },
+      { t: 27500, cmd: 'charTeleport', char: 'chien', x: 1060 },
       { t: 27500, cmd: 'charPose', char: 'chien', sprite: 'chien_lying_sleeping' },
 
       // ---- SHOT 4: Cúc Cu nhìn em ngủ, mỉm cười ----
@@ -75,8 +75,9 @@ export const CHAPTER_7 = {
       // ---- SHOT 5: Cúc Cu quỳ xuống đắp chăn cho em — tay duỗi sang phải đúng hướng ----
       { t: 31000, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_tucking_blanket' },
 
-      // ---- SHOT 6: Cúc Cu nhẹ nhàng chỉnh mũ len cho em ----
-      { t: 33500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder', scale: 1.18 },
+      // ---- SHOT 6: Cúc Cu ngồi lại bên đống lửa sau khi đắp chăn cho em ----
+      { t: 33500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },
+      { t: 33500, cmd: 'charScale', char: 'cucu',  scale: 1.0 },
 
       // ---- SHOT 7: Pan sang Chòe — đứng xa nhìn 2 em, quay mặt về phía 2 em ----
       { t: 36000, cmd: 'charPose', char: 'choe',  sprite: 'choe_watching_protective' },
@@ -89,7 +90,7 @@ export const CHAPTER_7 = {
       { t: 42000, cmd: 'charPose', char: 'choe',  sprite: 'choe_sighing_smile' },
 
       // ---- SHOT 10: Chòe lặng lẽ ngồi xuống bên trái Cúc Cu ----
-      { t: 45000, cmd: 'charTeleport', char: 'choe', x: 570 },
+      { t: 45000, cmd: 'charTeleport', char: 'choe', x: 560 },
       { t: 45000, cmd: 'charPose', char: 'choe',  sprite: 'choe_by_fire' },
       { t: 45000, cmd: 'faceChar', char: 'choe',  dir: 1 },
 

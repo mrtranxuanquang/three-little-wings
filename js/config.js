@@ -39,7 +39,7 @@ export const CONFIG = {
   // Character heights in game world — increased ~17% across the board.
   // Ratio reflects real age gaps: 11yo / 8yo / 6yo → 1 : 0.83 : 0.67
   CHARACTER_HEIGHTS: {
-    choe:  375, // tallest  (11yo)
+    choe:  415, // tallest  (11yo)
     cucu:  310, // middle   (8yo,  310/375 ≈ 0.83)
     chien: 250, // smallest (6yo,  250/375 ≈ 0.67)
     bo:    445, // adult father
