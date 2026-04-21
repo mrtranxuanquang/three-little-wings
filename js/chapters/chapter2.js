@@ -70,8 +70,10 @@ export const CHAPTER_2 = {
     // Tutorial: đẩy đá — 3 tảng đá giống thật, đẩy từng tảng xuống suối
     // ============================================================
     tut_push_rock: [
-      // Dựng barrier tại mép suối — 3 bé không được đi vào suối trước khi cầu xuất hiện
-      { t: 0,   cmd: 'setRightBarrier', x: 955 },
+      // Barrier tại x:1040 = đúng mép suối.
+      // Boulder triggerX: 1040 / 1100 / 1160 → Chòe clamped tại 1040,
+      // dx tối đa = 120 < 130 (near threshold) → cả 3 boulder đẩy được ✓
+      { t: 0,   cmd: 'setRightBarrier', x: 1040 },
       // 3 tảng đá xếp hàng, mỗi tảng một kích thước khác nhau (seed khác nhau)
       { t: 0,   cmd: 'spawnProp', prop: 'boulder', id: 'boulder1', x: 780,  triggerX: 1040, triggerEvent: 'rock1_in', sinkDepth: 18 },
       { t: 200, cmd: 'spawnProp', prop: 'boulder', id: 'boulder2', x: 840,  triggerX: 1100, triggerEvent: 'rock2_in', sinkDepth: 12 },
