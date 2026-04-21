@@ -47,6 +47,7 @@ export const CHAPTER_8 = {
       { t: 0,    cmd: 'charPose', char: 'choe',  sprite: 'choe_against_tree' },
       { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },
       { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_yawning_sleepy' },
+      { t: 0,    cmd: 'charPose', char: 'bo',    sprite: 'bo_standing_waiting' },
       { t: 0,    cmd: 'setVignette', alpha: 0.9 },
       { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.2 },
 
