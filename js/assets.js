@@ -84,12 +84,14 @@ export const SPRITES = {
   chien_lying_sleeping:      sp('chien_lying_sleeping.png'),
   chien_taking_hand_up:      sp('chien_taking_hand_up.png'),
 
-  // Bố Quang (5)
+  // Bố Quang (6)
   bo_standing_waiting:       sp('bo_standing_waiting.png'),
   bo_kneeling_arms_open:     sp('bo_kneeling_arms_open.png'),
   bo_warm_smile_standing:    sp('bo_warm_smile_standing.png'),
   bo_hands_clasped_emotional: sp('bo_hands_clasped_emotional.png'),
   bo_crouching_open_arms:    sp('bo_crouching_open_arms.png'),
+  // Cảnh ôm — 4 bố con trong 1 sprite duy nhất (ch8 arrive_home)
+  bo_scene_father_hugging_all: sp('bo_scene_father_hugging_all.png'),
 };
 
 // SCENES (8) — pre-composed full-screen cutscene images

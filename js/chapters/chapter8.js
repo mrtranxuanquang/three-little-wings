@@ -96,35 +96,33 @@ export const CHAPTER_8 = {
       // Bố không nói một lời — chỉ quỳ xuống, mở rộng 2 tay
       { t: 800,  cmd: 'narrate', text: 'Ra khỏi rừng... Băng qua cánh đồng hoa... Chúng nhảy qua suối... Và thấy cổng nhà...', duration: 6000, waitForInput: false },
 
-      // 3 bé lao vào ôm bố
+      // 3 bé lao vào ôm bố — khoảnh khắc chạm tay
       { t: 5500, cmd: 'attachChars', child: 'chien', parent: 'bo' },
       { t: 5500, cmd: 'attachChars', child: 'cucu',  parent: 'bo' },
       { t: 5500, cmd: 'attachChars', child: 'choe',  parent: 'bo' },
-      { t: 5500, cmd: 'charPose', char: 'bo',    sprite: 'bo_hands_clasped_emotional' },
-      { t: 5500, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 5500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder', scale: 1.18 },
-      { t: 5500, cmd: 'charPose', char: 'choe',  sprite: 'choe_relieved_kneeling' },
 
-      // 5 giây im lặng. Không có thoại. Music dịu xuống.
-      { t: 11000, cmd: 'narrate', text: '...', duration: 2000, waitForInput: false },
+      // ~1 giây sau khi chạm → thay 4 sprites riêng bằng 1 sprite duy nhất
+      { t: 6500, cmd: 'charTeleport', char: 'bo', x: 2810 },   // căn giữa sprite nhóm
+      { t: 6500, cmd: 'charPose', char: 'bo', sprite: 'bo_scene_father_hugging_all' },
+      { t: 6500, cmd: 'hideChar', char: 'choe' },
+      { t: 6500, cmd: 'hideChar', char: 'cucu' },
+      { t: 6500, cmd: 'hideChar', char: 'chien' },
 
-      // Giọng thật của Bố Quang — câu duy nhất
-      { t: 14000, cmd: 'sfx', sfx: 'sfx_bo_voice' },
-      { t: 14000, cmd: 'say', char: 'bo', text: '"Về nhà rồi. Bố rất tự hào vì các con đã đoàn kết, bảo vệ và yêu thương nhau."', duration: 6500, waitForInput: false },
+      // Im lặng — chỉ có sprite ôm nhau
+      { t: 9000, cmd: 'narrate', text: '...', duration: 2500, waitForInput: false },
 
-      // 3 bé nhìn bố — rồi mỉm cười
-      { t: 21200, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 21200, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },
-      { t: 21200, cmd: 'charPose', char: 'choe',  sprite: 'choe_sighing_smile' },
+      // Giọng thật của Bố Quang — câu duy nhất (t:12500 → còn 22s trước khi credits)
+      { t: 12500, cmd: 'sfx', sfx: 'sfx_bo_voice' },
+      { t: 12500, cmd: 'say', char: 'bo', text: '"Về nhà rồi. Bố rất tự hào vì các con đã đoàn kết, bảo vệ và yêu thương nhau."', duration: 6500, waitForInput: false },
 
-      // Fade to white
-      { t: 24500, cmd: 'animateVignette', to: 1.0, speed: 0.4 },
+      // Fade to white (t:21000 → 14.5s sau sprite nhóm ✓)
+      { t: 21000, cmd: 'animateVignette', to: 1.0, speed: 0.4 },
 
       // Chữ "Anh em phải bảo vệ và yêu thương nhau..."
-      { t: 26800, cmd: 'narrate', text: '"Anh em phải bảo vệ và yêu thương nhau..."', duration: 6000, waitForInput: false },
+      { t: 23500, cmd: 'narrate', text: '"Anh em phải bảo vệ và yêu thương nhau..."', duration: 6000, waitForInput: false },
 
-      // Sang Credits
-      { t: 34000, cmd: 'goToCredits' },
+      // Sang Credits (t:34500 → 28s sau sprite nhóm ✓ > 8s)
+      { t: 34500, cmd: 'goToCredits' },
     ],
   },
 };
