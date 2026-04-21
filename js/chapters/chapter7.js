@@ -57,37 +57,45 @@ export const CHAPTER_7 = {
       // ---- SHOT 1: Chiền Chiện ngáp ----
       { t: 22500, cmd: 'charPose', char: 'chien', sprite: 'chien_yawning_sleepy' },
 
-      // ---- SHOT 2: Chiền Chiện ngả vào vai Cúc Cu ----
+      // ---- SHOT 2: Chiền Chiện ngả vào vai Cúc Cu — kéo 2 đứa lại gần nhau ----
+      // Cúc Cu bên trái (x:670), Chiền Chiện bên phải (x:790), sát cạnh nhau
+      { t: 25500, cmd: 'charTeleport', char: 'cucu',  x: 670 },
+      { t: 25500, cmd: 'charTeleport', char: 'chien', x: 800 },
+      { t: 25500, cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 25500, cmd: 'charPose', char: 'chien', sprite: 'chien_sleeping_leaning' },
       { t: 25500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },
 
-      // ---- SHOT 3: Cúc Cu nhìn em ngủ, mỉm cười ----
+      // ---- SHOT 3: Chiền Chiện nằm hẳn xuống — Cúc Cu (trái, x:670) đắp chăn bên phải ----
+      { t: 27500, cmd: 'charTeleport', char: 'chien', x: 870 },
+      { t: 27500, cmd: 'charPose', char: 'chien', sprite: 'chien_lying_sleeping' },
+
+      // ---- SHOT 4: Cúc Cu nhìn em ngủ, mỉm cười ----
       { t: 28500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arms_crossed_listening' },
 
-      // ---- SHOT 4: Cúc Cu đắp áo/chỉnh mũ cho em ----
+      // ---- SHOT 5: Cúc Cu quỳ xuống đắp chăn cho em — tay duỗi sang phải đúng hướng ----
       { t: 31000, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_tucking_blanket' },
 
-      // ---- SHOT 5: Cúc Cu chỉnh mũ len, cẩn thận như mẹ ----
+      // ---- SHOT 6: Cúc Cu nhẹ nhàng chỉnh mũ len cho em ----
       { t: 33500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder', scale: 1.18 },
 
-      // ---- SHOT 6: Pan sang Chòe — đang nhìn 2 em ----
+      // ---- SHOT 7: Pan sang Chòe — đứng xa nhìn 2 em, quay mặt về phía 2 em ----
       { t: 36000, cmd: 'charPose', char: 'choe',  sprite: 'choe_watching_protective' },
-      { t: 36000, cmd: 'faceChar', char: 'choe',  dir: -1 },
+      { t: 36000, cmd: 'faceChar', char: 'choe',  dir: 1 },
 
-      // ---- SHOT 7: Close-up Chòe — một giọt nước mắt ----
+      // ---- SHOT 8: Close-up Chòe — một giọt nước mắt ----
       { t: 39000, cmd: 'charPose', char: 'choe',  sprite: 'choe_single_tear_sitting' },
 
-      // ---- SHOT 8: Khoé môi Chòe cong lên — nụ cười buồn ----
+      // ---- SHOT 9: Khoé môi Chòe cong lên — nụ cười buồn ----
       { t: 42000, cmd: 'charPose', char: 'choe',  sprite: 'choe_sighing_smile' },
 
-      // ---- SHOT 9: Chòe đứng dậy, đến ngồi cạnh 2 em ----
-      { t: 45000, cmd: 'charTeleport', char: 'choe', x: 690 },
+      // ---- SHOT 10: Chòe lặng lẽ ngồi xuống bên trái Cúc Cu ----
+      { t: 45000, cmd: 'charTeleport', char: 'choe', x: 570 },
       { t: 45000, cmd: 'charPose', char: 'choe',  sprite: 'choe_by_fire' },
       { t: 45000, cmd: 'faceChar', char: 'choe',  dir: 1 },
 
-      // ---- SHOT 10: Wide shot — 3 bé dựa vào nhau ----
+      // ---- SHOT 11: Wide shot — 3 bé: Chòe(570) Cúc Cu(670) Chiện nằm(870) ----
       { t: 48000, cmd: 'charPose', char: 'choe',  sprite: 'choe_against_tree' },
-      { t: 48000, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },  // reset scale về 1.0
+      { t: 48000, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },
       { t: 48000, cmd: 'charScale', char: 'cucu',  scale: 1.0 },
       { t: 48000, cmd: 'charPose', char: 'chien', sprite: 'chien_lying_sleeping' },
 
