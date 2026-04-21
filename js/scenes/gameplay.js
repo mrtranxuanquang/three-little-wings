@@ -193,8 +193,8 @@ export class GameplayScene {
     }
 
     // Clamp leader in world — 130px margin left (never flush with edge),
-    // 320px margin right so character appears at ≤5/6 of screen when camera maxes out.
-    leader.x = Math.max(130, Math.min(this.chapter.worldWidth - 320, leader.x));
+    // 50px margin right so chapter-ending triggers near worldWidth can be reached.
+    leader.x = Math.max(130, Math.min(this.chapter.worldWidth - 50, leader.x));
 
     // Followers — compute smoothed "follow side" so leader direction changes
     // don't teleport followers to the other side instantly.
