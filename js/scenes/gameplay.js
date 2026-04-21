@@ -500,8 +500,16 @@ export class GameplayScene {
       case 'bgm':
         this.game.audio.playBgm(`audio/${cmd.track}.mp3`, { fadeMs: cmd.fadeMs || 1500 });
         break;
+      case 'stopBgm':
+        // Fade out current BGM without starting a new one
+        this.game.audio.playBgm('', { fadeMs: cmd.fadeMs || 2000 });
+        break;
       case 'sfx':
         this.game.audio.playSfx(`audio/${cmd.sfx}.mp3`);
+        break;
+      case 'voice':
+        // Plays through voiceGain — for spoken recordings
+        this.game.audio.playVoice(`audio/${cmd.sfx}.mp3`);
         break;
       case 'spawnProp':
         this.props.push(createProp(cmd, this));

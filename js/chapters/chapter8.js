@@ -118,10 +118,16 @@ export const CHAPTER_8 = {
       // Fade to white (t:21000 → 14.5s sau sprite nhóm ✓)
       { t: 21000, cmd: 'animateVignette', to: 1.0, speed: 0.4 },
 
-      // Chữ "Anh em phải bảo vệ và yêu thương nhau..."
-      { t: 23500, cmd: 'narrate', text: '"Anh em phải bảo vệ và yêu thương nhau..."', duration: 6000, waitForInput: false },
+      // BGM fade ra trong lúc màn trắng — giọng bố sẽ nghe rõ hơn
+      { t: 22000, cmd: 'stopBgm', fadeMs: 1800 },
 
-      // Sang Credits (t:34500 → 28s sau sprite nhóm ✓ > 8s)
+      // Chữ + giọng bố Quang cất lên CÙNG LÚC (t:23500)
+      // Ghi âm "Anh em phải bảo vệ và yêu thương nhau..." dài 4.2s
+      { t: 23500, cmd: 'narrate', text: '"Anh em phải bảo vệ và yêu thương nhau..."', duration: 8000, waitForInput: false },
+      { t: 23500, cmd: 'voice', sfx: 'sfx_bao_ve_yeu_thuong' },
+
+      // Credits sau khi giọng kết thúc + khoảng lặng (23500 + 4200 + 4300 buffer = ~32000)
+      // t:34500 → 28s sau group sprite, 11s sau giọng đọc ✓
       { t: 34500, cmd: 'goToCredits' },
     ],
   },
