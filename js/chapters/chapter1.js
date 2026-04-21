@@ -14,7 +14,7 @@ export const CHAPTER_1 = {
   worldWidth: 3840,       // 2 screens wide
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 280, leader: 'choe' },
+  spawn: { x: 640, leader: 'choe' },
 
   // Platforms for tiny jumping practice
   platforms: [
@@ -76,9 +76,9 @@ export const CHAPTER_1 = {
       { t: 0,     cmd: 'charPose', char: 'choe',  sprite: 'choe_standing_watching' },
       { t: 0,     cmd: 'charPose', char: 'cucu',  sprite: 'cucu_idle_side' },
       { t: 0,     cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 0,     cmd: 'charTeleport', char: 'choe',  x: 280 },
-      { t: 0,     cmd: 'charTeleport', char: 'cucu',  x: 400 },
-      { t: 0,     cmd: 'charTeleport', char: 'chien', x: 520 },
+      { t: 0,     cmd: 'charTeleport', char: 'choe',  x: 520 },
+      { t: 0,     cmd: 'charTeleport', char: 'cucu',  x: 640 },
+      { t: 0,     cmd: 'charTeleport', char: 'chien', x: 760 },
       { t: 0,     cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,     cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,     cmd: 'faceChar', char: 'chien', dir: 1 },

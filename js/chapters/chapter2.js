@@ -14,13 +14,13 @@ export const CHAPTER_2 = {
   worldWidth: 3200,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 200, leader: 'choe' },
+  spawn: { x: 640, leader: 'choe' },
 
   platforms: [],
 
-  // Rock bridge: hidden until boulder pushed in
+  // Rock bridge: 3 stepping-stones exposed when all 3 boulders are pushed in
   dynamicPlatforms: [
-    { id: 'rock_bridge', x: 1060, y: CONFIG.GROUND_Y, w: 280, h: 40, visible: false },
+    { id: 'rock_bridge', x: 1040, y: CONFIG.GROUND_Y - 12, w: 340, h: 28, visible: false },
   ],
 
   collectibles: [
@@ -67,21 +67,44 @@ export const CHAPTER_2 = {
     ],
 
     // ============================================================
-    // Tutorial: đẩy đá
+    // Tutorial: đẩy đá — 3 tảng đá giống thật, đẩy từng tảng xuống suối
     // ============================================================
     tut_push_rock: [
-      { t: 0, cmd: 'spawnProp', prop: 'boulder', id: 'boulder1', x: 850, triggerX: 1050, triggerEvent: 'bridge_appears' },
-      { t: 300, cmd: 'narrate', text: '💡 Chích Chòe khoẻ nhất! Đứng cạnh tảng đá, giữ Z để đẩy tảng đá vào dòng suối.', duration: 5000, tutorial: true, waitForInput: false },
+      // 3 tảng đá xếp hàng, mỗi tảng một kích thước khác nhau (seed khác nhau)
+      { t: 0,   cmd: 'spawnProp', prop: 'boulder', id: 'boulder1', x: 780,  triggerX: 1040, triggerEvent: 'rock1_in', sinkDepth: 18 },
+      { t: 200, cmd: 'spawnProp', prop: 'boulder', id: 'boulder2', x: 840,  triggerX: 1100, triggerEvent: 'rock2_in', sinkDepth: 12 },
+      { t: 400, cmd: 'spawnProp', prop: 'boulder', id: 'boulder3', x: 900,  triggerX: 1160, triggerEvent: 'bridge_appears', sinkDepth: 8 },
+      { t: 600, cmd: 'narrate', text: '💡 Chích Chòe khoẻ nhất! Đứng cạnh tảng đá, giữ Z để đẩy từng tảng đá xuống suối làm cầu!', mobileText: '💡 Đứng cạnh tảng đá, giữ nút ⚡ để đẩy từng tảng đá xuống suối!', duration: 5500, tutorial: true, waitForInput: false },
     ],
 
     // ============================================================
-    // Boulder pushed in → rock bridge appears
+    // Tảng 1 rơi xuống suối — tiếng bùm, nước văng
+    // ============================================================
+    rock1_in: [
+      { t: 0,   cmd: 'cameraShake', amount: 8 },
+      { t: 0,   cmd: 'sfx', sfx: 'sfx_rock_land' },
+      { t: 300, cmd: 'narrate', text: 'Bùm! Tảng đá đầu tiên rơi xuống suối...', duration: 2000, waitForInput: false },
+    ],
+
+    // ============================================================
+    // Tảng 2 rơi xuống — suối nước dậy
+    // ============================================================
+    rock2_in: [
+      { t: 0,   cmd: 'cameraShake', amount: 10 },
+      { t: 0,   cmd: 'sfx', sfx: 'sfx_rock_land' },
+      { t: 300, cmd: 'narrate', text: 'Tảng hai... sắp xong rồi, cố lên Chòe!', duration: 2000, waitForInput: false },
+    ],
+
+    // ============================================================
+    // Tảng 3 → cầu đá hoàn chỉnh
     // ============================================================
     bridge_appears: [
       { t: 0,    cmd: 'showPlatform', id: 'rock_bridge' },
-      { t: 0,    cmd: 'cameraShake', amount: 10 },
+      { t: 0,    cmd: 'cameraShake', amount: 14 },
       { t: 0,    cmd: 'sfx', sfx: 'sfx_rock_land' },
-      { t: 400,  cmd: 'narrate', text: 'Đá lăn vào suối — Chích Chòe đã đẩy tảng đá làm cầu cho các em!!', duration: 2500, waitForInput: false },
+      { t: 500,  cmd: 'narrate', text: 'RẦMMM! Ba tảng đá lớn chắn ngang suối — Chích Chòe đã làm được!', duration: 3000, waitForInput: false },
+      { t: 3000, cmd: 'charPose', char: 'choe', sprite: 'choe_relieved_kneeling' },
+      { t: 3200, cmd: 'say', char: 'choe', text: 'Xong! Mấy tảng đá này làm cầu được rồi. Các em đi qua đi!', duration: 2800, waitForInput: false },
     ],
 
     // ============================================================

@@ -16,7 +16,7 @@ export const CHAPTER_6 = {
   worldWidth: 2800,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 200, leader: 'choe' },
+  spawn: { x: 640, leader: 'choe' },
 
   // Cúc Cu giữ dây bên dưới — đặt ở chân vách núi, không trèo lên
   cucuBaseX: 320,
@@ -49,9 +49,9 @@ export const CHAPTER_6 = {
       { t: 0,    cmd: 'setVignette', alpha: 0.85 },
       { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.35 },
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 220 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 130 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 320 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 350 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 240 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 460 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
@@ -78,8 +78,8 @@ export const CHAPTER_6 = {
       { t: 11800, cmd: 'lockCharSwitch' },
       { t: 11800, cmd: 'setLeader', char: 'choe' },
 
-      { t: 12200, cmd: 'narrate', text: '💡 Chích Chòe cõng Chiền Chiện! Điều khiển Chích Chòe trèo lên vách núi.', duration: 4000, tutorial: true, waitForInput: false },
-      { t: 12400, cmd: 'charState', char: 'choe', state: 'idle' },
+      { t: 12200, cmd: 'narrate', text: '💡 Chích Chòe cõng Chiền Chiện! Điều khiển Chích Chòe trèo lên vách núi.', mobileText: '💡 Chích Chòe cõng Chiền Chiện! Ấn nút ← → để trèo lên!', duration: 4000, tutorial: true, waitForInput: false },
+      // KHÔNG charState:idle — giữ nguyên pose choe_climbing trong lúc trèo
       { t: 12600, cmd: 'releaseInput' },
     ],
 
@@ -99,7 +99,7 @@ export const CHAPTER_6 = {
       { t: 5000, cmd: 'say', char: 'chien', text: 'Anh Chòe ơi... em sợ... em không dám nhìn...', duration: 3000 },
       { t: 8300, cmd: 'say', char: 'choe',  text: 'Không sao đâu. Có anh và anh Cu ở đây. Chiện cứ mở mắt ra nhìn lên trời đi. Trời đẹp lắm.', duration: 4500 },
       { t: 13100, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 13200, cmd: 'charState', char: 'choe',  state: 'idle' },
+      // Giữ pose choe_climbing (đã set ở t:2600) — không reset về idle
       { t: 13400, cmd: 'releaseInput' },
     ],
 
@@ -118,8 +118,11 @@ export const CHAPTER_6 = {
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
       { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_idle_side' },
       { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
+      // choe vẫn đang ở pose choe_climbing cho đến khi Chiện nói cảm ơn
 
       { t: 600,  cmd: 'say', char: 'chien', text: 'Cảm ơn Chòe đã cõng Chiện. Giờ Chiện tự đi được rồi...', duration: 3000 },
+      // Sau câu cảm ơn → Chòe mới tách thành sprite riêng
+      { t: 3400, cmd: 'charState', char: 'choe', state: 'idle' },
       { t: 3600, cmd: 'say', char: 'choe',  text: 'Chiện nhẹ hều mà. Với cả có Cu giữ dây nên an toàn hơn.', duration: 3000 },
       { t: 7400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_arms_crossed_listening' },
       { t: 7500, cmd: 'say', char: 'cucu',  text: 'Cu cũng sợ độ cao, mà lúc nãy Cu cố giữ bình tĩnh đi chậm sau Chòe nên vượt qua dễ dàng.', duration: 4500 },

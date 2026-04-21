@@ -47,7 +47,7 @@ export const CHAPTER_7 = {
 
       // ---- Đoạn thoại ----
       { t: 1500, cmd: 'say', char: 'chien', text: 'Anh ơi... em nhớ bố mẹ...', duration: 3000, waitForInput: false },
-      { t: 4800, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder' },
+      { t: 4800, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder', scale: 1.18 },
       { t: 5000, cmd: 'say', char: 'cucu',  text: 'Đừng khóc, có tụi anh ở đây mà.', duration: 2500, waitForInput: false },
       { t: 8100, cmd: 'say', char: 'choe',  text: 'Các em có nhớ bố hay dặn gì không?', duration: 3000 },
       { t: 11400, cmd: 'say', char: 'cucu',  text: 'Anh em phải bảo vệ và yêu thương nhau...', duration: 3000 },
@@ -68,7 +68,7 @@ export const CHAPTER_7 = {
       { t: 31000, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_tucking_blanket' },
 
       // ---- SHOT 5: Cúc Cu chỉnh mũ len, cẩn thận như mẹ ----
-      { t: 33500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder' },
+      { t: 33500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder', scale: 1.18 },
 
       // ---- SHOT 6: Pan sang Chòe — đang nhìn 2 em ----
       { t: 36000, cmd: 'charPose', char: 'choe',  sprite: 'choe_watching_protective' },
@@ -87,7 +87,8 @@ export const CHAPTER_7 = {
 
       // ---- SHOT 10: Wide shot — 3 bé dựa vào nhau ----
       { t: 48000, cmd: 'charPose', char: 'choe',  sprite: 'choe_against_tree' },
-      { t: 48000, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },
+      { t: 48000, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_by_fire_warm' },  // reset scale về 1.0
+      { t: 48000, cmd: 'charScale', char: 'cucu',  scale: 1.0 },
       { t: 48000, cmd: 'charPose', char: 'chien', sprite: 'chien_lying_sleeping' },
 
       // ---- SHOT 11-12: Lửa nhỏ dần, sao trời, zoom out ----

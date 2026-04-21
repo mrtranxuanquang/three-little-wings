@@ -16,7 +16,7 @@ export const CHAPTER_5 = {
   worldWidth: 4200,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 200, leader: 'choe' },
+  spawn: { x: 640, leader: 'choe' },
 
   platforms: [],
 
@@ -41,9 +41,9 @@ export const CHAPTER_5 = {
       { t: 0,    cmd: 'setVignette', alpha: 0.85 },
       { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.35 },
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 250 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 150 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 350 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 640 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 525 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 760 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
@@ -73,13 +73,14 @@ export const CHAPTER_5 = {
     // ============================================================
     enter_cave: [
       { t: 0,    cmd: 'setCaveWalk', on: true },
-      { t: 0,    cmd: 'heartbeat', bpm: 58 },
+      { t: 0,    cmd: 'heartbeat', bpm: 64 },
       { t: 0,    cmd: 'animateVignette', to: 0.15, speed: 0.12 },
-      // Heartbeat chỉ 5-7 giây rồi dừng, sau đó hiện mắt nai từ xa
-      { t: 5000, cmd: 'setHeartbeatBpm', bpm: 82 },
-      { t: 7000, cmd: 'stopHeartbeat' },
-      { t: 7200, cmd: 'animateVignette', to: 0.72, speed: 0.06 },
-      { t: 7500, cmd: 'spawnProp', prop: 'deerEyes', id: 'deer1', x: 2600 },
+      // Heartbeat chỉ 2 giây rồi dừng — liền mạch hơn
+      { t: 1200, cmd: 'setHeartbeatBpm', bpm: 88 },
+      { t: 2000, cmd: 'stopHeartbeat' },
+      { t: 2200, cmd: 'animateVignette', to: 0.72, speed: 0.06 },
+      // Mắt nai tự dần xuất hiện và tự di chuyển lại gần — không cần ấn
+      { t: 2800, cmd: 'spawnProp', prop: 'deerEyes', id: 'deer1', x: 2800 },
     ],
 
     // ============================================================
@@ -187,10 +188,10 @@ export const CHAPTER_5 = {
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
 
-      { t: 500,  cmd: 'say', char: 'choe',  text: 'Trời tối rồi. Mình phải ở lại đây nghỉ ngơi rồi mai mới đi tiếp được.', duration: 3500 },
-      { t: 3500, cmd: 'narrate', text: 'Ba anh em nhìn lên trời. Sao đêm bắt đầu mọc. Đom đóm lấp lánh khắp nơi...', duration: 5000, waitForInput: false },
-      { t: 9500, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
-      { t: 12500, cmd: 'showTransition', title: 'Chương 5 — Hang Tối', next: 6 },
+      { t: 500,  cmd: 'say', char: 'choe',  text: 'Trời tối rồi. Mình phải ở lại đây nghỉ ngơi rồi mai mới đi tiếp được.', duration: 3500, waitForInput: false },
+      { t: 4200, cmd: 'narrate', text: 'Ba anh em nhìn lên trời. Sao đêm bắt đầu mọc. Đom đóm lấp lánh khắp nơi...', duration: 4000, waitForInput: false },
+      { t: 8500, cmd: 'animateVignette', to: 1.0, speed: 0.35 },
+      { t: 11000, cmd: 'showTransition', title: 'Chương 5 — Hang Tối', next: 6 },
     ],
   },
 };

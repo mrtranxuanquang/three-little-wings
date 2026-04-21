@@ -16,7 +16,7 @@ export const CHAPTER_3 = {
   worldWidth: 2600,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 200, leader: 'choe' },
+  spawn: { x: 640, leader: 'choe' },
 
   platforms: [],
 
@@ -47,9 +47,9 @@ export const CHAPTER_3 = {
       { t: 0,    cmd: 'charPose',     char: 'chien', sprite: 'chien_wonder_awestruck' },
       { t: 0,    cmd: 'charPose',     char: 'cucu',  sprite: 'cucu_idle_side' },
       { t: 0,    cmd: 'charPose',     char: 'choe',  sprite: 'choe_standing_watching' },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 200 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 310 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 420 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 520 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 640 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 760 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },

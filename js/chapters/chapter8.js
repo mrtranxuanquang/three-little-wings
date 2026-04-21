@@ -16,7 +16,7 @@ export const CHAPTER_8 = {
   worldWidth: 3200,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 200, leader: 'chien' },
+  spawn: { x: 640, leader: 'chien' },
 
   platforms: [],
 
@@ -38,9 +38,9 @@ export const CHAPTER_8 = {
     // ============================================================
     intro_ch8: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 280 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 180 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 310 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 640 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 525 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 760 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
@@ -102,7 +102,7 @@ export const CHAPTER_8 = {
       { t: 5500, cmd: 'attachChars', child: 'choe',  parent: 'bo' },
       { t: 5500, cmd: 'charPose', char: 'bo',    sprite: 'bo_hands_clasped_emotional' },
       { t: 5500, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
-      { t: 5500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder' },
+      { t: 5500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder', scale: 1.18 },
       { t: 5500, cmd: 'charPose', char: 'choe',  sprite: 'choe_relieved_kneeling' },
 
       // 5 giây im lặng. Không có thoại. Music dịu xuống.

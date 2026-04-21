@@ -16,7 +16,7 @@ export const CHAPTER_4 = {
   worldWidth: 2600,
   groundY: CONFIG.GROUND_Y,
 
-  spawn: { x: 200, leader: 'cucu' },
+  spawn: { x: 640, leader: 'cucu' },
 
   platforms: [],
 
@@ -37,9 +37,9 @@ export const CHAPTER_4 = {
       { t: 0,    cmd: 'setVignette', alpha: 0.9 },
       { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.3 },
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 200 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 300 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 400 },
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 520 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 640 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 760 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
@@ -121,7 +121,7 @@ export const CHAPTER_4 = {
 
       // Khoảnh khắc hối hận
       { t: 7500, cmd: 'say', char: 'chien', text: 'Em không sao! Huhu... Em xin lỗi... Em tưởng bị lạc rồi... Em không dám bỏ đi một mình nữa đâu.', duration: 5500 },
-      { t: 12300, cmd: 'charPose', char: 'cucu', sprite: 'cucu_arm_around_shoulder' },
+      { t: 12300, cmd: 'charPose', char: 'cucu', sprite: 'cucu_arm_around_shoulder', scale: 1.18 },
       { t: 12500, cmd: 'say', char: 'cucu',  text: 'Anh cũng xin lỗi. Anh quát Chiền Chiện là anh sai. Đừng bao giờ... bỏ đi một mình nữa, nghe không?', duration: 5000 },
       { t: 17700, cmd: 'say', char: 'chien', text: 'Vâng... vâng anh ơi...', duration: 2200 },
 

@@ -192,8 +192,9 @@ export class GameplayScene {
       leader.update(dt, null, platforms, false);
     }
 
-    // Clamp leader in world
-    leader.x = Math.max(50, Math.min(this.chapter.worldWidth - 50, leader.x));
+    // Clamp leader in world — 130px margin left (never flush with edge),
+    // 320px margin right so character appears at ≤5/6 of screen when camera maxes out.
+    leader.x = Math.max(130, Math.min(this.chapter.worldWidth - 320, leader.x));
 
     // Followers — compute smoothed "follow side" so leader direction changes
     // don't teleport followers to the other side instantly.
@@ -458,7 +459,17 @@ export class GameplayScene {
       }
       case 'charPose': {
         const c = this.characters[cmd.char];
-        if (c) c.setState(STATE.CUSTOM, { sprite: cmd.sprite });
+        if (c) {
+          c.setState(STATE.CUSTOM, { sprite: cmd.sprite });
+          // Optional scale override per-pose (corrects sprites where character
+          // occupies smaller proportion of the frame, e.g. arm_around_shoulder)
+          if (cmd.scale !== undefined) c.scale = cmd.scale;
+        }
+        break;
+      }
+      case 'charScale': {
+        const c = this.characters[cmd.char];
+        if (c) c.scale = cmd.scale ?? 1.0;
         break;
       }
       case 'charTeleport': {
@@ -747,7 +758,8 @@ export class GameplayScene {
         c.vx = 0;
         const onDone = sm.onDone;
         c._scriptedMove = null;
-        c.setState(STATE.IDLE);
+        // Preserve CUSTOM pose (charPose) — only reset to idle if no custom sprite
+        if (c.state !== STATE.CUSTOM) c.setState(STATE.IDLE);
         if (onDone) { try { onDone(); } catch(e) { console.error(e); } }
         continue;
       }
@@ -755,12 +767,13 @@ export class GameplayScene {
       c.vx = dir * sm.speed;
       c.facing = dir;
       // Drive horizontal motion ourselves; let updateBody handle gravity/ground.
-      // We call updateBody with empty platforms to keep scripted chars on ground
-      // without fighting platform collisions (intended for Ch1 ground-level scripts).
       const platforms = this._getActivePlatforms();
       updateBody(c, platforms, CONFIG.GROUND_Y, dt);
-      if (sm.speed >= CONFIG.RUN_SPEED) c.setState(STATE.RUN);
-      else c.setState(STATE.WALK);
+      // Preserve CUSTOM pose during movement (e.g. cucu_diving_save while charging in)
+      if (c.state !== STATE.CUSTOM) {
+        if (sm.speed >= CONFIG.RUN_SPEED) c.setState(STATE.RUN);
+        else c.setState(STATE.WALK);
+      }
     }
   }
 
@@ -861,13 +874,13 @@ export class GameplayScene {
     ctx.lineJoin = 'round';
 
     if (b.action === 'left' || b.action === 'right') {
-      // Chevron arrow
+      // Chevron arrow — tip points in the direction of movement
       const dir = b.action === 'left' ? -1 : 1;
       const s = rr * 0.38;
       ctx.beginPath();
-      ctx.moveTo(cx + dir * s * 0.4, cy - s);
-      ctx.lineTo(cx - dir * s * 0.4, cy);
-      ctx.lineTo(cx + dir * s * 0.4, cy + s);
+      ctx.moveTo(cx - dir * s * 0.4, cy - s);   // top wing (opposite side)
+      ctx.lineTo(cx + dir * s * 0.4, cy);         // apex tip (direction of motion)
+      ctx.lineTo(cx - dir * s * 0.4, cy + s);   // bottom wing
       ctx.stroke();
     } else if (b.action === 'jump') {
       // Leaf + upward curl (organic, feels like flight)
@@ -1163,29 +1176,49 @@ function createProp(cmd, scene) {
   if (cmd.prop === 'butterfly') return createButterfly(cmd);
   if (cmd.prop === 'boulder')   return createBoulder(cmd, scene);
   if (cmd.prop === 'campfire')  return createCampfire(cmd);
-  if (cmd.prop === 'deerEyes')  return createDeerEyes(cmd);
+  if (cmd.prop === 'deerEyes')  return createDeerEyes(cmd, scene);
   if (cmd.prop === 'fireflies') return createFireflies(cmd);
   return { id: `p${_propIdCounter++}`, update: () => {}, draw: () => {} };
 }
 
-function createBoulder({ id, x, y, triggerX, triggerEvent }, scene) {
-  let vy = 0, rolling = false, done = false;
-  const W = 120, H = 100;
+function createBoulder({ id, x, y, triggerX, triggerEvent, sinkDepth = 0 }, scene) {
+  // sinkDepth: how far below groundY the stone sits once pushed in (0 = on ground)
+  let vy = 0, rolling = false, done = false, splashing = false, splashTimer = 0;
+  // Each boulder gets a unique seed for irregular shape
+  const seed = (id || '').charCodeAt(id?.length - 1 || 0) * 137 || Math.random() * 999 | 0;
+  const rng = (n) => { let s = (seed * 9301 + n * 49297) % 233280; return s / 233280; };
+  // Pre-generate 8 polygon points for irregular stone outline
+  const NUM_PTS = 9;
+  const stoneVerts = Array.from({ length: NUM_PTS }, (_, i) => {
+    const angle = (i / NUM_PTS) * Math.PI * 2 - Math.PI / 2;
+    const r = 0.78 + rng(i * 3) * 0.22;          // radius variation ±22%
+    const wobble = (rng(i * 7 + 1) - 0.5) * 0.18; // angular wobble
+    return { a: angle + wobble, r };
+  });
+  const W = 110 + (seed % 3) * 14;  // stones have slightly different sizes
+  const H = W * (0.72 + rng(5) * 0.16);
+
   const obj = {
     id: id || `boulder${_propIdCounter++}`,
     x, y: y ?? CONFIG.GROUND_Y,
+    sinkY: CONFIG.GROUND_Y + sinkDepth,
     update(dt) {
-      if (done) return;
+      if (done && !splashing) return;
+      if (splashing) {
+        splashTimer += dt;
+        if (splashTimer > 0.55) splashing = false;
+        return;
+      }
       // Gravity
       vy += 1200 * dt;
       this.y = Math.min(CONFIG.GROUND_Y, this.y + vy * dt);
       if (this.y >= CONFIG.GROUND_Y) vy = 0;
 
-      // Skill push: only Chòe as leader, adjacent, holding Z
+      // Skill push: only Chòe as leader, adjacent, holding skill key
       const leader = scene.characters[scene.leaderId];
       if (!scene.inputLocked && scene.leaderId === 'choe' && leader) {
         const dx = this.x - leader.x;
-        const near = Math.abs(dx) < 110 && Math.abs(this.y - leader.y) < 80;
+        const near = Math.abs(dx) < 130 && Math.abs(this.y - leader.y) < 80;
         const facing = leader.facing * dx > 0;
         if (near && facing && Input.isDown('skill')) {
           rolling = true;
@@ -1196,36 +1229,118 @@ function createBoulder({ id, x, y, triggerX, triggerEvent }, scene) {
         }
       }
       if (rolling) {
-        const dir = Math.sign(this.x - (scene.characters['choe']?.x || this.x - 1));
-        this.x += dir * CONFIG.WALK_SPEED * dt;
+        this.x += CONFIG.WALK_SPEED * dt;
       }
-      // Trigger
+      // Trigger: stone reaches stream edge → splash + sink
       if (triggerX && !done && rolling && this.x >= triggerX) {
-        done = true; rolling = false;
+        done = true; rolling = false; splashing = true; splashTimer = 0;
         scene._fireEvent(triggerEvent);
+        // Sink into stream
+        this.y = this.sinkY;
         const c = scene.characters['choe'];
         if (c && c.customSpriteKey === 'choe_pushing_rock') c.setState(STATE.IDLE);
       }
     },
     draw(ctx) {
-      const cx = this.x, cy = this.y - H / 2;
+      if (!splashing && done && sinkDepth === 0) {
+        // Fully submerged — draw as stepping-stone peeking out of water
+        this._drawStone(ctx, this.x, this.y - H * 0.18, W * 1.1, H * 0.36, true);
+        return;
+      }
+      if (splashing) {
+        this._drawSplash(ctx, this.x, CONFIG.GROUND_Y, splashTimer);
+      }
+      if (!done) {
+        // Ground shadow
+        ctx.save();
+        ctx.globalAlpha = 0.18;
+        ctx.fillStyle = '#000';
+        ctx.beginPath();
+        ctx.ellipse(this.x, this.y + 6, W * 0.55, H * 0.18, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        this._drawStone(ctx, this.x, this.y - H * 0.5, W, H, false);
+      }
+    },
+    _drawStone(ctx, cx, cy, sw, sh, isWet) {
       ctx.save();
-      ctx.fillStyle = '#9a8a78';
-      ctx.strokeStyle = '#3a2a1a';
-      ctx.lineWidth = 4;
-      ctx.beginPath(); ctx.ellipse(cx, cy, W/2, H/2, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-      ctx.lineWidth = 2;
+      // Main stone body — radial gradient for depth
+      const grad = ctx.createRadialGradient(cx - sw * 0.2, cy - sh * 0.25, sw * 0.08, cx, cy, sw * 0.7);
+      if (isWet) {
+        grad.addColorStop(0, '#8a9e90');
+        grad.addColorStop(0.5, '#5c7060');
+        grad.addColorStop(1, '#3a4d3c');
+      } else {
+        grad.addColorStop(0, '#b8a898');
+        grad.addColorStop(0.45, '#8a7a6a');
+        grad.addColorStop(1, '#4a3a2e');
+      }
+      ctx.fillStyle = grad;
+      // Irregular polygon path
       ctx.beginPath();
-      ctx.moveTo(cx-25, cy-8); ctx.lineTo(cx+8, cy+22);
-      ctx.moveTo(cx+18, cy-22); ctx.lineTo(cx-5, cy+12);
+      for (let i = 0; i < NUM_PTS; i++) {
+        const v = stoneVerts[i];
+        const px = cx + Math.cos(v.a) * sw * v.r * 0.5;
+        const py = cy + Math.sin(v.a) * sh * v.r * 0.5;
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      // Rim / outline
+      ctx.strokeStyle = isWet ? 'rgba(20,40,22,0.55)' : 'rgba(30,20,12,0.5)';
+      ctx.lineWidth = 2.5;
       ctx.stroke();
-      if (rolling) {
-        ctx.fillStyle = 'rgba(0,0,0,0.12)';
-        ctx.beginPath(); ctx.ellipse(cx, this.y+6, W/2+12, 14, 0, 0, Math.PI*2); ctx.fill();
+
+      // Surface cracks
+      ctx.strokeStyle = isWet ? 'rgba(10,30,12,0.35)' : 'rgba(20,14,8,0.28)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(cx - sw*0.18, cy - sh*0.05); ctx.lineTo(cx + sw*0.12, cy + sh*0.18);
+      ctx.moveTo(cx + sw*0.15, cy - sh*0.22); ctx.lineTo(cx - sw*0.06, cy + sh*0.10);
+      ctx.stroke();
+
+      // Highlight (top-left specular)
+      ctx.fillStyle = 'rgba(255,255,240,0.18)';
+      ctx.beginPath();
+      ctx.ellipse(cx - sw*0.15, cy - sh*0.22, sw*0.15, sh*0.10, -0.4, 0, Math.PI*2);
+      ctx.fill();
+
+      // Moss patch (bottom-right, only on dry stones)
+      if (!isWet) {
+        ctx.fillStyle = 'rgba(60,90,40,0.22)';
+        ctx.beginPath();
+        ctx.ellipse(cx + sw*0.18, cy + sh*0.18, sw*0.16, sh*0.10, 0.3, 0, Math.PI*2);
+        ctx.fill();
       }
       ctx.restore();
-    }
+    },
+    _drawSplash(ctx, sx, sy, t) {
+      ctx.save();
+      const progress = Math.min(1, t / 0.55);
+      const spread = progress * 80;
+      const alpha = (1 - progress) * 0.75;
+      // Water spray droplets
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        const r = spread * (0.5 + 0.5 * ((i * 3 + seed) % 5) / 4);
+        const drop = {
+          x: sx + Math.cos(a) * r,
+          y: sy - Math.sin(Math.abs(a)) * spread * 0.7 * progress,
+        };
+        ctx.fillStyle = `rgba(130,190,220,${alpha * 0.8})`;
+        ctx.beginPath();
+        ctx.ellipse(drop.x, drop.y, 4, 7, a, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Ripple ring
+      ctx.strokeStyle = `rgba(100,160,200,${alpha * 0.6})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(sx, sy, spread * 0.9, spread * 0.3, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    },
   };
   return obj;
 }
@@ -1280,34 +1395,43 @@ function createCampfire({ id, x, y }) {
   };
 }
 
-function createDeerEyes({ id, x, y }) {
+function createDeerEyes({ id, x, y }, scene) {
+  // Eyes start far away and slowly drift toward the player — no button press needed
   let blinkTimer = 0, blinking = false;
+  const startX = x || 2600;
   return {
     id: id || `p${_propIdCounter++}`,
-    x: x || 2600, y: y || CONFIG.GROUND_Y - 120,
+    x: startX, y: y || CONFIG.GROUND_Y - 120,
+    _moveSpeed: 28,   // px/s — slow, creepy approach
     update(dt) {
+      // Auto-approach: drift toward the player's current X
+      const leader = scene?.characters?.[scene?.leaderId];
+      if (leader) {
+        const targetX = leader.x + 180; // stay a bit ahead of player's view
+        const dx = targetX - this.x;
+        if (Math.abs(dx) > 10) this.x += Math.sign(dx) * Math.min(this._moveSpeed * dt, Math.abs(dx));
+      }
       blinkTimer += dt;
       if (!blinking && blinkTimer > 2.2) { blinking = true; blinkTimer = 0; }
       if (blinking && blinkTimer > 0.14) { blinking = false; blinkTimer = 0; }
     },
     draw(ctx) {
+      if (blinking) return;
       const spacing = 38, r = 9;
       for (let i = 0; i < 2; i++) {
         const ex = this.x + (i === 0 ? -spacing / 2 : spacing / 2);
         const ey = this.y;
-        if (!blinking) {
-          const grd = ctx.createRadialGradient(ex, ey, 0, ex, ey, r * 2.8);
-          grd.addColorStop(0, 'rgba(255,70,30,0.95)');
-          grd.addColorStop(1, 'rgba(200,0,0,0)');
-          ctx.fillStyle = grd;
-          ctx.beginPath();
-          ctx.arc(ex, ey, r * 2.8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = '#ff4418';
-          ctx.beginPath();
-          ctx.ellipse(ex, ey, r, r * 0.55, 0, 0, Math.PI * 2);
-          ctx.fill();
-        }
+        const grd = ctx.createRadialGradient(ex, ey, 0, ex, ey, r * 2.8);
+        grd.addColorStop(0, 'rgba(255,70,30,0.95)');
+        grd.addColorStop(1, 'rgba(200,0,0,0)');
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.arc(ex, ey, r * 2.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ff4418';
+        ctx.beginPath();
+        ctx.ellipse(ex, ey, r, r * 0.55, 0, 0, Math.PI * 2);
+        ctx.fill();
       }
     },
   };
