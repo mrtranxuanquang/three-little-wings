@@ -121,7 +121,7 @@ export const CHAPTER_6 = {
 
       { t: 600,  cmd: 'say', char: 'chien', text: 'Cảm ơn Chòe đã cõng Chiện. Giờ Chiện tự đi được rồi...', duration: 3000 },
       { t: 3600, cmd: 'say', char: 'choe',  text: 'Chiện nhẹ hều mà. Với cả có Cu giữ dây nên an toàn hơn.', duration: 3000 },
-      { t: 7400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_by_fire_warm' },
+      { t: 7400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_arms_crossed_listening' },
       { t: 7500, cmd: 'say', char: 'cucu',  text: 'Cu cũng sợ độ cao, mà lúc nãy Cu cố giữ bình tĩnh đi chậm sau Chòe nên vượt qua dễ dàng.', duration: 4500 },
 
       { t: 10700, cmd: 'say', char: 'chien', text: 'Ơ, kia có phải là nhà mình không?', duration: 2500 },

@@ -100,7 +100,7 @@ export const CHAPTER_8 = {
       { t: 5500, cmd: 'attachChars', child: 'cucu',  parent: 'bo' },
       { t: 5500, cmd: 'attachChars', child: 'choe',  parent: 'bo' },
       { t: 5500, cmd: 'charPose', char: 'bo',    sprite: 'bo_hands_clasped_emotional' },
-      { t: 5500, cmd: 'charPose', char: 'chien', sprite: 'chien_clinging_scared' },
+      { t: 5500, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
       { t: 5500, cmd: 'charPose', char: 'cucu',  sprite: 'cucu_arm_around_shoulder' },
       { t: 5500, cmd: 'charPose', char: 'choe',  sprite: 'choe_relieved_kneeling' },
 

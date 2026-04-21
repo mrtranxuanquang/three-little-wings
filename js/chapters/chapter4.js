@@ -51,7 +51,7 @@ export const CHAPTER_4 = {
       { t: 4200, cmd: 'say', char: 'choe',  text: 'Rẽ đường nào bây giờ nhỉ...', duration: 2000 },
       { t: 6400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_calling_worried' },
       { t: 6500, cmd: 'say', char: 'cucu',  text: 'Bên này! Em thấy có ánh sáng!', duration: 2200 },
-      { t: 8900, cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
+      { t: 8900, cmd: 'charPose', char: 'chien', sprite: 'chien_yelling_defiant' },
       { t: 9000, cmd: 'say', char: 'chien', text: 'Không! Bên này! Vừa nãy em nghe có tiếng người nói chuyện!', duration: 2800 },
       { t: 11700, cmd: 'charPose', char: 'cucu', sprite: 'cucu_angry_pointing' },
       { t: 11800, cmd: 'say', char: 'cucu',  text: 'Chiện sai rồi. Bên này mới đúng!', duration: 2000 },
