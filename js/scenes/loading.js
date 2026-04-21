@@ -87,12 +87,22 @@ export class LoadingScene {
 
   _getRandomTip() {
     if (!this._currentTip || this.time - (this._tipTime||0) > 4) {
-      const tips = [
+      const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+      const tips = isTouch ? [
+        'Mỗi bé có một sức mạnh riêng...',
+        'Không ai một mình vượt qua được.',
+        'Lắng nghe nhau là phép màu lớn nhất.',
+        'Anh em phải luôn yêu thương nhau.',
+        'Ấn vào ảnh nhân vật để đổi giữa ba anh em.',
+        'Ấn vào để đổi nhân vật — mỗi bé có kỹ năng khác nhau!',
+        'Dùng nút ← → để di chuyển, nút nhảy để nhảy.',
+      ] : [
         'Mỗi bé có một sức mạnh riêng...',
         'Không ai một mình vượt qua được.',
         'Lắng nghe nhau là phép màu lớn nhất.',
         'Anh em phải luôn yêu thương nhau.',
         'Bấm 1, 2, 3 để chuyển giữa ba anh em.',
+        'Dùng ← → để đi, Space để nhảy.',
       ];
       this._currentTip = tips[Math.floor(Math.random() * tips.length)];
       this._tipTime = this.time;

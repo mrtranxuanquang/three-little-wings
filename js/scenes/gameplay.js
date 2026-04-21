@@ -475,9 +475,12 @@ export class GameplayScene {
       case 'say':
         this.dialog.say(cmd.char, cmd.text, { duration: cmd.duration, waitForInput: cmd.waitForInput !== false });
         break;
-      case 'narrate':
-        this.dialog.narrate(cmd.text, { duration: cmd.duration, waitForInput: cmd.waitForInput !== false, tutorial: cmd.tutorial });
+      case 'narrate': {
+        const _isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+        const _txt = (_isTouch && cmd.mobileText) ? cmd.mobileText : cmd.text;
+        this.dialog.narrate(_txt, { duration: cmd.duration, waitForInput: cmd.waitForInput !== false, tutorial: cmd.tutorial });
         break;
+      }
       case 'bgm':
         this.game.audio.playBgm(`audio/${cmd.track}.mp3`, { fadeMs: cmd.fadeMs || 1500 });
         break;

@@ -116,21 +116,21 @@ export const CHAPTER_1 = {
 
       // Release control
       { t: 16700, cmd: 'releaseInput' },
-      { t: 16800, cmd: 'narrate', text: '💡 Dùng ← → để đi, Space để nhảy. Bấm số 1/2/3 để chuyển nhân vật.', duration: 5000, tutorial: true, waitForInput: false },
+      { t: 16800, cmd: 'narrate', text: '💡 Dùng ← → để đi, Space để nhảy. Bấm số 1/2/3 để chuyển nhân vật.', mobileText: '💡 Dùng nút ← → để đi, nút nhảy để nhảy. Ấn ảnh nhân vật để đổi nhân vật.', duration: 5000, tutorial: true, waitForInput: false },
     ],
 
     // ============================================================
     // Tutorial: encourage switching characters
     // ============================================================
     tutorial_switch: [
-      { t: 0, cmd: 'narrate', text: '💡 Mỗi bé có một sức mạnh riêng. Thử bấm 1, 2, 3 để chuyển nhân vật!', duration: 4500, tutorial: true, waitForInput: false },
+      { t: 0, cmd: 'narrate', text: '💡 Mỗi bé có một sức mạnh riêng. Thử bấm 1, 2, 3 để chuyển nhân vật!', mobileText: '💡 Mỗi bé có một sức mạnh riêng. Ấn vào ảnh nhân vật để đổi!', duration: 4500, tutorial: true, waitForInput: false },
     ],
 
     // ============================================================
     // Tutorial: jumping over platforms
     // ============================================================
     tutorial_jump: [
-      { t: 0, cmd: 'narrate', text: '💡 Bấm Space để nhảy. Có bông hoa sáng ở trên kia...', duration: 3500, tutorial: true, waitForInput: false },
+      { t: 0, cmd: 'narrate', text: '💡 Bấm Space để nhảy. Có bông hoa sáng ở trên kia...', mobileText: '💡 Ấn nút nhảy để nhảy. Có bông hoa sáng ở trên kia...', duration: 3500, tutorial: true, waitForInput: false },
     ],
 
     // ============================================================
