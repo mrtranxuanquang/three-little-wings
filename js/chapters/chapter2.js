@@ -70,6 +70,8 @@ export const CHAPTER_2 = {
     // Tutorial: đẩy đá — 3 tảng đá giống thật, đẩy từng tảng xuống suối
     // ============================================================
     tut_push_rock: [
+      // Dựng barrier tại mép suối — 3 bé không được đi vào suối trước khi cầu xuất hiện
+      { t: 0,   cmd: 'setRightBarrier', x: 955 },
       // 3 tảng đá xếp hàng, mỗi tảng một kích thước khác nhau (seed khác nhau)
       { t: 0,   cmd: 'spawnProp', prop: 'boulder', id: 'boulder1', x: 780,  triggerX: 1040, triggerEvent: 'rock1_in', sinkDepth: 18 },
       { t: 200, cmd: 'spawnProp', prop: 'boulder', id: 'boulder2', x: 840,  triggerX: 1100, triggerEvent: 'rock2_in', sinkDepth: 12 },
@@ -103,7 +105,8 @@ export const CHAPTER_2 = {
       { t: 0,    cmd: 'cameraShake', amount: 14 },
       { t: 0,    cmd: 'sfx', sfx: 'sfx_rock_land' },
       { t: 500,  cmd: 'narrate', text: 'RẦMMM! Ba tảng đá lớn chắn ngang suối — Chích Chòe đã làm được!', duration: 3000, waitForInput: false },
-      { t: 3000, cmd: 'charPose', char: 'choe', sprite: 'choe_relieved_kneeling' },
+      // Dỡ barrier — cầu đã xong, 3 bé được đi qua
+      { t: 800,  cmd: 'clearRightBarrier' },
       { t: 3200, cmd: 'say', char: 'choe', text: 'Xong! Mấy tảng đá này làm cầu được rồi. Các em đi qua đi!', duration: 2800, waitForInput: false },
     ],
 

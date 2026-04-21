@@ -31,6 +31,7 @@ export class GameplayScene {
     this.firedTriggers = new Set();
     this.dynamicPlatforms = []; // platforms toggled by showPlatform/hidePlatform
     this.charAttachments = {};  // childId → parentId (hand-holding)
+    this.rightBarrier = null;   // optional x cap — blocks leader from crossing (e.g. unbuilt bridge)
 
     // Input lock (cutscenes, forced movement)
     this.inputLocked = false;
@@ -194,7 +195,11 @@ export class GameplayScene {
 
     // Clamp leader in world — 130px margin left (never flush with edge),
     // 50px margin right so chapter-ending triggers near worldWidth can be reached.
-    leader.x = Math.max(130, Math.min(this.chapter.worldWidth - 50, leader.x));
+    // rightBarrier (if set) blocks crossing until puzzle is solved (e.g. unbuilt bridge).
+    const _rightMax = this.rightBarrier !== null
+      ? this.rightBarrier
+      : this.chapter.worldWidth - 50;
+    leader.x = Math.max(130, Math.min(_rightMax, leader.x));
 
     // Followers — compute smoothed "follow side" so leader direction changes
     // don't teleport followers to the other side instantly.
@@ -511,6 +516,13 @@ export class GameplayScene {
         if (dp) dp.visible = false;
         break;
       }
+      case 'setRightBarrier':
+        // Prevent leader from crossing x until clearRightBarrier is called
+        this.rightBarrier = cmd.x;
+        break;
+      case 'clearRightBarrier':
+        this.rightBarrier = null;
+        break;
       case 'attachChars':
         this.charAttachments[cmd.child] = cmd.parent;
         break;

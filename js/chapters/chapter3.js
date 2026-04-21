@@ -80,9 +80,10 @@ export const CHAPTER_3 = {
     // ============================================================
     snack_scene: [
       { t: 0,    cmd: 'freezeInput' },
-      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 1130 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 1020 },
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 1250 },
+      // Chien thêm xa về phía phải để kẹo không bị che bởi Cúc Cu khi sprite flip (dir:-1)
+      { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 1100 },
+      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 980 },
+      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 1360 },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
       { t: 0,    cmd: 'faceChar', char: 'chien', dir: -1 },
@@ -97,7 +98,8 @@ export const CHAPTER_3 = {
       { t: 8000, cmd: 'say', char: 'chien', text: 'Còn em có kẹo mút này! Em chia cho các anh!', duration: 2500 },
       { t: 10700, cmd: 'say', char: 'choe', text: 'Chiện ăn đi, anh ăn snack đây rồi.', duration: 2200 },
 
-      { t: 13200, cmd: 'charPose', char: 'chien', sprite: 'chien_melancholy_sitting' },
+      // scale:0.82 để tỉ lệ chiều cao ngồi hợp lý hơn so với 2 anh đứng
+      { t: 13200, cmd: 'charPose', char: 'chien', sprite: 'chien_melancholy_sitting', scale: 0.82 },
       { t: 13500, cmd: 'say', char: 'chien', text: 'Anh Chòe ơi... Chừng nào mình mới về được nhà?', duration: 3200, waitForInput: false },
       { t: 17000, cmd: 'charPose', char: 'choe',  sprite: 'choe_standing_watching' },
       { t: 17200, cmd: 'say', char: 'choe',  text: 'Sắp rồi. Anh nghĩ không còn xa lắm đâu.', duration: 3000 },
