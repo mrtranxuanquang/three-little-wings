@@ -109,20 +109,21 @@ export const CHAPTER_6 = {
     reach_summit: [
       { t: 0,    cmd: 'freezeInput' },
       { t: 0,    cmd: 'piggybackDetach', child: 'chien' },
-      { t: 0,    cmd: 'showChar', char: 'chien' },          // chien hiện ra ở đỉnh núi
-      { t: 0,    cmd: 'unlockFollower', char: 'cucu' },     // cucu có thể di chuyển lại
-      { t: 0,    cmd: 'charTeleport', char: 'chien', x: 2070, y: 310 },
-      { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 1960, y: 310 },
+      // Chòe về sprite riêng NGAY TRƯỚC KHI Cu và Chiện xuất hiện
+      { t: 0,    cmd: 'charState', char: 'choe', state: 'idle' },
       { t: 0,    cmd: 'faceChar', char: 'choe',  dir: 1 },
-      { t: 0,    cmd: 'faceChar', char: 'cucu',  dir: 1 },
-      { t: 0,    cmd: 'faceChar', char: 'chien', dir: 1 },
-      { t: 0,    cmd: 'charPose', char: 'cucu',  sprite: 'cucu_idle_side' },
-      { t: 0,    cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
-      // choe vẫn đang ở pose choe_climbing cho đến khi Chiện nói cảm ơn
+      { t: 0,    cmd: 'unlockFollower', char: 'cucu' },
+
+      // Sau 200ms: Cu và Chiện mới hiện ra ở đỉnh núi
+      { t: 200,  cmd: 'showChar', char: 'chien' },
+      { t: 200,  cmd: 'charTeleport', char: 'chien', x: 2070, y: 310 },
+      { t: 200,  cmd: 'charTeleport', char: 'cucu',  x: 1960, y: 310 },
+      { t: 200,  cmd: 'faceChar', char: 'cucu',  dir: 1 },
+      { t: 200,  cmd: 'faceChar', char: 'chien', dir: 1 },
+      { t: 200,  cmd: 'charPose', char: 'cucu',  sprite: 'cucu_idle_side' },
+      { t: 200,  cmd: 'charPose', char: 'chien', sprite: 'chien_wonder_awestruck' },
 
       { t: 600,  cmd: 'say', char: 'chien', text: 'Cảm ơn Chòe đã cõng Chiện. Giờ Chiện tự đi được rồi...', duration: 3000 },
-      // Sau câu cảm ơn → Chòe mới tách thành sprite riêng
-      { t: 3400, cmd: 'charState', char: 'choe', state: 'idle' },
       { t: 3600, cmd: 'say', char: 'choe',  text: 'Chiện nhẹ hều mà. Với cả có Cu giữ dây nên an toàn hơn.', duration: 3000 },
       { t: 7400, cmd: 'charPose', char: 'cucu', sprite: 'cucu_arms_crossed_listening' },
       { t: 7500, cmd: 'say', char: 'cucu',  text: 'Cu cũng sợ độ cao, mà lúc nãy Cu cố giữ bình tĩnh đi chậm sau Chòe nên vượt qua dễ dàng.', duration: 4500 },

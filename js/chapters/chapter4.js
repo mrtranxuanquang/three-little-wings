@@ -37,6 +37,10 @@ export const CHAPTER_4 = {
       { t: 0,    cmd: 'setVignette', alpha: 0.9 },
       { t: 0,    cmd: 'animateVignette', to: 0, speed: 0.3 },
       { t: 0,    cmd: 'freezeInput' },
+      // Reset scale về 1.0 — xóa bất kỳ carry-over scale nào từ chương trước
+      { t: 0,    cmd: 'charScale', char: 'choe',  scale: 1.0 },
+      { t: 0,    cmd: 'charScale', char: 'cucu',  scale: 1.0 },
+      { t: 0,    cmd: 'charScale', char: 'chien', scale: 1.0 },
       { t: 0,    cmd: 'charTeleport', char: 'choe',  x: 520 },
       { t: 0,    cmd: 'charTeleport', char: 'cucu',  x: 640 },
       { t: 0,    cmd: 'charTeleport', char: 'chien', x: 760 },
@@ -159,6 +163,9 @@ export const CHAPTER_4 = {
       { t: 0,    cmd: 'charState', char: 'choe',  state: 'idle' },
       { t: 0,    cmd: 'charState', char: 'cucu',  state: 'idle' },
       { t: 0,    cmd: 'charState', char: 'chien', state: 'idle' },
+      // Reset scale của cucu (1.18 từ falling_branch) và chien trước khi sang ch5
+      { t: 0,    cmd: 'charScale', char: 'cucu',  scale: 1.0 },
+      { t: 0,    cmd: 'charScale', char: 'chien', scale: 1.0 },
 
       { t: 600,  cmd: 'narrate', text: 'Có những hiểu lầm, có những cãi vã... để làm chúng ta lớn lên và hiểu nhau hơn. Cúc Cu và Chiền Chiện sẽ nhớ mãi bài học này...', duration: 7000, waitForInput: false },
       { t: 6000, cmd: 'say', char: 'chien', text: 'Anh Cu đi gần em đi.', duration: 2000 },

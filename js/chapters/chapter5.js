@@ -79,8 +79,10 @@ export const CHAPTER_5 = {
       { t: 1200, cmd: 'setHeartbeatBpm', bpm: 88 },
       { t: 2000, cmd: 'stopHeartbeat' },
       { t: 2200, cmd: 'animateVignette', to: 0.72, speed: 0.06 },
-      // Mắt nai tự dần xuất hiện và tự di chuyển lại gần — không cần ấn
+      // Đôi mắt đỏ bên phải — tiến lại gần 3 anh em
       { t: 2800, cmd: 'spawnProp', prop: 'deerEyes', id: 'deer1', x: 2800 },
+      // Đôi mắt đỏ thứ hai sâu hơn trong hang — cùng tiến lại gần song song
+      { t: 3200, cmd: 'spawnProp', prop: 'deerEyes', id: 'deer2', x: 3400 },
     ],
 
     // ============================================================
@@ -113,6 +115,7 @@ export const CHAPTER_5 = {
       { t: 0,   cmd: 'setCaveWalk', on: false },
       { t: 0,   cmd: 'freezeInput' },
       { t: 0,   cmd: 'removeProp', id: 'deer1' },
+      { t: 0,   cmd: 'removeProp', id: 'deer2' },
       { t: 0,   cmd: 'stopHeartbeat' },
       { t: 0,   cmd: 'animateVignette', to: 0.3, speed: 0.5 },
       { t: 500, cmd: 'say', char: 'choe',  text: '...Thì ra là một con nai.', duration: 2500, waitForInput: false },
